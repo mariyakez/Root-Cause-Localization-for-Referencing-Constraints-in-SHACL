@@ -18,7 +18,7 @@ The current implementation focuses on:
 - `sh:node` referencing constraints,
 - nested referencing chains,
 - property-level `sh:node`,
-- mixed direct and referenced failures,
+- multiple referenced-shape failures on the same focus node,
 - diamond-shaped references,
 - reports with or without `sh:detail`,
 - Apache Jena-style external SHACL reports.
@@ -224,9 +224,9 @@ The Jena compatibility path handles reports where:
 | `test_cases/tc1_single_leaf.ttl` | One hidden leaf failure under `sh:node` |
 | `test_cases/tc2_multi_leaf.ttl` | Multiple hidden leaf failures under one referenced shape |
 | `test_cases/tc3_two_level.ttl` | Two-level reference chain |
-| `test_cases/tc4_mixed.ttl` | Direct property failures plus nested referenced failures |
+| `test_cases/tc4_mixed.ttl` | Multiple `sh:node` branches on the same focus node |
 | `test_cases/tc5_diamond.ttl` | Diamond reference pattern and deduplication |
-| `test_cases/tc6_complex_org.ttl` | Larger organization example with deeper nesting and repeated shapes |
+| `test_cases/tc6_complex_org.ttl` | Larger organization example with deeper nesting, repeated shapes, and all failures reached through `sh:node` |
 | `test_cases/tc7_property_node.ttl` | Property-level `sh:node` where the value node must be revalidated |
 | `test_cases/tc8_cycle_property_paths.ttl` | Cyclic property references and cycle-guard behavior |
 | `test_cases/external_report_tc2_no_detail.ttl` | External report without `sh:detail` |

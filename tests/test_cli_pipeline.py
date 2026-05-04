@@ -101,7 +101,7 @@ class ShaclExplainerCliTests(unittest.TestCase):
             ],
         )
 
-    def test_tc4_mixed_direct_and_nested_violations(self):
+    def test_tc4_multiple_sh_node_branches(self):
         output = self.run_explainer("tc4_mixed.ttl")
 
         self.assert_contains_all(

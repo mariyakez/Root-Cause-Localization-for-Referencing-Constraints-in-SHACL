@@ -4,6 +4,7 @@
 ex:CycleShape
     a sh:NodeShape ;
     sh:targetNode ex:a ;
+    sh:node ex:RequiredShape ;
     sh:property [
         sh:path ex:left ;
         sh:node ex:CycleShape ;
@@ -11,7 +12,10 @@ ex:CycleShape
     sh:property [
         sh:path ex:right ;
         sh:node ex:CycleShape ;
-    ] ;
+    ] .
+
+ex:RequiredShape
+    a sh:NodeShape ;
     sh:property [
         sh:path ex:required ;
         sh:minCount 1 ;

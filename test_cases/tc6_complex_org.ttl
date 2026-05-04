@@ -11,10 +11,10 @@
 #      |-- sh:node SecurityClearanceShape
 #      |      `-- sh:node PersonShape       (diamond back to PersonShape)
 #      |
-#      `-- direct project constraints
+#      `-- sh:node ProjectAssignmentShape
 #
 # Violations on ex:frank:
-#   - direct ProjectLeadShape: ex:projectCode missing
+#   - ProjectAssignmentShape: ex:projectCode missing
 #   - EmploymentShape: ex:employeeId missing
 #   - ContactShape: ex:email invalid
 #   - SecurityClearanceShape: ex:clearanceLevel outside allowed values
@@ -74,16 +74,20 @@ ex:SecurityClearanceShape
         sh:message "ex:clearanceLevel must be public, internal, or restricted" ;
     ] .
 
-ex:ProjectLeadShape
+ex:ProjectAssignmentShape
     a sh:NodeShape ;
-    sh:targetClass ex:ProjectLead ;
-    sh:node ex:EmploymentShape ;
-    sh:node ex:SecurityClearanceShape ;
     sh:property [
         sh:path ex:projectCode ;
         sh:minCount 1 ;
         sh:message "ex:projectCode is required for project leads" ;
     ] .
+
+ex:ProjectLeadShape
+    a sh:NodeShape ;
+    sh:targetClass ex:ProjectLead ;
+    sh:node ex:EmploymentShape ;
+    sh:node ex:SecurityClearanceShape ;
+    sh:node ex:ProjectAssignmentShape .
 
 ex:frank
     a ex:ProjectLead ;

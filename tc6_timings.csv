@@ -1,0 +1,2 @@
+data_path,shapes_path,data_triples,shape_triples,top_results,all_results,parse_data_seconds,parse_shapes_seconds,validate_seconds,build_explanation_tree_seconds,render_seconds
+test_cases/tc6_complex_org.ttl,test_cases/tc6_complex_org.ttl,53,55,3,13,0.001800,0.001000,0.002383,0.000483,0.000049

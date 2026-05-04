@@ -1,0 +1,122 @@
+@prefix ex: <http://example.org/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+[] a sh:ValidationReport ;
+    sh:conforms false ;
+    sh:result [ a sh:ValidationResult ;
+            sh:detail [ a sh:ValidationResult ;
+                    sh:detail [ a sh:ValidationResult ;
+                            sh:focusNode ex:frank ;
+                            sh:resultMessage "ex:email must match a basic email pattern" ;
+                            sh:resultPath ex:email ;
+                            sh:resultSeverity sh:Violation ;
+                            sh:sourceConstraintComponent sh:PatternConstraintComponent ;
+                            sh:sourceShape [ sh:message "ex:email must match a basic email pattern" ;
+                                    sh:path ex:email ;
+                                    sh:pattern "^\\S+@\\S+$" ] ;
+                            sh:value "frank-at-example" ] ;
+                    sh:focusNode ex:frank ;
+                    sh:resultMessage "Value must conform to every Shape in ('ex:PersonShape', 'ex:ContactShape'). See details for more information." ;
+                    sh:resultSeverity sh:Violation ;
+                    sh:sourceConstraintComponent sh:NodeConstraintComponent ;
+                    sh:sourceShape ex:EmploymentShape ;
+                    sh:value ex:frank ],
+                [ a sh:ValidationResult ;
+                    sh:focusNode ex:frank ;
+                    sh:resultMessage "ex:employeeId is required" ;
+                    sh:resultPath ex:employeeId ;
+                    sh:resultSeverity sh:Violation ;
+                    sh:sourceConstraintComponent sh:MinCountConstraintComponent ;
+                    sh:sourceShape [ sh:message "ex:employeeId is required" ;
+                            sh:minCount 1 ;
+                            sh:path ex:employeeId ] ],
+                [ a sh:ValidationResult ;
+                    sh:detail [ a sh:ValidationResult ;
+                            sh:focusNode ex:frank ;
+                            sh:resultMessage "ex:name must be present and xsd:string" ;
+                            sh:resultPath ex:name ;
+                            sh:resultSeverity sh:Violation ;
+                            sh:sourceConstraintComponent sh:MinCountConstraintComponent ;
+                            sh:sourceShape _:naa625e6d04214d50be9926ac35022aebb2 ],
+                        [ a sh:ValidationResult ;
+                            sh:focusNode ex:frank ;
+                            sh:resultMessage "ex:age must be present and xsd:integer" ;
+                            sh:resultPath ex:age ;
+                            sh:resultSeverity sh:Violation ;
+                            sh:sourceConstraintComponent sh:DatatypeConstraintComponent ;
+                            sh:sourceShape _:naa625e6d04214d50be9926ac35022aebb1 ;
+                            sh:value "forty" ] ;
+                    sh:focusNode ex:frank ;
+                    sh:resultMessage "Value must conform to every Shape in ('ex:PersonShape', 'ex:ContactShape'). See details for more information." ;
+                    sh:resultSeverity sh:Violation ;
+                    sh:sourceConstraintComponent sh:NodeConstraintComponent ;
+                    sh:sourceShape ex:EmploymentShape ;
+                    sh:value ex:frank ] ;
+            sh:focusNode ex:frank ;
+            sh:resultMessage "Value must conform to every Shape in ('ex:EmploymentShape', 'ex:SecurityClearanceShape'). See details for more information." ;
+            sh:resultSeverity sh:Violation ;
+            sh:sourceConstraintComponent sh:NodeConstraintComponent ;
+            sh:sourceShape ex:ProjectLeadShape ;
+            sh:value ex:frank ],
+        [ a sh:ValidationResult ;
+            sh:focusNode ex:frank ;
+            sh:resultMessage "ex:projectCode is required for project leads" ;
+            sh:resultPath ex:projectCode ;
+            sh:resultSeverity sh:Violation ;
+            sh:sourceConstraintComponent sh:MinCountConstraintComponent ;
+            sh:sourceShape [ sh:message "ex:projectCode is required for project leads" ;
+                    sh:minCount 1 ;
+                    sh:path ex:projectCode ] ],
+        [ a sh:ValidationResult ;
+            sh:detail [ a sh:ValidationResult ;
+                    sh:focusNode ex:frank ;
+                    sh:resultMessage "ex:clearanceLevel must be public, internal, or restricted" ;
+                    sh:resultPath ex:clearanceLevel ;
+                    sh:resultSeverity sh:Violation ;
+                    sh:sourceConstraintComponent sh:InConstraintComponent ;
+                    sh:sourceShape [ sh:in ( "public" "internal" "restricted" ) ;
+                            sh:message "ex:clearanceLevel must be public, internal, or restricted" ;
+                            sh:minCount 1 ;
+                            sh:path ex:clearanceLevel ] ;
+                    sh:value "top-secret" ],
+                [ a sh:ValidationResult ;
+                    sh:detail [ a sh:ValidationResult ;
+                            sh:focusNode ex:frank ;
+                            sh:resultMessage "ex:age must be present and xsd:integer" ;
+                            sh:resultPath ex:age ;
+                            sh:resultSeverity sh:Violation ;
+                            sh:sourceConstraintComponent sh:DatatypeConstraintComponent ;
+                            sh:sourceShape _:naa625e6d04214d50be9926ac35022aebb1 ;
+                            sh:value "forty" ],
+                        [ a sh:ValidationResult ;
+                            sh:focusNode ex:frank ;
+                            sh:resultMessage "ex:name must be present and xsd:string" ;
+                            sh:resultPath ex:name ;
+                            sh:resultSeverity sh:Violation ;
+                            sh:sourceConstraintComponent sh:MinCountConstraintComponent ;
+                            sh:sourceShape _:naa625e6d04214d50be9926ac35022aebb2 ] ;
+                    sh:focusNode ex:frank ;
+                    sh:resultMessage "Value does not conform to Shape ex:PersonShape. See details for more information." ;
+                    sh:resultSeverity sh:Violation ;
+                    sh:sourceConstraintComponent sh:NodeConstraintComponent ;
+                    sh:sourceShape ex:SecurityClearanceShape ;
+                    sh:value ex:frank ] ;
+            sh:focusNode ex:frank ;
+            sh:resultMessage "Value must conform to every Shape in ('ex:EmploymentShape', 'ex:SecurityClearanceShape'). See details for more information." ;
+            sh:resultSeverity sh:Violation ;
+            sh:sourceConstraintComponent sh:NodeConstraintComponent ;
+            sh:sourceShape ex:ProjectLeadShape ;
+            sh:value ex:frank ] .
+
+_:naa625e6d04214d50be9926ac35022aebb1 sh:datatype xsd:integer ;
+    sh:message "ex:age must be present and xsd:integer" ;
+    sh:minCount 1 ;
+    sh:path ex:age .
+
+_:naa625e6d04214d50be9926ac35022aebb2 sh:datatype xsd:string ;
+    sh:message "ex:name must be present and xsd:string" ;
+    sh:minCount 1 ;
+    sh:path ex:name .
+

@@ -1,23 +1,20 @@
 ###############################################################################
-# TEST CASE 4 — Mixed: DIRECT property violations  +  sh:node violations
-#               on the SAME focus node
+# TEST CASE 4 — Multiple sh:node branches on the SAME focus node
 #
 # Shape hierarchy:
 #   :ManagerShape  --sh:node-->  :PersonShape
+#                 \--sh:node-->  :ManagerRoleShape
 #
 # Violations on ex:dave:
-#   (a) DIRECT on :ManagerShape:
-#         ex:department missing     → MinCountConstraintComponent  (direct)
-#   (b) VIA sh:node → :PersonShape:
+#   (a) VIA sh:node → :PersonShape:
 #         ex:age wrong datatype     → DatatypeConstraintComponent  (nested)
 #         ex:name missing           → MinCountConstraintComponent  (nested)
+#   (b) VIA sh:node → :ManagerRoleShape:
+#         ex:department missing     → MinCountConstraintComponent  (nested)
 #
 # Key question to investigate:
-#   In the report, how does pyshacl distinguish between:
-#     - a result whose sh:sourceShape is :ManagerShape  (direct)
-#     - a result whose sh:sourceShape is :PersonShape   (from sh:node)
-#   Does the nested NodeConstraintComponent result appear alongside
-#   the direct property results, or is it separate?
+#   Can the explainer collect leaf failures from multiple referenced shapes
+#   attached to the same focus node?
 ###############################################################################
 
 @prefix sh:   <http://www.w3.org/ns/shacl#> .
@@ -41,10 +38,8 @@ ex:PersonShape
         sh:message  "ex:name is required" ;
     ] .
 
-ex:ManagerShape
+ex:ManagerRoleShape
     a sh:NodeShape ;
-    sh:targetClass ex:Manager ;
-    sh:node ex:PersonShape ;        # ← nested constraint
     sh:property [
         sh:path    ex:department ;
         sh:minCount 1 ;
@@ -56,12 +51,17 @@ ex:ManagerShape
         sh:message "A manager must have a reportsTo link" ;
     ] .
 
+ex:ManagerShape
+    a sh:NodeShape ;
+    sh:targetClass ex:Manager ;
+    sh:node ex:PersonShape ;        # ← nested constraint
+    sh:node ex:ManagerRoleShape .   # ← nested role constraints
+
 # ── Data ─────────────────────────────────────────────────────────────────────
 
 ex:dave
     a ex:Manager ;
-    # ex:department — MISSING         → direct MinCount on :ManagerShape
-    # ex:reportsTo  — MISSING         → direct MinCount on :ManagerShape
+    # ex:department — MISSING         → nested MinCount inside :ManagerRoleShape
     ex:age "forty-two" ;             # → nested Datatype inside :PersonShape
     # ex:name       — MISSING         → nested MinCount inside :PersonShape
     ex:reportsTo ex:ceo .            # present, so reportsTo is fine

@@ -231,7 +231,7 @@ def build_report():
         "the concrete property constraints inside referenced shapes that caused the top-level failure."
     )
     pdf.kv_table([
-        ("In scope", "SHACL Core constraints, sh:node referencing, nested references, property-level sh:node, direct and referenced failures, diamond references, reports with or without sh:detail."),
+        ("In scope", "SHACL Core constraints, sh:node referencing, nested references, property-level sh:node, multiple referenced-shape failures on the same focus node, diamond references, reports with or without sh:detail."),
         ("Out of scope", "SPARQL constraints and full support for all SHACL logical constructs such as sh:and, sh:or, sh:not, sh:xone, and qualified value shapes."),
         ("Primary user question", "Which exact path, value, component, and referenced-shape chain explains this validation failure?"),
     ])
@@ -354,9 +354,9 @@ def build_report():
         ("TC1", "Single sh:node reference with one hidden leaf failure."),
         ("TC2", "Multiple leaf failures under one referenced shape."),
         ("TC3", "Two-level reference chain: ContractorShape -> EmployeeShape -> PersonShape."),
-        ("TC4", "Mixed direct and nested violations on the same focus node."),
+        ("TC4", "Multiple sh:node branches on the same focus node."),
         ("TC5", "Diamond reference with deduplication and alternate-path preservation."),
-        ("TC6", "Complex organization case with deeper nesting, sibling references, direct failures, and diamond reuse."),
+        ("TC6", "Complex organization case with deeper nesting, sibling references, all failures through sh:node, and diamond reuse."),
         ("TC7", "Property-level sh:node, matching the pattern discovered in the supervisor LUBM schema."),
         ("Fallback tests", "Remove all sh:detail triples and verify that revalidation reconstructs the missing leaves."),
         ("CLI tests", "Summary mode, limits, focus/path/component/reference filters, CSV export, raw report export, and timing CSV."),
@@ -372,9 +372,9 @@ def build_report():
         ("tc1_single_leaf.ttl", "Minimal sh:node case where one concrete datatype failure is hidden behind a referencing result."),
         ("tc2_multi_leaf.ttl", "One referenced shape produces several concrete leaf failures, testing complete leaf recovery."),
         ("tc3_two_level.ttl", "Nested reference chain, ContractorShape -> EmployeeShape, used to verify multi-level expansion."),
-        ("tc4_mixed.ttl", "Combines direct property failures with nested referenced-shape failures on the same data node."),
+        ("tc4_mixed.ttl", "Uses multiple sh:node branches to collect several referenced-shape failures on the same data node."),
         ("tc5_diamond.ttl", "Diamond-shaped reference graph that tests deduplication and preservation of alternate reference chains."),
-        ("tc6_complex_org.ttl", "Larger organization example with deeper nesting, sibling references, direct failures, and repeated shapes."),
+        ("tc6_complex_org.ttl", "Larger organization example with deeper nesting, sibling references, all failures through sh:node, and repeated shapes."),
         ("tc7_property_node.ttl", "Property-level sh:node case where the referenced value node must be revalidated, matching the LUBM pattern."),
         ("tc8_cycle_property_paths.ttl", "Pathological cyclic reference case used to prove that the cycle guard stops repeated expansion."),
         ("external_report_tc2_no_detail.ttl", "External report fixture with sh:detail removed, testing fallback reconstruction for TC2."),
@@ -390,9 +390,9 @@ def build_report():
     )
     pdf.h2("TC6: tc6_complex_org.ttl")
     pdf.kv_table([
-        ("What it models", "A ProjectLead must satisfy ProjectLeadShape, which references EmploymentShape and SecurityClearanceShape. Those shapes further reference PersonShape and ContactShape."),
+        ("What it models", "A ProjectLead must satisfy ProjectLeadShape, which references EmploymentShape, SecurityClearanceShape, and ProjectAssignmentShape. Those shapes further reference PersonShape and ContactShape."),
         ("Potential issue", "A high-level sh:node failure may hide the actual repair actions across several shapes, such as missing name, invalid age, invalid email, missing employeeId, invalid clearanceLevel, or missing projectCode."),
-        ("Why this test exists", "It checks practical completeness: nested references, sibling references, direct property failures, and diamond reuse of PersonShape."),
+        ("Why this test exists", "It checks practical completeness: nested references, sibling references, all concrete failures reached through sh:node, and diamond reuse of PersonShape."),
         ("Pipeline solution", "parser.py selects roots, expander.py recursively expands sh:node details, deduplicator.py removes repeated PersonShape leaves while preserving alternate chains, and renderer.py displays the actionable tree."),
         ("Applicability", "Useful for enterprise or ontology validation where one entity, such as employee, project lead, patient, contract, or professor, is validated through reusable referenced shapes."),
     ], col1=125, col2=375, size=8.5)

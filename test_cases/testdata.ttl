@@ -4,8 +4,9 @@
 ex:alice
     a ex:Employee ;
     ex:employeeId "E001" ;
-    ex:age "twenty" ;
-    ex:email "not-an-email" .
+    ex:age 31 ;
+    ex:name "Alice" ;
+    ex:email "alice@example.org" .
 
 ex:bob
     a ex:Employee ;
@@ -15,5 +16,7 @@ ex:bob
 
 ex:carol
     a ex:Employee ;
+    ex:employeeId "E003" ;
     ex:age 29 ;
-    ex:name "Carol" .
+    ex:name "Carol" ;
+    ex:email "carol@example.org" .
