@@ -1,0 +1,23 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix ex: <http://example.org/> .
+
+ex:CycleShape
+    a sh:NodeShape ;
+    sh:targetNode ex:a ;
+    sh:property [
+        sh:path ex:left ;
+        sh:node ex:CycleShape ;
+    ] ;
+    sh:property [
+        sh:path ex:right ;
+        sh:node ex:CycleShape ;
+    ] ;
+    sh:property [
+        sh:path ex:required ;
+        sh:minCount 1 ;
+        sh:message "ex:required is required" ;
+    ] .
+
+ex:a
+    ex:left ex:a ;
+    ex:right ex:a .

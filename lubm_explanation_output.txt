@@ -1,0 +1,2538 @@
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department3.University5.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University859.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department4.University6.edu/FullProfessor9>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University361.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University187.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department10.University6.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University793.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department2.University4.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University172.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department12.University7.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University799.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department9.University4.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University420.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University289.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department14.University0.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University801.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University214.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department4.University0.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University654.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department22.University6.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University333.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department19.University4.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University919.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department0.University6.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University34.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department9.University7.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University462.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department2.University5.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University786.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department13.University7.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University424.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University417.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department18.University1.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University935.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department12.University6.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University536.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department13.University0.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University487.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department3.University3.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University204.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department16.University3.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University277.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department11.University5.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University491.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University202.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department16.University7.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University851.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department12.University7.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University622.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department11.University2.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University398.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department22.University6.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University591.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department16.University1.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University827.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department8.University2.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University12.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University115.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department9.University1.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University146.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department13.University6.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University57.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University559.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department10.University6.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University890.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University961.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department11.University7.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University830.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University612.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University9.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department1.University3.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University514.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department12.University3.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University648.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department5.University1.edu/FullProfessor8>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University390.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department8.University3.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University953.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University773.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department4.University5.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University659.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University802.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department11.University2.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University920.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department5.University1.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University374.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University978.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department6.University3.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University905.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department7.University1.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University554.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department11.University6.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University306.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department14.University5.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University761.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department10.University6.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University305.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University496.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department19.University3.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University281.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department5.University4.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University957.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department0.University5.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University17.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University215.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department9.University6.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University986.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University936.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University147.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department12.University4.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University228.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department12.University7.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University411.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department16.University1.edu/FullProfessor9>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University463.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department3.University7.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University401.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University781.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University218.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department10.University4.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University55.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department7.University5.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University776.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University276.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department4.University2.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University602.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department13.University1.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University425.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department2.University3.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University447.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University208.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department7.University1.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University84.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University995.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department9.University2.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University37.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University272.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department6.University7.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University128.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department3.University2.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University440.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department11.University3.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University780.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department13.University6.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University656.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department6.University6.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University752.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department17.University6.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University408.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department10.University7.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University135.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department3.University4.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University143.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University36.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department17.University4.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University467.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department13.University2.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University954.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department11.University6.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University653.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department12.University0.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University717.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department3.University3.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University199.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department13.University0.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University631.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University526.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department3.University4.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University928.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department10.University1.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University377.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University766.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department10.University5.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University613.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department11.University3.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University113.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department10.University1.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University565.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department17.University1.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University700.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department0.University5.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University99.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University431.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department5.University4.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University856.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department0.University5.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University665.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department9.University3.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University750.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department4.University5.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University899.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department11.University1.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University910.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department13.University5.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University642.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University816.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department12.University0.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University885.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University531.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department2.University1.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University235.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department16.University3.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University219.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department0.University1.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University262.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department10.University4.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University280.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department5.University4.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University540.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department18.University6.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University144.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University847.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department12.University0.edu/FullProfessor8>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University175.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University684.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department14.University0.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University580.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department1.University2.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University933.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University464.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department4.University1.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University782.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department16.University4.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University710.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department17.University1.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University547.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department6.University6.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University597.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University970.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department17.University1.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University358.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department6.University6.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University304.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department8.University4.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University768.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department8.University0.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University568.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department14.University3.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University406.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department7.University5.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University716.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University983.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department11.University7.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University800.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University211.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department0.University6.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University73.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department0.University0.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University882.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department9.University5.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University795.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department11.University0.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University421.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department9.University3.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University295.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department13.University4.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University91.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University125.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department4.University2.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University763.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department11.University3.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University825.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department3.University1.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University943.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department5.University2.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University388.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department2.University2.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University879.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department3.University2.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University52.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department11.University7.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University482.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department6.University7.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University947.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University382.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department14.University0.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University177.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department7.University3.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University152.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department7.University2.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University636.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department10.University0.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University651.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department10.University2.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University489.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department11.University4.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University260.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department12.University1.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University861.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department4.University3.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University730.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department5.University5.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University231.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department21.University4.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University982.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department0.University3.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University198.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department5.University1.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University993.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department3.University3.edu/FullProfessor8>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University600.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department15.University6.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University54.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University566.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department9.University5.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University359.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University693.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department7.University0.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University620.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department14.University2.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University450.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department5.University1.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University741.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department15.University7.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University992.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University552.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department0.University4.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University241.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department1.University0.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University539.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department9.University2.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University615.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University471.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department2.University3.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University815.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department1.University3.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University477.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University564.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department7.University4.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University461.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department16.University4.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University513.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department18.University4.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University397.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department3.University6.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University387.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department6.University4.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University494.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department11.University0.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University233.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department8.University2.edu/FullProfessor9>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University705.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department11.University2.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University633.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department13.University3.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University488.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department9.University5.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University162.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department1.University6.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University727.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department5.University1.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University808.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department19.University4.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University127.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department4.University7.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University971.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department2.University1.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University833.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department4.University5.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University485.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department0.University3.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University507.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department10.University5.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University372.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department6.University0.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University481.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department14.University2.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University807.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department4.University4.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University669.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department8.University6.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University237.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department11.University0.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University192.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department11.University0.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University297.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department19.University6.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University952.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University369.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department2.University2.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University914.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department10.University1.edu/FullProfessor9>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University582.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department14.University4.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University850.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department6.University3.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University451.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department7.University3.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University637.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department14.University4.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University724.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department23.University6.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University497.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University225.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department1.University0.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University413.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department17.University6.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University923.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department11.University4.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University623.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University159.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department10.University4.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University775.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department0.University2.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University791.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department12.University6.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University19.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University989.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department0.University0.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University112.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University336.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department6.University0.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University618.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University873.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department2.University5.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University43.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University302.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department17.University6.edu/FullProfessor8>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University183.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University818.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department9.University2.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University328.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department4.University4.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University131.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department1.University6.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University918.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department0.University4.edu/FullProfessor9>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University29.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department12.University6.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University221.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department11.University1.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University186.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department11.University4.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University725.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University376.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department1.University7.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University157.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department1.University1.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University472.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department15.University4.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University503.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department4.University3.edu/FullProfessor9>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University924.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department17.University4.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University169.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University479.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department16.University6.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University601.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department0.University4.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University433.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University25.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department2.University2.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University548.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department1.University4.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University71.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department15.University7.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University250.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department3.University2.edu/FullProfessor8>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University748.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University430.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department2.University3.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University762.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University61.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department7.University6.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University386.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department19.University3.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University778.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department5.University6.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University821.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department10.University7.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University878.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department11.University3.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University15.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department6.University5.edu/FullProfessor8>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University116.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department8.University0.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University22.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department7.University0.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University82.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department17.University1.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University164.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University956.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department1.University7.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University435.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department16.University6.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University274.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department0.University4.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University148.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University476.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department6.University1.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University843.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University321.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department3.University7.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University907.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University533.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department2.University4.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University645.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department14.University2.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University70.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department4.University5.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University590.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University726.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department0.University3.edu/FullProfessor8>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University814.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department6.University7.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University108.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department6.University2.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University639.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department3.University3.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University299.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department11.University5.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University236.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University562.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University508.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department5.University4.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University783.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University528.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University193.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department3.University5.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University495.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department11.University3.edu/FullProfessor8>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University370.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University846.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department16.University3.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University263.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University44.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department17.University3.edu/FullProfessor8>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University734.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department7.University7.edu/FullProfessor8>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University63.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department1.University5.edu/FullProfessor9>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University769.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University269.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department5.University6.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University210.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University81.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department8.University3.edu/FullProfessor9>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University441.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department8.University4.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University180.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department4.University4.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University49.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department12.University7.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University93.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department14.University0.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University523.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department11.University2.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University315.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University787.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department3.University5.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University577.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department6.University0.edu/FullProfessor9>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University972.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University934.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department6.University7.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University871.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University51.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department11.University7.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University585.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department4.University4.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University997.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department7.University0.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University97.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department8.University3.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University606.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department7.University2.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University720.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department0.University3.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University687.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department13.University1.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University644.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department13.University6.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University384.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University589.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department2.University7.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University216.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department6.University6.edu/FullProfessor8>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University442.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department3.University7.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University190.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department5.University0.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University543.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department18.University1.edu/FullProfessor8>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University240.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department18.University3.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University747.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University356.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department2.University0.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University354.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University884.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department9.University3.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University984.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University660.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department10.University4.edu/FullProfessor9>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University181.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department4.University7.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University904.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department13.University3.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University837.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department14.University6.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University320.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University663.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department15.University6.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University76.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department15.University2.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University347.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University355.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department13.University4.edu/FullProfessor9>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University979.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department8.University6.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University676.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department12.University2.edu/FullProfessor8>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University318.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department2.University2.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University60.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department0.University7.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University454.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department7.University7.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University546.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department9.University4.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University621.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department19.University6.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University458.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University340.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department6.University1.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University534.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department14.University6.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University760.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department1.University5.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University30.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department7.University4.edu/FullProfessor8>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University542.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department8.University1.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University59.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department12.University3.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University707.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department16.University1.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University264.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department3.University1.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University694.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department18.University4.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University772.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University867.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department14.University3.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University279.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department4.University1.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University251.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department5.University7.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University964.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department6.University0.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University223.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University444.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department21.University4.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University950.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University87.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department8.University7.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University307.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department10.University3.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University155.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department3.University6.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University951.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department7.University0.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University870.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department10.University2.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University366.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department21.University6.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University596.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department1.University7.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University673.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department16.University6.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University232.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department8.University4.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University551.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department14.University7.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University83.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University149.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department14.University4.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University40.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department6.University0.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University286.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department8.University5.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University114.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University89.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department23.University6.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University490.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department16.University7.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University351.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department19.University4.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University364.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department8.University5.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University252.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department2.University5.edu/FullProfessor9>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University475.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University897.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department8.University7.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University39.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University865.edu>->ub:name
+via ub:UniversityShape  path=ub:doctoralDegreeFrom  focus=<http://www.Department1.University6.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University309.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department11.University0.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University239.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department16.University7.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University247.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department15.University2.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University191.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University909.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department11.University7.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University671.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department15.University4.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University641.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department18.University3.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University598.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department6.University6.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University732.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department10.University7.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University917.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department4.University4.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University517.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department17.University3.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University624.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department3.University0.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University664.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department2.University7.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University28.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department7.University2.edu/FullProfessor8>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University965.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University329.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department7.University6.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University939.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department4.University6.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University789.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University603.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department6.University3.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University756.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University680.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department14.University3.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University714.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department6.University1.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University96.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department10.University0.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University352.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department20.University3.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University378.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department11.University2.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University8.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department15.University7.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University686.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department20.University4.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University765.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department12.University4.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University48.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department12.University6.edu/FullProfessor9>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University735.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department13.University7.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University572.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department14.University7.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University324.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department0.University2.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University635.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department1.University4.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University688.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department0.University4.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University409.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department2.University0.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University249.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University367.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department6.University0.edu/FullProfessor8>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University712.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department21.University4.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University422.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department1.University7.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University407.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department11.University2.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University405.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department5.University0.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University47.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department6.University5.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University42.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department12.University2.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University348.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department23.University6.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University886.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department10.University2.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University571.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department5.University4.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University98.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department19.University3.edu/FullProfessor8>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University679.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department1.University0.edu/FullProfessor8>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University436.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department8.University7.edu/FullProfessor9>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University353.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University901.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department16.University6.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University553.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department2.University0.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University434.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department10.University5.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University742.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department8.University6.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University754.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department17.University4.edu/FullProfessor8>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University402.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department10.University0.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University426.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department20.University6.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University156.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department10.University5.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University244.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department8.University4.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University692.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department1.University0.edu/FullProfessor9>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University584.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department10.University7.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University404.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department6.University6.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University709.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department1.University0.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University194.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department9.University2.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University203.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department4.University6.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University525.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department4.University3.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University94.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department2.University1.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University894.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department2.University7.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University95.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department0.University7.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University811.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department9.University5.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University275.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department14.University5.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University792.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department14.University4.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University326.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department0.University5.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University925.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department0.University7.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University652.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department5.University0.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University124.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department4.University2.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University563.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department7.University6.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University779.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department7.University7.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University332.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department10.University4.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University666.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department10.University2.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University831.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department2.University2.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University511.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department3.University1.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University357.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University672.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department7.University1.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University560.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department6.University1.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University396.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department2.University1.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University903.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department12.University4.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University258.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department5.University3.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University595.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department16.University4.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University658.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department0.University0.edu/FullProfessor8>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University605.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department10.University6.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University512.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department9.University7.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University188.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department12.University6.edu/FullProfessor8>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University675.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department18.University1.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University981.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department3.University3.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University723.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University314.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department3.University6.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University271.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department15.University7.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University313.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department2.University1.edu/FullProfessor8>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University604.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department10.University1.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University715.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University341.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department16.University7.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University913.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department6.University1.edu/FullProfessor8>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University344.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department18.University3.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University242.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department17.University3.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University339.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department10.University6.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University391.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department3.University0.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University967.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department1.University5.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University796.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department7.University1.edu/FullProfessor8>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University270.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department7.University4.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University619.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department11.University5.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University363.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department8.University6.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University14.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University273.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department0.University3.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University576.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department5.University2.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University443.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department0.University0.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University875.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department2.University1.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University38.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department7.University0.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University468.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department2.University5.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University182.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department8.University1.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University381.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department4.University2.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University701.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University437.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department7.University1.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University794.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department3.University2.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University941.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department11.University7.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University438.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department16.University7.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University103.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University257.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department1.University3.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University805.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department4.University4.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University755.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department21.University4.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University322.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department23.University6.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University510.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department13.University7.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University797.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department3.University0.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University395.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department6.University4.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University365.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department3.University4.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University291.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department20.University3.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University375.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department16.University1.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University916.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department8.University3.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University702.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department16.University1.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University86.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department12.University4.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University976.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department22.University6.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University887.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department18.University3.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University120.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department6.University4.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University683.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department7.University6.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University745.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department7.University3.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University520.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department9.University3.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University145.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department2.University5.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University469.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department18.University4.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University770.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University771.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department1.University6.edu/FullProfessor8>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University72.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department13.University3.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University812.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department0.University0.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University718.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department8.University7.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University719.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department0.University3.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University930.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department12.University0.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University836.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department16.University4.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University555.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department6.University2.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University117.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department9.University1.edu/FullProfessor8>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University283.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University840.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department9.University4.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University331.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department4.University5.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University627.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department13.University1.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University308.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department3.University5.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University290.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department11.University3.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University975.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department13.University2.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University100.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University668.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department11.University5.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University767.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department6.University1.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University109.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department12.University1.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University292.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department0.University3.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University561.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department8.University2.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University478.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department9.University5.edu/FullProfessor8>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University592.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department13.University3.edu/FullProfessor8>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University266.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department14.University6.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University806.edu>->ub:name
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University824.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department16.University3.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University465.edu>->ub:name
+via ub:UniversityShape  path=ub:mastersDegreeFrom  focus=<http://www.Department15.University7.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University949.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department15.University3.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University166.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department5.University6.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University173.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department7.University4.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University958.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department13.University7.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University530.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department11.University1.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University238.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department14.University4.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University245.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department1.University1.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University499.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department1.University3.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University184.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department13.University3.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University317.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department4.University3.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University412.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department8.University5.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University107.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department5.University3.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University541.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department18.University4.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University129.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department1.University1.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University729.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department2.University4.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University516.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department18.University4.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University423.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department10.University5.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University823.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department13.University3.edu/FullProfessor9>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University832.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department0.University7.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University738.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department6.University3.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University549.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department0.University4.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University841.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department7.University7.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University259.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department12.University5.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University963.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department6.University7.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University893.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department14.University5.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University854.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department18.University6.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University400.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department23.University6.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University906.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department8.University3.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University844.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department12.University1.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University544.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department1.University1.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University46.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department12.University3.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University31.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department3.University2.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University13.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department8.University5.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University940.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department13.University2.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University448.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department16.University6.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University607.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department17.University4.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University682.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department13.University3.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University130.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department1.University2.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University835.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department9.University0.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University392.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department0.University1.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University674.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department13.University7.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University16.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department8.University2.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University85.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department2.University6.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University804.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department14.University5.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University310.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department4.University1.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University518.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department9.University2.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University473.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department7.University2.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University349.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department1.University6.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University316.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department7.University1.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University483.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department22.University6.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University393.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department2.University6.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University158.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department9.University4.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University171.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department3.University0.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University985.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department9.University5.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University864.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department2.University1.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University230.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department13.University7.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University810.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department9.University2.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University790.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department6.University3.edu/FullProfessor8>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University855.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department4.University3.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University212.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department4.University0.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University45.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department19.University4.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University974.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department10.University2.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University774.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department14.University6.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University938.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department14.University3.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University902.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department15.University1.edu/FullProfessor3>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University459.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department16.University4.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University77.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department2.University7.edu/FullProfessor7>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University350.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department12.University0.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University234.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department13.University1.edu/FullProfessor9>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University64.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department4.University6.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University174.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department8.University7.edu/FullProfessor8>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University500.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department7.University4.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University20.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department15.University3.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University842.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department4.University4.edu/FullProfessor8>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University418.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department8.University7.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University92.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department14.University1.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University104.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department15.University6.edu/FullProfessor2>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University629.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department10.University5.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University18.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department1.University5.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University303.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department19.University4.edu/FullProfessor8>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University803.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department15.University6.edu/FullProfessor0>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University27.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department5.University0.edu/FullProfessor1>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University788.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department10.University4.edu/FullProfessor6>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University573.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department13.University3.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University337.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department12.University0.edu/FullProfessor4>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University90.edu>->ub:name
+via ub:UniversityShape  path=ub:undergraduateDegreeFrom  focus=<http://www.Department8.University2.edu/FullProfessor5>
+   ❌ [minCount]  path=ub:name
+      → Less than 1 values on <http://www.University753.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University207.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University829.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University883.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University26.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University179.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University32.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University65.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University21.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University834.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University610.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University119.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University630.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University996.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University504.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University209.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University678.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University371.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University284.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University594.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University515.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University56.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University449.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University123.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University625.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University414.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University334.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University999.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University160.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University912.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University457.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University862.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University312.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University690.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University265.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University877.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University968.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University501.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University759.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University385.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University955.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University325.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University189.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University784.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University969.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University460.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University428.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University335.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University524.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University588.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University243.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University287.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University574.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University102.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University849.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University966.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University650.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University137.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University608.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University206.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University706.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University122.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University736.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University150.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University749.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University980.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University891.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University649.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University569.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University990.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University751.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University403.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University141.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University11.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University69.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University578.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University698.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University946.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University557.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University908.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University994.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University857.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University860.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University346.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University581.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University611.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University224.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University165.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University599.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University10.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University419.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University614.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University62.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University106.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University962.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University445.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University285.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University368.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University838.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University888.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University161.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University492.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University655.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University677.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University681.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University446.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University75.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University889.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University345.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University327.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University977.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University691.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University142.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University78.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University535.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University550.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University699.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University868.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University538.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University785.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University136.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University853.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University583.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University362.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University991.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University826.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University455.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University626.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University278.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University959.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University998.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University931.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University380.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University151.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University828.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University253.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University874.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University845.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University740.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University88.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University205.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University23.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University360.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University373.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University537.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University456.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University383.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University876.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University657.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University217.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University509.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University739.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University852.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University895.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University178.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University704.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University58.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University261.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University288.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University33.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University866.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University743.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University667.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University921.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University708.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University944.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University711.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University167.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University872.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University134.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University820.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University140.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University66.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University744.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University429.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University200.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University505.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University926.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University222.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University163.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University256.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University248.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University640.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University628.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University296.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University121.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University110.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University696.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University294.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University819.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University53.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University502.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University662.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University439.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University126.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University632.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University922.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University593.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University394.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University342.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University50.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University567.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University293.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University529.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University493.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University80.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University154.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University579.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University133.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University139.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University609.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University813.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University900.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University670.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University881.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University470.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University522.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University733.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University268.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University254.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University498.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University197.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University863.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University848.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University703.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University330.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University757.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University545.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University737.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University267.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University474.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University647.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University111.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University587.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University746.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University646.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University927.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University132.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University617.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University722.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University685.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University170.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University616.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University201.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University415.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University343.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University869.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University300.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University638.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University480.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University311.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University195.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University973.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University945.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University558.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University105.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University118.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University764.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University379.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University929.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University932.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University988.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University697.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University176.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University227.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University282.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University643.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University35.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University79.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University695.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University213.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University661.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University185.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University519.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University575.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University532.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University484.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University758.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University298.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University798.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University226.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University41.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University896.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University689.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University521.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University427.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University822.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University556.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University24.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University168.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University153.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University416.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University220.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University713.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University68.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University138.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University506.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University399.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University721.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University839.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University486.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University410.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University915.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University898.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University229.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University960.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University809.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University586.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University570.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University338.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University817.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University74.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University731.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University101.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University777.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University937.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University196.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University432.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University634.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University892.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University948.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University987.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University323.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University527.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University246.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University453.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University858.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University255.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University728.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University911.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University389.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University319.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University301.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University452.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University67.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University942.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University880.edu>->ub:name
+❌ [minCount]  path=ub:name
+   → Less than 1 values on <http://www.University466.edu>->ub:name

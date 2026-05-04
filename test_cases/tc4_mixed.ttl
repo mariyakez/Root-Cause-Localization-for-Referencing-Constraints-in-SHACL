@@ -1,0 +1,67 @@
+###############################################################################
+# TEST CASE 4 — Mixed: DIRECT property violations  +  sh:node violations
+#               on the SAME focus node
+#
+# Shape hierarchy:
+#   :ManagerShape  --sh:node-->  :PersonShape
+#
+# Violations on ex:dave:
+#   (a) DIRECT on :ManagerShape:
+#         ex:department missing     → MinCountConstraintComponent  (direct)
+#   (b) VIA sh:node → :PersonShape:
+#         ex:age wrong datatype     → DatatypeConstraintComponent  (nested)
+#         ex:name missing           → MinCountConstraintComponent  (nested)
+#
+# Key question to investigate:
+#   In the report, how does pyshacl distinguish between:
+#     - a result whose sh:sourceShape is :ManagerShape  (direct)
+#     - a result whose sh:sourceShape is :PersonShape   (from sh:node)
+#   Does the nested NodeConstraintComponent result appear alongside
+#   the direct property results, or is it separate?
+###############################################################################
+
+@prefix sh:   <http://www.w3.org/ns/shacl#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix ex:   <http://example.org/> .
+
+# ── Shapes ───────────────────────────────────────────────────────────────────
+
+ex:PersonShape
+    a sh:NodeShape ;
+    sh:property [
+        sh:path     ex:age ;
+        sh:datatype xsd:integer ;
+        sh:message  "ex:age must be an xsd:integer" ;
+    ] ;
+    sh:property [
+        sh:path     ex:name ;
+        sh:minCount 1 ;
+        sh:message  "ex:name is required" ;
+    ] .
+
+ex:ManagerShape
+    a sh:NodeShape ;
+    sh:targetClass ex:Manager ;
+    sh:node ex:PersonShape ;        # ← nested constraint
+    sh:property [
+        sh:path    ex:department ;
+        sh:minCount 1 ;
+        sh:message "A manager must have a department" ;
+    ] ;
+    sh:property [
+        sh:path    ex:reportsTo ;
+        sh:minCount 1 ;
+        sh:message "A manager must have a reportsTo link" ;
+    ] .
+
+# ── Data ─────────────────────────────────────────────────────────────────────
+
+ex:dave
+    a ex:Manager ;
+    # ex:department — MISSING         → direct MinCount on :ManagerShape
+    # ex:reportsTo  — MISSING         → direct MinCount on :ManagerShape
+    ex:age "forty-two" ;             # → nested Datatype inside :PersonShape
+    # ex:name       — MISSING         → nested MinCount inside :PersonShape
+    ex:reportsTo ex:ceo .            # present, so reportsTo is fine

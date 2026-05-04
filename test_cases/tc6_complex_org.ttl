@@ -1,0 +1,93 @@
+###############################################################################
+# TEST CASE 6 -- Complex organization reference graph
+#
+# Shape hierarchy:
+#
+#   ProjectLeadShape
+#      |-- sh:node EmploymentShape
+#      |      |-- sh:node PersonShape
+#      |      `-- sh:node ContactShape
+#      |
+#      |-- sh:node SecurityClearanceShape
+#      |      `-- sh:node PersonShape       (diamond back to PersonShape)
+#      |
+#      `-- direct project constraints
+#
+# Violations on ex:frank:
+#   - direct ProjectLeadShape: ex:projectCode missing
+#   - EmploymentShape: ex:employeeId missing
+#   - ContactShape: ex:email invalid
+#   - SecurityClearanceShape: ex:clearanceLevel outside allowed values
+#   - PersonShape: ex:age invalid datatype, ex:name missing
+#     PersonShape is reached through two different paths and should be deduped.
+###############################################################################
+
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix ex:  <http://example.org/> .
+
+ex:PersonShape
+    a sh:NodeShape ;
+    sh:property [
+        sh:path ex:age ;
+        sh:datatype xsd:integer ;
+        sh:minCount 1 ;
+        sh:message "ex:age must be present and xsd:integer" ;
+    ] ;
+    sh:property [
+        sh:path ex:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:message "ex:name must be present and xsd:string" ;
+    ] .
+
+ex:ContactShape
+    a sh:NodeShape ;
+    sh:property [
+        sh:path ex:email ;
+        sh:pattern "^\\S+@\\S+$" ;
+        sh:message "ex:email must match a basic email pattern" ;
+    ] ;
+    sh:property [
+        sh:path ex:phone ;
+        sh:minCount 1 ;
+        sh:message "ex:phone is required for project leads" ;
+    ] .
+
+ex:EmploymentShape
+    a sh:NodeShape ;
+    sh:node ex:PersonShape ;
+    sh:node ex:ContactShape ;
+    sh:property [
+        sh:path ex:employeeId ;
+        sh:minCount 1 ;
+        sh:message "ex:employeeId is required" ;
+    ] .
+
+ex:SecurityClearanceShape
+    a sh:NodeShape ;
+    sh:node ex:PersonShape ;
+    sh:property [
+        sh:path ex:clearanceLevel ;
+        sh:in ("public" "internal" "restricted") ;
+        sh:minCount 1 ;
+        sh:message "ex:clearanceLevel must be public, internal, or restricted" ;
+    ] .
+
+ex:ProjectLeadShape
+    a sh:NodeShape ;
+    sh:targetClass ex:ProjectLead ;
+    sh:node ex:EmploymentShape ;
+    sh:node ex:SecurityClearanceShape ;
+    sh:property [
+        sh:path ex:projectCode ;
+        sh:minCount 1 ;
+        sh:message "ex:projectCode is required for project leads" ;
+    ] .
+
+ex:frank
+    a ex:ProjectLead ;
+    ex:age "forty" ;
+    ex:email "frank-at-example" ;
+    ex:phone "+49-30-123456" ;
+    ex:clearanceLevel "top-secret" .

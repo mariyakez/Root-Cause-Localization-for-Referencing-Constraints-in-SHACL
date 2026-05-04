@@ -1,0 +1,92 @@
+###############################################################################
+# TEST CASE 5 — Diamond / repeated reference
+#
+# Shape hierarchy (diamond):
+#
+#        :StaffShape
+#       /            \
+#  sh:node        sh:node
+#     |                |
+# :FulltimeShape  :ParttimeShape
+#       \            /
+#        sh:node  sh:node
+#              |
+#         :PersonShape   ← referenced TWICE via different paths
+#
+# Same focus node ex:eve is validated against :PersonShape TWICE (via both
+# :FulltimeShape and :ParttimeShape). This tests:
+#   (a) Does pyshacl deduplicate the resulting leaf failures?
+#   (b) Does your expansion engine need cycle/duplicate detection on
+#       (focusNode, shape) pairs to avoid reporting the same leaf twice?
+#
+# Additionally: :StaffShape itself has a direct property violation,
+# making this the hardest combined case.
+###############################################################################
+
+@prefix sh:   <http://www.w3.org/ns/shacl#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix ex:   <http://example.org/> .
+
+# ── Shapes ───────────────────────────────────────────────────────────────────
+
+# Base shape — referenced by BOTH intermediate shapes
+ex:PersonShape
+    a sh:NodeShape ;
+    sh:property [
+        sh:path     ex:age ;
+        sh:datatype xsd:integer ;
+        sh:minCount 1 ;
+        sh:message  "ex:age must be an xsd:integer" ;
+    ] ;
+    sh:property [
+        sh:path     ex:name ;
+        sh:minCount 1 ;
+        sh:message  "ex:name is required" ;
+    ] .
+
+# Intermediate shape A — also references PersonShape
+ex:FulltimeShape
+    a sh:NodeShape ;
+    sh:node ex:PersonShape ;        # ← path 1 to PersonShape
+    sh:property [
+        sh:path    ex:hoursPerWeek ;
+        sh:minCount 1 ;
+        sh:message "Full-time staff must declare hoursPerWeek" ;
+    ] .
+
+# Intermediate shape B — also references PersonShape
+ex:ParttimeShape
+    a sh:NodeShape ;
+    sh:node ex:PersonShape ;        # ← path 2 to PersonShape (diamond!)
+    sh:property [
+        sh:path    ex:contractHours ;
+        sh:minCount 1 ;
+        sh:message "Part-time staff must declare contractHours" ;
+    ] .
+
+# Top shape — references BOTH intermediate shapes
+ex:StaffShape
+    a sh:NodeShape ;
+    sh:targetClass ex:Staff ;
+    sh:node ex:FulltimeShape ;      # ← one branch
+    sh:node ex:ParttimeShape ;      # ← other branch
+    sh:property [
+        sh:path    ex:staffId ;
+        sh:minCount 1 ;
+        sh:message "Staff must have a staffId" ;
+    ] .
+
+# ── Data ─────────────────────────────────────────────────────────────────────
+
+ex:eve
+    a ex:Staff ;
+    ex:staffId      "S001" ;
+    # ex:hoursPerWeek  — MISSING    → leaf in :FulltimeShape
+    # ex:contractHours — MISSING    → leaf in :ParttimeShape
+    ex:age          "not-a-number" ; # → DatatypeConstraintComponent in :PersonShape
+    #                                   reached via BOTH paths — dedup question!
+    # ex:name — MISSING             → MinCount in :PersonShape
+    #                                   again via both paths
+    ex:reportsTo    ex:ceo .
