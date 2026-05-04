@@ -1,0 +1,19 @@
+@prefix ex:  <http://example.org/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:alice
+    a ex:Employee ;
+    ex:employeeId "E001" ;
+    ex:age "twenty" ;
+    ex:email "not-an-email" .
+
+ex:bob
+    a ex:Employee ;
+    ex:employeeId "E002" ;
+    ex:age 32 ;
+    ex:name "Bob" .
+
+ex:carol
+    a ex:Employee ;
+    ex:age 29 ;
+    ex:name "Carol" .
