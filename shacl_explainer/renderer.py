@@ -2,12 +2,12 @@
 
 # renderer.py
 import csv
-import datetime
 import json
 from collections import Counter
 from dataclasses import replace
 from rdflib import Literal
 from .tree import LeafFailure, ReferenceNode
+import importlib.resources
 
 PREFIXES = [
     ("ex:", "http://example.org/"),
@@ -357,24 +357,19 @@ def serialise_value(node):
         return str(node)        # "forty" not "\"forty\""
     return short_uri(node)
 
-def tree_to_data(nodes: list) -> list:
+def to_json(nodes: list) -> str:
     def serialise(node):
         if isinstance(node, LeafFailure):
+
             d = {
                 "type":       "leaf",
-                "focusNode":  short_uri(node.focus_node),
-                "path":       short_uri(node.result_path) if node.result_path else None,
-                "component":  short_uri(node.component),
-                "componentLabel": component_label(node.component),
+                "focusNode":  serialise_value(node.value_node),
+                "path":       serialise_value(node.value_node) if node.result_path else None,
+                "component":  serialise_value(node.value_node),
                 "value":      serialise_value(node.value_node) if node.value_node else None,
                 "message":    node.message,
                 "repairHint": repair_hint(node),
                 "refChain":   [short_uri(s) for s in node.ref_chain],
-                "altChains":  [
-                    [short_uri(s) for s in chain]
-                    for chain in node.alt_chains
-                    if chain
-                ],
             }
         else:
             d = {
@@ -387,762 +382,60 @@ def tree_to_data(nodes: list) -> list:
                 "children":   [serialise(c) for c in node.children],
             }
         return {k: v for k, v in d.items() if v is not None}
-
-    return [serialise(n) for n in nodes]
-
-def to_json(nodes: list) -> str:
-    return json.dumps(tree_to_data(nodes), indent=2)
-
+    
+    return json.dumps([serialise(n) for n in nodes], indent=2)
 def to_html(nodes: list, title: str = "SHACL Explanation Report") -> str:
-    data_json = json.dumps(tree_to_data(nodes), indent=2)
+    """
+    Produce a self-contained HTML file embedding the explanation tree.
+    The JSON data is injected into the REPORT_DATA constant in the
+    page's <script> block. No external dependencies required.
+    """
+    import json as _json
+    import datetime
+
+    # Reuse the existing JSON serialiser — same structure the JS expects
+    def serialise(node):
+        if isinstance(node, LeafFailure):
+            d = {
+                "type":       "leaf",
+                "focusNode":  short_uri(node.focus_node),
+                "path":       short_uri(node.result_path) if node.result_path else None,
+                "component":  short_uri(node.component),
+                "value":      str(node.value_node) if node.value_node else None,
+                "message":    node.message,
+                "repairHint": repair_hint(node),
+                "refChain":   [short_uri(s) for s in node.ref_chain],
+                "altChains":  [
+                    [short_uri(s) for s in chain]
+                    for chain in getattr(node, "alt_chains", [])
+                    if chain
+                ],
+            }
+        else:
+            d = {
+                "type":            "reference",
+                "focusNode":       short_uri(node.focus_node),
+                "shape":           short_uri(node.source_shape),
+                "referencedShape": short_uri(node.referenced_shape)
+                                   if node.referenced_shape else None,
+                "path":            short_uri(node.result_path)
+                                   if node.result_path else None,
+                "refChain":        [short_uri(s) for s in node.ref_chain],
+                "children":        [serialise(c) for c in node.children],
+            }
+        return {k: v for k, v in d.items() if v is not None}
+
+    data_json = _json.dumps([serialise(n) for n in nodes], indent=2)
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    return (
-        _HTML_TEMPLATE
-        .replace("__TITLE__", title)
-        .replace("__TIMESTAMP__", timestamp)
-        .replace("__REPORT_DATA__", data_json)
-    )
 
-_HTML_TEMPLATE = r"""<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>__TITLE__</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+    # Read the HTML template (the file you saved as shacl_report.html.template)
+    # OR embed it inline as a triple-quoted string.
+    # Inline is simpler — no file dependency.
+    html = _HTML_TEMPLATE.replace("__REPORT_DATA__", data_json)
+    html = html.replace("__TITLE__", title)
+    html = html.replace("__TIMESTAMP__", timestamp)
+    return html
 
-:root {
-  --bg:          #0f1117;
-  --surface:     #171b26;
-  --surface2:    #1e2333;
-  --surface3:    #252b3d;
-  --border:      #2a3149;
-  --border2:     #363f5c;
-  --text:        #e2e8f5;
-  --text-muted:  #6b7a9e;
-  --text-dim:    #4a5578;
-  --red:         #ff4f6d;
-  --red-bg:      #1f0d12;
-  --red-border:  #4a1523;
-  --orange:      #f97316;
-  --orange-bg:   #1a1008;
-  --yellow:      #fbbf24;
-  --green:       #34d399;
-  --green-bg:    #091a14;
-  --blue:        #60a5fa;
-  --blue-bg:     #0d1829;
-  --purple:      #a78bfa;
-  --purple-bg:   #130e24;
-  --cyan:        #22d3ee;
-  --chain-line:  #2a3149;
-  --mono: 'IBM Plex Mono', monospace;
-  --sans: 'IBM Plex Sans', sans-serif;
-}
-
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--sans);
-  font-size: 14px;
-  line-height: 1.6;
-  min-height: 100vh;
-}
-
-/* ── top bar ── */
-.topbar {
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  padding: 14px 32px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-.topbar-logo {
-  font-family: var(--mono);
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--cyan);
-  letter-spacing: .06em;
-}
-.topbar-sep { color: var(--border2); }
-.topbar-title {
-  font-family: var(--sans);
-  font-size: 13px;
-  color: var(--text-muted);
-}
-.topbar-stats {
-  margin-left: auto;
-  display: flex;
-  gap: 20px;
-  font-family: var(--mono);
-  font-size: 11px;
-}
-.stat { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; }
-.stat-val { color: var(--text); font-weight: 600; font-size: 13px; }
-.stat-lbl { color: var(--text-dim); font-size: 10px; letter-spacing: .05em; text-transform: uppercase; }
-
-/* ── layout ── */
-.layout { display: flex; min-height: calc(100vh - 49px); }
-
-/* ── sidebar ── */
-.sidebar {
-  width: 220px;
-  min-width: 220px;
-  background: var(--surface);
-  border-right: 1px solid var(--border);
-  padding: 20px 0;
-  position: sticky;
-  top: 49px;
-  height: calc(100vh - 49px);
-  overflow-y: auto;
-}
-.sidebar-label {
-  font-family: var(--mono);
-  font-size: 10px;
-  font-weight: 600;
-  color: var(--text-dim);
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  padding: 0 16px 8px;
-}
-.focus-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 7px 16px;
-  cursor: pointer;
-  border-left: 2px solid transparent;
-  transition: all .12s;
-  font-family: var(--mono);
-  font-size: 12px;
-  color: var(--text-muted);
-}
-.focus-item:hover { background: var(--surface2); color: var(--text); }
-.focus-item.active {
-  background: var(--surface2);
-  border-left-color: var(--cyan);
-  color: var(--cyan);
-}
-.focus-dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--red);
-  flex-shrink: 0;
-}
-.focus-count {
-  margin-left: auto;
-  background: var(--red-bg);
-  color: var(--red);
-  border: 1px solid var(--red-border);
-  border-radius: 3px;
-  padding: 0 5px;
-  font-size: 10px;
-  font-weight: 600;
-}
-
-/* ── main ── */
-.main { flex: 1; padding: 32px; overflow-x: auto; }
-
-/* ── focus block ── */
-.focus-block {
-  margin-bottom: 40px;
-  animation: fadeUp .3s ease both;
-}
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-.focus-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 16px;
-}
-.focus-node-label {
-  font-family: var(--mono);
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--text);
-}
-.focus-badge {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--text-muted);
-  background: var(--surface2);
-  border: 1px solid var(--border2);
-  border-radius: 4px;
-  padding: 2px 8px;
-}
-.failure-count {
-  margin-left: auto;
-  font-family: var(--mono);
-  font-size: 12px;
-  color: var(--red);
-  background: var(--red-bg);
-  border: 1px solid var(--red-border);
-  border-radius: 4px;
-  padding: 3px 10px;
-}
-
-/* ── tree container ── */
-.tree { display: flex; flex-direction: column; gap: 6px; }
-
-/* ── reference node ── */
-.ref-node { position: relative; }
-.ref-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 14px;
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  cursor: pointer;
-  transition: border-color .12s, background .12s;
-  user-select: none;
-}
-.ref-header:hover { border-color: var(--border2); background: var(--surface3); }
-.ref-arrow {
-  font-size: 11px;
-  color: var(--text-dim);
-  transition: transform .2s;
-  flex-shrink: 0;
-}
-.ref-arrow.open { transform: rotate(90deg); }
-.ref-icon {
-  font-size: 13px;
-  color: var(--cyan);
-  flex-shrink: 0;
-}
-.ref-shape {
-  font-family: var(--mono);
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--cyan);
-}
-.ref-arrow-label {
-  font-size: 11px;
-  color: var(--text-dim);
-  font-family: var(--mono);
-}
-.ref-target {
-  font-family: var(--mono);
-  font-size: 13px;
-  color: var(--blue);
-}
-.ref-chain-pill {
-  margin-left: auto;
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--text-dim);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 3px;
-  padding: 1px 7px;
-}
-.ref-children {
-  margin-left: 24px;
-  margin-top: 6px;
-  padding-left: 16px;
-  border-left: 1px solid var(--chain-line);
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  overflow: hidden;
-  transition: max-height .25s ease, opacity .2s ease;
-}
-.ref-children.collapsed { max-height: 0 !important; opacity: 0; }
-
-/* ── leaf node ── */
-.leaf-node {
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  overflow: hidden;
-  transition: border-color .12s;
-}
-.leaf-node:hover { border-color: var(--border2); }
-
-.leaf-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 14px;
-  cursor: pointer;
-}
-.leaf-icon { font-size: 14px; flex-shrink: 0; }
-.leaf-comp {
-  font-family: var(--mono);
-  font-size: 11px;
-  font-weight: 600;
-  border-radius: 3px;
-  padding: 2px 7px;
-  flex-shrink: 0;
-}
-.comp-mincount  { background: #1a1029; color: #c084fc; border: 1px solid #3b1d6e; }
-.comp-datatype  { background: #1a0e08; color: #fb923c; border: 1px solid #6b2d0d; }
-.comp-pattern   { background: #0d1a18; color: #34d399; border: 1px solid #0e4a37; }
-.comp-in        { background: #0d1629; color: #60a5fa; border: 1px solid #1a3a6e; }
-.comp-maxcount  { background: #1a1a08; color: #facc15; border: 1px solid #6b5a0d; }
-.comp-default   { background: var(--surface2); color: var(--text-muted); border: 1px solid var(--border); }
-
-.leaf-path {
-  font-family: var(--mono);
-  font-size: 13px;
-  color: var(--text);
-  font-weight: 500;
-}
-.leaf-eq { color: var(--text-dim); font-family: var(--mono); }
-.leaf-value {
-  font-family: var(--mono);
-  font-size: 12px;
-  color: var(--yellow);
-  background: rgba(251,191,36,.08);
-  border-radius: 3px;
-  padding: 1px 6px;
-}
-.leaf-missing {
-  font-family: var(--mono);
-  font-size: 12px;
-  color: var(--text-dim);
-  font-style: italic;
-}
-.leaf-toggle {
-  margin-left: auto;
-  font-size: 11px;
-  color: var(--text-dim);
-  transition: transform .2s;
-  flex-shrink: 0;
-}
-.leaf-toggle.open { transform: rotate(180deg); }
-
-/* leaf body */
-.leaf-body {
-  background: var(--surface);
-  border-top: 1px solid var(--border);
-  padding: 12px 14px;
-  display: grid;
-  grid-template-columns: 90px 1fr;
-  gap: 8px 12px;
-  font-size: 12px;
-  overflow: hidden;
-  transition: max-height .22s ease, opacity .18s ease;
-}
-.leaf-body.collapsed { max-height: 0 !important; opacity: 0; border-top: none; padding: 0 14px; }
-.leaf-row-label {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--text-dim);
-  text-transform: uppercase;
-  letter-spacing: .06em;
-  padding-top: 1px;
-}
-.leaf-row-val { font-family: var(--mono); font-size: 12px; color: var(--text); }
-.leaf-message { color: var(--text-muted); font-family: var(--sans); font-size: 12px; }
-.leaf-hint { color: var(--green); font-family: var(--sans); font-size: 12px; }
-.leaf-chain { color: var(--blue); }
-.leaf-altchain {
-  color: var(--text-dim);
-  font-size: 11px;
-  font-family: var(--mono);
-  margin-top: 2px;
-}
-.alt-label {
-  color: var(--purple);
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: .06em;
-  font-weight: 600;
-}
-
-/* leaf node coloring by component */
-.leaf-node.lf-mincount  { border-left: 3px solid #c084fc; }
-.leaf-node.lf-datatype  { border-left: 3px solid #fb923c; }
-.leaf-node.lf-pattern   { border-left: 3px solid #34d399; }
-.leaf-node.lf-in        { border-left: 3px solid #60a5fa; }
-.leaf-node.lf-maxcount  { border-left: 3px solid #facc15; }
-
-/* ── filter bar ── */
-.filter-bar {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 24px;
-  flex-wrap: wrap;
-  align-items: center;
-}
-.filter-btn {
-  font-family: var(--mono);
-  font-size: 11px;
-  padding: 4px 12px;
-  border-radius: 4px;
-  border: 1px solid var(--border2);
-  background: var(--surface2);
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: all .12s;
-}
-.filter-btn:hover { border-color: var(--cyan); color: var(--cyan); }
-.filter-btn.active { border-color: var(--cyan); color: var(--cyan); background: rgba(34,211,238,.08); }
-.filter-sep { color: var(--border2); font-size: 12px; }
-.filter-label { font-size: 11px; color: var(--text-dim); font-family: var(--mono); }
-
-/* ── expand all btn ── */
-.expand-all-btn {
-  margin-left: auto;
-  font-family: var(--mono);
-  font-size: 11px;
-  padding: 4px 12px;
-  border-radius: 4px;
-  border: 1px solid var(--border2);
-  background: transparent;
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: all .12s;
-}
-.expand-all-btn:hover { border-color: var(--text-muted); color: var(--text); }
-
-/* ── generated line ── */
-.generated {
-  text-align: center;
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--text-dim);
-  padding: 32px 0 16px;
-  border-top: 1px solid var(--border);
-  margin-top: 40px;
-}
-</style>
-</head>
-<body>
-
-<div class="topbar">
-  <span class="topbar-logo">SHACL</span>
-  <span class="topbar-sep">/</span>
-  <span class="topbar-title">Explanation Report</span>
-  <div class="topbar-stats">
-    <div class="stat"><span class="stat-val" id="stat-focus">—</span><span class="stat-lbl">focus nodes</span></div>
-    <div class="stat"><span class="stat-val" id="stat-leaves">—</span><span class="stat-lbl">leaf failures</span></div>
-    <div class="stat"><span class="stat-val" id="stat-depth">—</span><span class="stat-lbl">max depth</span></div>
-    <div class="stat"><span class="stat-val" id="stat-direct">—</span><span class="stat-lbl">direct</span></div>
-  </div>
-</div>
-
-<div class="layout">
-  <nav class="sidebar">
-    <div class="sidebar-label">Focus nodes</div>
-    <div id="sidebar-items"></div>
-  </nav>
-
-  <main class="main">
-    <div class="filter-bar">
-      <span class="filter-label">filter:</span>
-      <button class="filter-btn active" data-comp="all" onclick="filterComp(this)">all</button>
-      <button class="filter-btn" data-comp="mincount"  onclick="filterComp(this)">minCount</button>
-      <button class="filter-btn" data-comp="datatype"  onclick="filterComp(this)">datatype</button>
-      <button class="filter-btn" data-comp="pattern"   onclick="filterComp(this)">pattern</button>
-      <button class="filter-btn" data-comp="in"        onclick="filterComp(this)">in</button>
-      <span class="filter-sep">|</span>
-      <button class="filter-btn" data-kind="all"       onclick="filterKind(this)">all kinds</button>
-      <button class="filter-btn" data-kind="direct"    onclick="filterKind(this)">direct only</button>
-      <button class="filter-btn" data-kind="nested"    onclick="filterKind(this)">nested only</button>
-      <button class="expand-all-btn" onclick="expandAll()">expand all</button>
-    </div>
-    <div id="report"></div>
-    <div class="generated">Generated by shacl_explainer · <span id="gen-time">__TIMESTAMP__</span></div>
-  </main>
-</div>
-
-<script>
-// ── DATA (this block is replaced by renderer.py's to_html()) ──────────────
-const REPORT_DATA = __REPORT_DATA__;
-// ── END DATA ──────────────────────────────────────────────────────────────
-
-const COMP_MAP = {
-  "sh:MinCountConstraintComponent":  { short: "minCount",  cls: "mincount"  },
-  "sh:MaxCountConstraintComponent":  { short: "maxCount",  cls: "maxcount"  },
-  "sh:DatatypeConstraintComponent":  { short: "datatype",  cls: "datatype"  },
-  "sh:PatternConstraintComponent":   { short: "pattern",   cls: "pattern"   },
-  "sh:InConstraintComponent":        { short: "in",        cls: "in"        },
-  "sh:ClassConstraintComponent":     { short: "class",     cls: "default"   },
-};
-
-function compInfo(uri) {
-  return COMP_MAP[uri] || { short: uri.split(":").pop().replace("ConstraintComponent",""), cls: "default" };
-}
-
-function countLeaves(nodes) {
-  let n = 0;
-  for (const node of nodes) {
-    if (node.type === "leaf") n++;
-    else if (node.children) n += countLeaves(node.children);
-  }
-  return n;
-}
-
-function maxDepth(nodes, d=0) {
-  let m = d;
-  for (const node of nodes) {
-    if (node.type === "reference" && node.children)
-      m = Math.max(m, maxDepth(node.children, d+1));
-  }
-  return m;
-}
-
-function allLeaves(nodes) {
-  const out = [];
-  function walk(ns) {
-    for (const n of ns) {
-      if (n.type === "leaf") out.push(n);
-      else if (n.children) walk(n.children);
-    }
-  }
-  walk(nodes);
-  return out;
-}
-
-// ── leaf DOM ─────────────────────────────────────────────────────────────
-let leafId = 0;
-function mkLeaf(node) {
-  const info  = compInfo(node.component);
-  const id    = `leaf-${leafId++}`;
-  const chain = node.refChain || [];
-  const depth = chain.length;
-  const kind  = depth === 0 ? "direct" : "nested";
-
-  const el = document.createElement("div");
-  el.className = `leaf-node lf-${info.cls}`;
-  el.dataset.comp = info.cls;
-  el.dataset.kind = kind;
-
-  el.innerHTML = `
-    <div class="leaf-header" onclick="toggleLeaf('${id}')">
-      <span class="leaf-icon">❌</span>
-      <span class="leaf-comp comp-${info.cls}">${info.short}</span>
-      <span class="leaf-path">${node.path || ""}</span>
-      ${node.value
-        ? `<span class="leaf-eq">=</span><span class="leaf-value">${esc(node.value)}</span>`
-        : `<span class="leaf-missing">(missing)</span>`}
-      <span class="leaf-toggle" id="${id}-toggle">▾</span>
-    </div>
-    <div class="leaf-body" id="${id}-body" style="max-height:400px">
-      ${node.message ? `
-        <span class="leaf-row-label">message</span>
-        <span class="leaf-message">${esc(node.message)}</span>` : ""}
-      ${node.repairHint ? `
-        <span class="leaf-row-label">fix</span>
-        <span class="leaf-hint">→ ${esc(node.repairHint)}</span>` : ""}
-      <span class="leaf-row-label">focus</span>
-      <span class="leaf-row-val">${esc(node.focusNode)}</span>
-      <span class="leaf-row-label">component</span>
-      <span class="leaf-row-val">${esc(node.component)}</span>
-      ${depth > 0 ? `
-        <span class="leaf-row-label">via</span>
-        <span class="leaf-row-val leaf-chain">${chain.join(" → ")}</span>` : `
-        <span class="leaf-row-label">kind</span>
-        <span class="leaf-row-val" style="color:var(--text-dim)">direct violation</span>`}
-      ${(node.altChains||[]).filter(c=>c.length).map(c => `
-        <span class="leaf-row-label"><span class="alt-label">alt</span></span>
-        <span class="leaf-row-val leaf-altchain">⎇ also via ${c.join(" → ")}</span>
-      `).join("")}
-    </div>`;
-  return el;
-}
-
-// ── reference DOM ─────────────────────────────────────────────────────────
-let refId = 0;
-function mkRef(node, depth=0) {
-  const id = `ref-${refId++}`;
-  const depthLabel = depth === 0 ? "root" : `depth ${depth}`;
-
-  const el = document.createElement("div");
-  el.className = "ref-node";
-
-  const childEls = (node.children || []).map(c =>
-    c.type === "leaf" ? mkLeaf(c) : mkRef(c, depth+1)
-  );
-
-  const hdr = document.createElement("div");
-  hdr.className = "ref-header";
-  hdr.innerHTML = `
-    <span class="ref-arrow open" id="${id}-arrow">▶</span>
-    <span class="ref-icon">↳</span>
-    <span class="ref-shape">${esc(node.shape)}</span>
-    ${node.referencedShape ? `
-      <span class="ref-arrow-label">sh:node →</span>
-      <span class="ref-target">${esc(node.referencedShape)}</span>` : ""}
-    <span class="ref-chain-pill">${depthLabel}</span>`;
-  hdr.onclick = () => toggleRef(id);
-
-  const kids = document.createElement("div");
-  kids.className = "ref-children";
-  kids.id = `${id}-children`;
-  const totalH = 9999;
-  kids.style.maxHeight = totalH + "px";
-  childEls.forEach(c => kids.appendChild(c));
-
-  el.appendChild(hdr);
-  el.appendChild(kids);
-  return el;
-}
-
-function toggleRef(id) {
-  const kids  = document.getElementById(`${id}-children`);
-  const arrow = document.getElementById(`${id}-arrow`);
-  const open  = !kids.classList.contains("collapsed");
-  if (open) {
-    kids.style.maxHeight = kids.scrollHeight + "px";
-    requestAnimationFrame(() => {
-      kids.style.maxHeight = "0px";
-      kids.classList.add("collapsed");
-      arrow.classList.remove("open");
-    });
-  } else {
-    kids.classList.remove("collapsed");
-    kids.style.maxHeight = kids.scrollHeight + "px";
-    arrow.classList.add("open");
-    setTimeout(() => { kids.style.maxHeight = "9999px"; }, 250);
-  }
-}
-
-function toggleLeaf(id) {
-  const body   = document.getElementById(`${id}-body`);
-  const toggle = document.getElementById(`${id}-toggle`);
-  const open   = !body.classList.contains("collapsed");
-  if (open) {
-    body.style.maxHeight = body.scrollHeight + "px";
-    requestAnimationFrame(() => {
-      body.style.maxHeight = "0px";
-      body.classList.add("collapsed");
-      toggle.classList.remove("open");
-    });
-  } else {
-    body.classList.remove("collapsed");
-    body.style.maxHeight = body.scrollHeight + "px";
-    toggle.classList.add("open");
-    setTimeout(() => { body.style.maxHeight = "400px"; }, 220);
-  }
-}
-
-function expandAll() {
-  document.querySelectorAll(".ref-children.collapsed").forEach(el => {
-    el.classList.remove("collapsed");
-    el.style.maxHeight = "9999px";
-  });
-  document.querySelectorAll(".ref-arrow").forEach(el => el.classList.add("open"));
-  document.querySelectorAll(".leaf-body.collapsed").forEach(el => {
-    el.classList.remove("collapsed");
-    el.style.maxHeight = "400px";
-  });
-  document.querySelectorAll(".leaf-toggle").forEach(el => el.classList.add("open"));
-}
-
-// ── filter ────────────────────────────────────────────────────────────────
-let activeComp = "all", activeKind = "all";
-
-function applyFilter() {
-  document.querySelectorAll(".leaf-node").forEach(el => {
-    const cMatch = activeComp === "all" || el.dataset.comp === activeComp;
-    const kMatch = activeKind === "all" || el.dataset.kind === activeKind;
-    el.style.display = (cMatch && kMatch) ? "" : "none";
-  });
-}
-
-function filterComp(btn) {
-  document.querySelectorAll("[data-comp]").forEach(b => b.classList.remove("active"));
-  btn.classList.add("active");
-  activeComp = btn.dataset.comp;
-  applyFilter();
-}
-
-function filterKind(btn) {
-  document.querySelectorAll("[data-kind]").forEach(b => b.classList.remove("active"));
-  btn.classList.add("active");
-  activeKind = btn.dataset.kind;
-  applyFilter();
-}
-
-// ── sidebar ───────────────────────────────────────────────────────────────
-function buildSidebar(groups) {
-  const container = document.getElementById("sidebar-items");
-  Object.entries(groups).forEach(([fn, nodes], i) => {
-    const lc = countLeaves(nodes);
-    const item = document.createElement("div");
-    item.className = "focus-item" + (i === 0 ? " active" : "");
-    item.innerHTML = `
-      <span class="focus-dot"></span>
-      <span>${fn.split(":").pop()}</span>
-      <span class="focus-count">${lc}</span>`;
-    item.onclick = () => {
-      document.querySelectorAll(".focus-item").forEach(x => x.classList.remove("active"));
-      item.classList.add("active");
-      document.getElementById(`focus-${fn.replace(/[^a-z0-9]/gi,"_")}`)
-              ?.scrollIntoView({ behavior:"smooth", block:"start" });
-    };
-    container.appendChild(item);
-  });
-}
-
-// ── stats ─────────────────────────────────────────────────────────────────
-function updateStats(groups) {
-  const allL = Object.values(groups).flatMap(ns => allLeaves(ns));
-  document.getElementById("stat-focus").textContent  = Object.keys(groups).length;
-  document.getElementById("stat-leaves").textContent = allL.length;
-  document.getElementById("stat-depth").textContent  =
-    maxDepth(Object.values(groups).flat());
-  document.getElementById("stat-direct").textContent =
-    allL.filter(l => l.refChain.length === 0).length;
-}
-
-// ── render ────────────────────────────────────────────────────────────────
-function esc(s) {
-  return String(s)
-    .replace(/&/g,"&amp;").replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;").replace(/"/g,"&quot;");
-}
-
-function render() {
-  // group by focus node
-  const groups = {};
-  for (const node of REPORT_DATA) {
-    const fn = node.focusNode || node.focus_node || "unknown";
-    (groups[fn] = groups[fn] || []).push(node);
-  }
-
-  buildSidebar(groups);
-  updateStats(groups);
-  document.getElementById("gen-time").textContent = "__TIMESTAMP__";
-
-  const report = document.getElementById("report");
-  Object.entries(groups).forEach(([fn, nodes]) => {
-    const lc = countLeaves(nodes);
-    const block = document.createElement("div");
-    block.className = "focus-block";
-    block.id = `focus-${fn.replace(/[^a-z0-9]/gi,"_")}`;
-
-    const hdr = document.createElement("div");
-    hdr.className = "focus-header";
-    hdr.innerHTML = `
-      <span class="focus-node-label">${esc(fn)}</span>
-      <span class="focus-badge">focus node</span>
-      <span class="failure-count">${lc} failure${lc!==1?"s":""}</span>`;
-
-    const tree = document.createElement("div");
-    tree.className = "tree";
-    nodes.forEach(n => tree.appendChild(n.type==="leaf" ? mkLeaf(n) : mkRef(n,0)));
-
-    block.appendChild(hdr);
-    block.appendChild(tree);
-    report.appendChild(block);
-  });
-}
-
-render();
-</script>
-</body>
-</html>
-"""
+def _load_template() -> str:
+    ref = importlib.resources.files("shacl_explainer") / "report_template.html"
+    return ref.read_text(encoding="utf-8")
