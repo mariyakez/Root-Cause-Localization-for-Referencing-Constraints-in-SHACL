@@ -5,9 +5,9 @@ import csv
 import json
 from collections import Counter
 from dataclasses import replace
+from pathlib import Path
 from rdflib import Literal
 from .tree import LeafFailure, ReferenceNode
-import importlib.resources
 
 PREFIXES = [
     ("ex:", "http://example.org/"),
@@ -350,58 +350,23 @@ def write_csv(nodes: list, destination):
         if close_after:
             destination.close()
 def serialise_value(node):
-    """Return a clean Python value for JSON — no RDF quoting."""
+    """Return a clean Python value for JSON, without RDF literal quoting."""
     if node is None:
         return None
     if isinstance(node, Literal):
-        return str(node)        # "forty" not "\"forty\""
+        return str(node)
     return short_uri(node)
 
-def to_json(nodes: list) -> str:
+def tree_to_data(nodes: list) -> list:
+    """Serialise explanation nodes once so JSON and HTML stay consistent."""
     def serialise(node):
         if isinstance(node, LeafFailure):
-
             d = {
                 "type":       "leaf",
-                "focusNode":  serialise_value(node.value_node),
-                "path":       serialise_value(node.value_node) if node.result_path else None,
-                "component":  serialise_value(node.value_node),
+                "focusNode":  serialise_value(node.focus_node),
+                "path":       serialise_value(node.result_path),
+                "component":  serialise_value(node.component),
                 "value":      serialise_value(node.value_node) if node.value_node else None,
-                "message":    node.message,
-                "repairHint": repair_hint(node),
-                "refChain":   [short_uri(s) for s in node.ref_chain],
-            }
-        else:
-            d = {
-                "type":       "reference",
-                "focusNode":  short_uri(node.focus_node),
-                "shape":      short_uri(node.source_shape),
-                "referencedShape": short_uri(node.referenced_shape) if node.referenced_shape else None,
-                "path":       short_uri(node.result_path) if node.result_path else None,
-                "refChain":   [short_uri(s) for s in node.ref_chain],
-                "children":   [serialise(c) for c in node.children],
-            }
-        return {k: v for k, v in d.items() if v is not None}
-    
-    return json.dumps([serialise(n) for n in nodes], indent=2)
-def to_html(nodes: list, title: str = "SHACL Explanation Report") -> str:
-    """
-    Produce a self-contained HTML file embedding the explanation tree.
-    The JSON data is injected into the REPORT_DATA constant in the
-    page's <script> block. No external dependencies required.
-    """
-    import json as _json
-    import datetime
-
-    # Reuse the existing JSON serialiser — same structure the JS expects
-    def serialise(node):
-        if isinstance(node, LeafFailure):
-            d = {
-                "type":       "leaf",
-                "focusNode":  short_uri(node.focus_node),
-                "path":       short_uri(node.result_path) if node.result_path else None,
-                "component":  short_uri(node.component),
-                "value":      str(node.value_node) if node.value_node else None,
                 "message":    node.message,
                 "repairHint": repair_hint(node),
                 "refChain":   [short_uri(s) for s in node.ref_chain],
@@ -414,28 +379,193 @@ def to_html(nodes: list, title: str = "SHACL Explanation Report") -> str:
         else:
             d = {
                 "type":            "reference",
-                "focusNode":       short_uri(node.focus_node),
-                "shape":           short_uri(node.source_shape),
-                "referencedShape": short_uri(node.referenced_shape)
-                                   if node.referenced_shape else None,
-                "path":            short_uri(node.result_path)
-                                   if node.result_path else None,
+                "focusNode":       serialise_value(node.focus_node),
+                "shape":           serialise_value(node.source_shape),
+                "referencedShape": short_uri(node.referenced_shape) if node.referenced_shape else None,
+                "path":            serialise_value(node.result_path),
                 "refChain":        [short_uri(s) for s in node.ref_chain],
                 "children":        [serialise(c) for c in node.children],
             }
         return {k: v for k, v in d.items() if v is not None}
 
-    data_json = _json.dumps([serialise(n) for n in nodes], indent=2)
+    return [serialise(n) for n in nodes]
+
+def to_json(nodes: list) -> str:
+    return json.dumps(tree_to_data(nodes), indent=2)
+
+def to_html(nodes: list, title: str = "SHACL Explanation Report") -> str:
+    """
+    Produce a self-contained HTML file embedding the explanation tree.
+    The JSON data is injected into the REPORT_DATA constant in the
+    page's <script> block. No external dependencies required.
+    """
+    import datetime
+
+    data_json = json.dumps(tree_to_data(nodes), indent=2)
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    # Read the HTML template (the file you saved as shacl_report.html.template)
-    # OR embed it inline as a triple-quoted string.
-    # Inline is simpler — no file dependency.
-    html = _HTML_TEMPLATE.replace("__REPORT_DATA__", data_json)
+    html = _load_template().replace("__REPORT_DATA__", data_json)
     html = html.replace("__TITLE__", title)
     html = html.replace("__TIMESTAMP__", timestamp)
     return html
 
 def _load_template() -> str:
-    ref = importlib.resources.files("shacl_explainer") / "report_template.html"
-    return ref.read_text(encoding="utf-8")
+    prototype_path = Path(__file__).resolve().parents[1] / "shacl_report_prototype.html"
+    if prototype_path.exists():
+        return _template_from_prototype(prototype_path.read_text(encoding="utf-8"))
+    return _HTML_TEMPLATE
+
+def _template_from_prototype(html: str) -> str:
+    start = html.find("const REPORT_DATA = [")
+    end_marker = "// ── END DATA"
+    end = html.find(end_marker, start)
+
+    if start != -1 and end != -1:
+        semi = html.rfind(";", start, end)
+        if semi != -1:
+            html = html[:start] + "const REPORT_DATA = __REPORT_DATA__;" + html[semi + 1:]
+
+    html = html.replace(
+        "<title>SHACL Explanation Report</title>",
+        "<title>__TITLE__</title>",
+    )
+    html = html.replace(
+        '<span id="gen-time"></span>',
+        '<span id="gen-time">__TIMESTAMP__</span>',
+    )
+    html = html.replace(
+        'document.getElementById("gen-time").textContent = new Date().toLocaleString();',
+        'document.getElementById("gen-time").textContent = "__TIMESTAMP__";',
+    )
+    return html
+
+_HTML_TEMPLATE = r"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>__TITLE__</title>
+<style>
+body { margin: 0; font-family: Arial, sans-serif; background: #111827; color: #e5e7eb; }
+header { padding: 18px 24px; border-bottom: 1px solid #374151; background: #0f172a; }
+h1 { margin: 0; font-size: 20px; }
+.generated { color: #9ca3af; font-size: 13px; margin-top: 4px; }
+main { display: grid; grid-template-columns: 280px 1fr; min-height: calc(100vh - 74px); }
+aside { border-right: 1px solid #374151; padding: 18px; background: #111827; }
+section { padding: 22px; }
+.focus-link, .node { border: 1px solid #374151; background: #1f2937; border-radius: 8px; margin-bottom: 10px; padding: 10px; }
+.focus-link { cursor: pointer; }
+.node.leaf { border-left: 4px solid #ef4444; }
+.node.reference { border-left: 4px solid #38bdf8; }
+.badge { display: inline-block; padding: 2px 7px; border-radius: 999px; background: #374151; color: #d1d5db; font-size: 12px; margin-left: 6px; }
+.children { margin-left: 18px; margin-top: 10px; }
+.muted { color: #9ca3af; }
+.hint { margin-top: 8px; padding: 8px; background: #052e16; border: 1px solid #166534; border-radius: 6px; color: #bbf7d0; }
+.toolbar { margin-bottom: 16px; }
+button { cursor: pointer; border: 1px solid #4b5563; background: #1f2937; color: #e5e7eb; border-radius: 6px; padding: 6px 10px; margin-right: 6px; }
+button.active { background: #2563eb; border-color: #60a5fa; }
+</style>
+</head>
+<body>
+<header>
+  <h1>__TITLE__</h1>
+  <div class="generated">Generated by shacl_explainer · <span id="gen-time">__TIMESTAMP__</span></div>
+</header>
+<main>
+  <aside>
+    <h2>Focus Nodes</h2>
+    <div id="focus-list"></div>
+  </aside>
+  <section>
+    <div class="toolbar">
+      <button class="filter-btn active" data-filter="all">all</button>
+      <button class="filter-btn" data-filter="nested">nested only</button>
+      <button class="filter-btn" data-filter="direct">direct only</button>
+    </div>
+    <div id="report"></div>
+  </section>
+</main>
+<script>
+const REPORT_DATA = __REPORT_DATA__;
+
+let activeFilter = "all";
+let activeFocus = null;
+
+function leaves(node) {
+  if (node.type === "leaf") return [node];
+  return (node.children || []).flatMap(leaves);
+}
+
+function allNodes(nodes) {
+  return nodes.flatMap(n => [n, ...allNodes(n.children || [])]);
+}
+
+function focusCounts() {
+  const counts = {};
+  REPORT_DATA.forEach(root => leaves(root).forEach(leaf => {
+    counts[leaf.focusNode] = (counts[leaf.focusNode] || 0) + 1;
+  }));
+  return counts;
+}
+
+function passesFilter(root) {
+  const rootLeaves = leaves(root);
+  if (activeFilter === "nested") return rootLeaves.some(l => (l.refChain || []).length > 0);
+  if (activeFilter === "direct") return rootLeaves.some(l => !(l.refChain || []).length);
+  return true;
+}
+
+function renderSidebar() {
+  const list = document.getElementById("focus-list");
+  const counts = focusCounts();
+  list.innerHTML = Object.entries(counts).map(([focus, count]) =>
+    `<div class="focus-link" data-focus="${focus}">${focus}<span class="badge">${count}</span></div>`
+  ).join("");
+  list.querySelectorAll(".focus-link").forEach(el => {
+    el.onclick = () => { activeFocus = el.dataset.focus; render(); };
+  });
+}
+
+function renderNode(node) {
+  if (node.type === "leaf") {
+    return `<div class="node leaf">
+      <strong>${node.component || "constraint"}</strong>
+      <span class="badge">${node.path || "no path"}</span>
+      <div class="muted">Focus: ${node.focusNode || ""}${node.value ? " · Value: " + node.value : ""}</div>
+      ${node.message ? `<div>${node.message}</div>` : ""}
+      ${node.repairHint ? `<div class="hint">${node.repairHint}</div>` : ""}
+      ${(node.refChain || []).length ? `<div class="muted">Reference chain: ${node.refChain.join(" -> ")}</div>` : ""}
+    </div>`;
+  }
+  return `<details class="node reference" open>
+    <summary><strong>sh:node</strong>
+      <span class="badge">${node.path || "reference"}</span>
+      <span class="muted">${node.shape || ""} -> ${node.referencedShape || ""}</span>
+    </summary>
+    <div class="children">${(node.children || []).map(renderNode).join("")}</div>
+  </details>`;
+}
+
+function render() {
+  const report = document.getElementById("report");
+  const roots = REPORT_DATA.filter(root =>
+    (!activeFocus || leaves(root).some(l => l.focusNode === activeFocus)) && passesFilter(root)
+  );
+  report.innerHTML = roots.length
+    ? roots.map(renderNode).join("")
+    : '<div class="muted">No matching explanation nodes.</div>';
+}
+
+document.querySelectorAll(".filter-btn").forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    activeFilter = btn.dataset.filter;
+    render();
+  };
+});
+
+renderSidebar();
+render();
+</script>
+</body>
+</html>"""
