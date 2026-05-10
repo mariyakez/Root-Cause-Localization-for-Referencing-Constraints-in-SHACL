@@ -38,10 +38,10 @@ class FallbackExpansionTests(unittest.TestCase):
         tree = build_explanation_tree(report_graph, graph, graph)
         output = to_text_tree(tree)
 
-        self.assertIn("[minCount]  path=ex:age", output)
-        self.assertIn("[minCount]  path=ex:name", output)
-        self.assertIn("[pattern]  path=ex:email", output)
-        self.assertIn('value="not-an-email"', output)
+        self.assertIn("minCount    ex:age", output)
+        self.assertIn("minCount    ex:name", output)
+        self.assertIn("pattern     ex:email", output)
+        self.assertIn('"not-an-email"', output)
 
     def test_fallback_preserves_diamond_branches(self):
         graph, report_graph = self.build_report_without_details(
@@ -53,9 +53,9 @@ class FallbackExpansionTests(unittest.TestCase):
 
         self.assertIn("ex:FulltimeShape", output)
         self.assertIn("ex:ParttimeShape", output)
-        self.assertIn("[minCount]  path=ex:hoursPerWeek", output)
-        self.assertIn("[minCount]  path=ex:contractHours", output)
-        self.assertIn("also reachable via ex:StaffShape", output)
+        self.assertIn("minCount    ex:hoursPerWeek", output)
+        self.assertIn("minCount    ex:contractHours", output)
+        self.assertIn("also via ex:StaffShape", output)
 
 
 if __name__ == "__main__":

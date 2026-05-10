@@ -3,6 +3,7 @@ import argparse
 import csv
 import sys
 import time
+from pathlib import Path
 import pyshacl
 from rdflib import Graph, Namespace, RDF
 from .expander import build_explanation_tree
@@ -11,6 +12,7 @@ from .renderer import (
     filter_by_focus,
     filter_tree,
     limit_roots,
+    to_html,
     to_json,
     to_summary,
     to_text_tree,
@@ -23,8 +25,10 @@ def run(data_path: str, shapes_path: str, fmt="text",
         summary=False, limit=None, focus=None, csv_path=None, timing=False,
         top=None, path=None, component=None, reference_path=None,
         hints=False, save_report=None, timing_csv=None, report_path=None,
-        data_format="turtle", shapes_format="turtle", report_format="turtle"):
+        data_format="turtle", shapes_format="turtle", report_format="turtle",
+        output=None):
     timings = {}
+    output_path = resolve_output_path(fmt, output) if output else None
 
     start = time.perf_counter()
     data_graph   = Graph().parse(data_path,   format=data_format)
@@ -57,7 +61,14 @@ def run(data_path: str, shapes_path: str, fmt="text",
         report_graph.serialize(destination=save_report, format="turtle")
 
     if conforms:
-        print("✓ Data is valid.")
+        output_str = "✓ Data is valid."
+        if output_path:
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            with open(output_path, "w", encoding="utf-8") as handle:
+                handle.write(output_str + "\n")
+            print(f"Output written to {output_path}", file=sys.stderr)
+        else:
+            print(output_str)
         if timing:
             print_timings(timings)
         if timing_csv:
@@ -83,12 +94,24 @@ def run(data_path: str, shapes_path: str, fmt="text",
 
     start = time.perf_counter()
     if summary:
-        print(to_summary(display_tree, top=top, stats=stats))
+        output_str = to_summary(display_tree, top=top, stats=stats)
     elif fmt == "json":
-        print(to_json(display_tree))
+        output_str = to_json(display_tree)
+    elif fmt == "html":
+        output_str = to_html(display_tree, title=f"SHACL Report - {data_path}")
     else:
-        print(to_text_tree(display_tree, hints=hints))
+        output_str = to_text_tree(display_tree, hints=hints)
     timings["render"] = time.perf_counter() - start
+
+    if output_path:
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(output_path, "w", encoding="utf-8") as handle:
+            handle.write(output_str)
+            if not output_str.endswith("\n"):
+                handle.write("\n")
+        print(f"Output written to {output_path}", file=sys.stderr)
+    else:
+        print(output_str)
 
     if timing:
         print_timings(timings)
@@ -105,6 +128,12 @@ def collect_stats(data_graph, shapes_graph, report_graph):
         "top_results": len(top_results),
         "all_results": len(all_results),
     }
+
+def resolve_output_path(fmt, output):
+    path = Path(output)
+    if fmt == "html" and not path.is_absolute() and path.parent == Path("."):
+        return Path("html_outputs") / path
+    return path
 
 def print_timings(timings):
     print("\nTimings:", file=sys.stderr)
@@ -152,14 +181,18 @@ def parse_args(argv):
     parser.add_argument(
         "legacy_format",
         nargs="?",
-        choices=["text", "json"],
+        choices=["text", "json", "html"],
         help="Deprecated positional output format; prefer --format.",
     )
     parser.add_argument(
         "--format",
-        choices=["text", "json"],
+        choices=["text", "json", "html"],
         default=None,
         help="Output format for the explanation tree.",
+    )
+    parser.add_argument(
+        "--output",
+        help="Write rendered output to this file instead of stdout.",
     )
     parser.add_argument(
         "--summary",
@@ -259,6 +292,7 @@ if __name__ == "__main__":
         data_format=args.data_format,
         shapes_format=args.shapes_format,
         report_format=args.report_format,
+        output=args.output,
     )
     
 # Running against TC3 should produce:
