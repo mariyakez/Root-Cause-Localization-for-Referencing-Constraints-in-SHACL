@@ -81,40 +81,80 @@ def repair_hint(leaf: LeafFailure) -> str | None:
         return f"Replace {value} on {path} with one of the allowed values."
     return None
 
+COMPONENT_WIDTH = 10   # fixed column width for component names
+
 def to_text_tree(nodes: list, indent=0, hints=False) -> str:
     lines = []
+
+    # At the top level, group by focus node and print a header per group
+    if indent == 0:
+        groups = {}
+        for node in nodes:
+            fn = str(getattr(node, "focus_node", ""))
+            groups.setdefault(fn, []).append(node)
+
+        blocks = []
+        for fn, group_nodes in groups.items():
+            block = []
+            block.append(f"Focus node: {short_uri_from_str(fn)}")
+            block.append("─" * 44)
+            block.append(_render_nodes(group_nodes, indent=0, hints=hints))
+            blocks.append("\n".join(block))
+
+        sep = "\n\n" + "━" * 44 + "\n\n"
+        return sep.join(blocks)
+
+    return _render_nodes(nodes, indent, hints)
+
+
+def short_uri_from_str(s: str) -> str:
+    """short_uri for a plain string (not an RDFNode)."""
+    for prefix, ns in PREFIXES:
+        if s.startswith(ns):
+            return prefix + s[len(ns):]
+    return f"<{s}>"
+
+
+def _render_nodes(nodes: list, indent: int, hints: bool) -> str:
+    lines = []
     pad = "   " * indent
+
     for node in nodes:
         if isinstance(node, LeafFailure):
-            comp = component_label(node.component)
-            line = f"{pad}❌ [{comp}]"
-            if node.result_path:
-                line += f"  path={short_uri(node.result_path)}"
-            if node.value_node:
-                line += f"  value={short_uri(node.value_node)}"
+            comp  = component_label(node.component).ljust(COMPONENT_WIDTH)
+            path  = short_uri(node.result_path) if node.result_path else ""
+            value = short_uri(node.value_node)  if node.value_node  else "(missing)"
+
+            # main violation line
+            lines.append(f"{pad}❌ {comp}  {path} = {value}")
+
+            # message
             if node.message:
-                line += f"\n{pad}   → {node.message}"
+                lines.append(f"{pad}   {'':>{COMPONENT_WIDTH}}  {node.message}")
+
+            # repair hint
             if hints:
                 hint = repair_hint(node)
                 if hint:
-                    line += f"\n{pad}   repair: {hint}"
-            if hasattr(node, 'alt_chains') and node.alt_chains:
-                chains = [
-                    format_chain(chain)
-                    for chain in node.alt_chains
-                    if chain
-                ]
-                if chains:
-                    line += f"\n{pad}   (also reachable via {', '.join(chains)})"
-            lines.append(line)
-        else:
+                    lines.append(f"{pad}   {'':>{COMPONENT_WIDTH}}  → fix: {hint}")
+
+            # alt chains
+            if node.alt_chains:
+                for chain in node.alt_chains:
+                    if chain:
+                        lines.append(
+                            f"{pad}   {'':>{COMPONENT_WIDTH}}  "
+                            f"⎇  also via {format_chain(chain)}"
+                        )
+
+        else:   # ReferenceNode
             label = short_uri(node.source_shape)
             if node.result_path:
                 label += f"  path={short_uri(node.result_path)}"
-            if indent == 0 and node.focus_node:
-                label += f"  focus={short_uri(node.focus_node)}"
-            lines.append(f"{pad}via {label}")
-            lines.append(to_text_tree(node.children, indent + 1, hints=hints))
+
+            lines.append(f"{pad}↳ sh:node {label}")
+            lines.append(_render_nodes(node.children, indent + 1, hints))
+
     return "\n".join(lines)
 
 def iter_leaves(nodes):
@@ -191,46 +231,84 @@ def limit_roots(nodes, limit: int | None):
     return nodes[:limit]
 
 def to_summary(nodes: list, top=None, stats=None) -> str:
-    leaves = list(iter_leaves(nodes))
+    leaves     = list(iter_leaves(nodes))
     references = list(iter_references(nodes))
 
-    leaf_paths = Counter(short_uri(leaf.result_path) or "none" for leaf in leaves)
-    leaf_components = Counter(component_label(leaf.component) for leaf in leaves)
+    # focus nodes
+    focus_nodes = {str(getattr(n, "focus_node", "")) for n in nodes}
+
+    # max reference depth
+    max_depth = max((len(l.ref_chain) for l in leaves), default=0)
+
+    # counters
+    leaf_paths = Counter(
+        (short_uri(l.result_path) or "none",
+         component_label(l.component))
+        for l in leaves
+    )
+    leaf_components = Counter(component_label(l.component) for l in leaves)
     reference_paths = Counter(
         f"{short_uri(ref.result_path)} -> {short_uri(ref.source_shape)}"
         for ref in references
         if ref.result_path
     )
 
+    direct   = sum(1 for l in leaves if not l.ref_chain)
+    via_node = sum(1 for l in leaves if     l.ref_chain)
+
+    sep = "━" * 44
     lines = [
-        f"Explanation roots: {len(nodes)}",
-        f"Reference nodes: {len(references)}",
-        f"Leaf failures: {len(leaves)}",
-        f"Referenced leaf failures: {sum(1 for leaf in leaves if leaf.ref_chain)}",
-        f"Direct leaf failures: {sum(1 for leaf in leaves if not leaf.ref_chain)}",
+        sep,
+        "SHACL Explanation Summary",
+        sep,
+        f"Focus nodes affected  : {len(focus_nodes)}",
+        f"Total leaf failures   : {len(leaves)}"
+          f"  ({via_node} via sh:node,  {direct} direct)",
+        f"Unique paths failing  : {len(leaf_paths)}",
+        f"Max reference depth   : {max_depth} level{'s' if max_depth != 1 else ''}",
     ]
 
     if stats:
-        lines.extend([
-            f"Data triples: {stats.get('data_triples', 0)}",
-            f"Shape triples: {stats.get('shape_triples', 0)}",
-            f"Top-level validation results: {stats.get('top_results', 0)}",
-            f"All validation results: {stats.get('all_results', 0)}",
-        ])
+        lines += [
+            "",
+            "Input",
+            f"  Data triples        : {stats.get('data_triples', 0)}",
+            f"  Shape triples       : {stats.get('shape_triples', 0)}",
+            f"  Pyshacl results     : {stats.get('all_results', 0)}"
+              f"  ({stats.get('top_results', 0)} top-level)",
+        ]
 
-    def add_counter(title, counter):
+    def add_table(title, rows, col1="", col2=""):
         lines.append("")
         lines.append(title)
-        if not counter:
-            lines.append("  none")
+        if not rows:
+            lines.append("  (none)")
             return
-        for key, count in counter.most_common(top):
-            lines.append(f"  {count:>5}  {key}")
+        for item, count in rows:
+            lines.append(f"  {str(count):>5}  {item}")
 
-    add_counter("By leaf path:", leaf_paths)
-    add_counter("By leaf component:", leaf_components)
-    add_counter("By reference path:", reference_paths)
+    # combined path + component table
+    lines.append("")
+    lines.append("Top failing paths")
+    if not leaf_paths:
+        lines.append("  (none)")
+    else:
+        items = leaf_paths.most_common(top)
+        for (path, comp), count in items:
+            lines.append(f"  {str(count):>5}  {path:<30}  {comp}")
 
+    add_table(
+        "Top components",
+        [(comp, count) for comp, count
+         in leaf_components.most_common(top)],
+    )
+    add_table(
+        "Top reference paths",
+        [(path, count) for path, count
+         in reference_paths.most_common(top)],
+    )
+
+    lines.append(sep)
     return "\n".join(lines)
 
 def write_csv(nodes: list, destination):
@@ -244,6 +322,7 @@ def write_csv(nodes: list, destination):
             destination,
             fieldnames=[
                 "focus_node",
+                "depth",
                 "reference_chain",
                 "leaf_path",
                 "component",
@@ -257,6 +336,7 @@ def write_csv(nodes: list, destination):
         for leaf in iter_leaves(nodes):
             writer.writerow({
                 "focus_node": short_uri(leaf.focus_node),
+                "depth": len(leaf.ref_chain),          
                 "reference_chain": format_chain(leaf.ref_chain),
                 "leaf_path": short_uri(leaf.result_path),
                 "component": short_uri(leaf.component),
@@ -268,22 +348,30 @@ def write_csv(nodes: list, destination):
     finally:
         if close_after:
             destination.close()
+def serialise_value(node):
+    """Return a clean Python value for JSON — no RDF quoting."""
+    if node is None:
+        return None
+    if isinstance(node, Literal):
+        return str(node)        # "forty" not "\"forty\""
+    return short_uri(node)
 
 def to_json(nodes: list) -> str:
     def serialise(node):
         if isinstance(node, LeafFailure):
-            return {
+
+            d = {
                 "type":       "leaf",
-                "focusNode":  short_uri(node.focus_node),
-                "path":       short_uri(node.result_path) if node.result_path else None,
-                "component":  short_uri(node.component),
-                "value":      short_uri(node.value_node) if node.value_node else None,
+                "focusNode":  serialise_value(node.value_node),
+                "path":       serialise_value(node.value_node) if node.result_path else None,
+                "component":  serialise_value(node.value_node),
+                "value":      serialise_value(node.value_node) if node.value_node else None,
                 "message":    node.message,
                 "repairHint": repair_hint(node),
                 "refChain":   [short_uri(s) for s in node.ref_chain],
             }
         else:
-            return {
+            d = {
                 "type":       "reference",
                 "focusNode":  short_uri(node.focus_node),
                 "shape":      short_uri(node.source_shape),
@@ -292,4 +380,6 @@ def to_json(nodes: list) -> str:
                 "refChain":   [short_uri(s) for s in node.ref_chain],
                 "children":   [serialise(c) for c in node.children],
             }
+        return {k: v for k, v in d.items() if v is not None}
+    
     return json.dumps([serialise(n) for n in nodes], indent=2)

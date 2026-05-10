@@ -15,7 +15,7 @@ python run_tests.py
 ## The Core Problem in One Diagram
 
 ```
-SHACL Report today:                 What your tool must produce:
+SHACL Report today:                 What the tool must produce:
 
 ❌ NodeConstraintComponent          ❌ NodeConstraintComponent
    focusNode: ex:alice                 focusNode: ex:alice

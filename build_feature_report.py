@@ -148,6 +148,65 @@ class PdfReport:
             self.y -= h
         self.y -= 8
 
+    def feature_examples_table(self, rows, size=8.2):
+        x = self.margin_x
+        feature_w = 104
+        detail_w = self.width - 2 * self.margin_x - feature_w
+        w = feature_w + detail_w
+
+        def draw_header():
+            row_h = 22
+            self.ensure(row_h + 8)
+            self.rect_fill(x, self.y - row_h + 6, w, row_h, "0.88 0.92 0.96")
+            self.text(x + 8, self.y - 9, "Feature", size=size, font="F2")
+            self.text(x + feature_w + 8, self.y - 9, "Call / File / Output", size=size, font="F2")
+            self.y -= row_h
+
+        draw_header()
+        for feature, call, file_info, output in rows:
+            call_lines = textwrap.wrap(call, width=66, break_long_words=False) or [""]
+            file_lines = textwrap.wrap(file_info, width=66, break_long_words=False) or [""]
+            output_lines = textwrap.wrap(output, width=64, break_long_words=False) or [""]
+            output_h = 12 * len(output_lines) + 12
+            row_h = max(68, 12 * (len(call_lines) + len(file_lines)) + output_h + 34)
+
+            if self.y - row_h < self.margin_bottom:
+                self.add_footer()
+                self.new_page()
+                draw_header()
+
+            top_y = self.y
+            self.line(x, top_y + 6, x + w, top_y + 6, color="0.82 0.85 0.88")
+            self.text(x + 8, top_y - 10, feature, size=size, font="F2")
+
+            detail_x = x + feature_w + 8
+            yy = top_y - 10
+
+            self.text(detail_x, yy, "Call:", size=size, font="F2", color="0.14 0.24 0.34")
+            yy -= 11
+            for line in call_lines:
+                self.text(detail_x + 18, yy, line, size=size, font="F3")
+                yy -= 11
+
+            self.text(detail_x, yy, "File:", size=size, font="F2", color="0.14 0.24 0.34")
+            yy -= 11
+            for line in file_lines:
+                self.text(detail_x + 18, yy, line, size=size)
+                yy -= 11
+
+            self.text(detail_x, yy, "Output:", size=size, font="F2", color="0.14 0.24 0.34")
+            yy -= 2
+            box_y = yy - output_h + 2
+            box_w = detail_w - 18
+            self.rect_fill(detail_x, box_y, box_w, output_h, "0.96 0.97 0.98")
+            out_y = yy - 10
+            for line in output_lines:
+                self.text(detail_x + 8, out_y, line, size=size, font="F3", color="0.12 0.15 0.18")
+                out_y -= 11
+
+            self.y -= row_h
+        self.y -= 8
+
     def add_footer(self):
         if not getattr(self, "_footer_pending", False):
             return
@@ -289,16 +348,60 @@ def build_report():
 
     pdf.h1("3. Implemented Features")
     pdf.kv_table([
-        ("Text tree output", "Readable explanation tree with focus node, reference path, referenced shape, leaf path, component, value, message, and alternate paths."),
-        ("JSON output", "Machine-readable representation of reference and leaf nodes."),
-        ("CSV export", "Flat leaf-failure export with focus node, reference chain, path, component, value, message, kind, and repair hint."),
-        ("Summary mode", "Counts roots, reference nodes, leaf failures, direct vs referenced failures, triples, validation results, top paths, components, and reference paths."),
-        ("Filtering", "Filter by focus node, leaf path, component, or reference path."),
-        ("Output limiting", "Limit displayed explanation roots for large reports."),
-        ("Repair hints", "Actionable hints for common Core constraints such as minCount, maxCount, datatype, pattern, class, and in."),
-        ("Raw report export", "Save the pySHACL validation report graph as Turtle for comparison and audit."),
-        ("Timing CSV", "Export parse, validation, tree-building, rendering, triples, and result counts for reproducibility."),
-        ("Dynamic prefixes", "Uses prefixes from loaded RDF graphs, with built-in support for ex, ub, sh, and xsd."),
+        ("Text tree output", "Readable explanation tree for human inspection."),
+        ("JSON output", "Machine-readable tree for downstream tooling or UI work."),
+        ("CSV export", "Flat leaf-failure table for spreadsheet analysis."),
+        ("Summary mode", "Aggregate counts for large reports and thesis evaluation."),
+        ("Filtering", "Restrict output by focus node, leaf path, component, or reference path."),
+        ("Output limiting", "Limit the number of rendered explanation roots."),
+        ("Repair hints", "Add actionable repair suggestions for common Core constraints."),
+        ("Raw report export", "Save the raw SHACL validation report graph as Turtle."),
+        ("Timing CSV", "Save parse, validation, expansion, rendering, and count metrics."),
+        ("Dynamic prefixes", "Display compact names such as ex:age and ub:name instead of full IRIs."),
+    ], col1=145, col2=355, size=8.5)
+
+    pdf.h2("Feature calls and output examples")
+    pdf.feature_examples_table([
+        ("Text tree",
+         "python3 -m shacl_explainer.cli test_cases/tc6_complex_org.ttl test_cases/tc6_complex_org.ttl",
+         "Terminal output only.",
+         "via ex:ProjectLeadShape focus=ex:frank; [datatype] path=ex:age value=\"forty\""),
+        ("JSON",
+         "python3 -m shacl_explainer.cli test_cases/tc6_complex_org.ttl test_cases/tc6_complex_org.ttl --format json",
+         "Terminal output only, unless redirected by the shell.",
+         "{type: leaf, focusNode: ex:frank, path: ex:age, component: sh:DatatypeConstraintComponent}"),
+        ("CSV export",
+         "python3 -m shacl_explainer.cli test_cases/tc6_complex_org.ttl test_cases/tc6_complex_org.ttl --csv failures.csv",
+         "Creates failures.csv.",
+         "focus_node, reference_chain, leaf_path, component, value, message, kind, repair_hint"),
+        ("Summary",
+         "python3 -m shacl_explainer.cli test_cases/tc6_complex_org.ttl test_cases/tc6_complex_org.ttl --summary",
+         "Terminal output only.",
+         "Explanation roots: 1; Reference nodes: 2; Leaf failures: 6; Direct leaf failures: 0"),
+        ("Filtering",
+         "python3 -m shacl_explainer.cli test_cases/tc6_complex_org.ttl test_cases/tc6_complex_org.ttl --path ex:age",
+         "Terminal output only.",
+         "Only the ex:age leaf failure is shown."),
+        ("Output limiting",
+         "python3 -m shacl_explainer.cli test_cases/tc6_complex_org.ttl test_cases/tc6_complex_org.ttl --limit 1",
+         "Terminal output only.",
+         "Only the first explanation root from the TC6 explanation tree is rendered."),
+        ("Repair hints",
+         "python3 -m shacl_explainer.cli test_cases/tc6_complex_org.ttl test_cases/tc6_complex_org.ttl --hints",
+         "Terminal output only.",
+         "repair: Replace \"forty\" on ex:age with a value of the required datatype."),
+        ("Raw report",
+         "python3 -m shacl_explainer.cli test_cases/tc6_complex_org.ttl test_cases/tc6_complex_org.ttl --save-report report.ttl",
+         "Creates report.ttl.",
+         "Turtle file containing sh:ValidationReport and sh:ValidationResult triples."),
+        ("Timing CSV",
+         "python3 -m shacl_explainer.cli test_cases/tc6_complex_org.ttl test_cases/tc6_complex_org.ttl --timing-csv timings.csv",
+         "Creates timings.csv.",
+         "parse_data_seconds, validate_seconds, build_explanation_tree_seconds, render_seconds"),
+        ("Dynamic prefixes",
+         "python3 -m shacl_explainer.cli test_cases/tc6_complex_org.ttl test_cases/tc6_complex_org.ttl",
+         "Terminal output uses prefixes configured from the RDF graphs.",
+         "path=ex:age instead of path=<http://example.org/age>"),
     ])
 
     pdf.h2("Apache Jena compatibility")
@@ -320,16 +423,38 @@ def build_report():
         "python3 -m shacl_explainer.cli data.ttl shapes.ttl --reference-path ub:doctoralDegreeFrom\n"
         "python3 -m shacl_explainer.cli data.ttl shapes.ttl --csv failures.csv --timing-csv timings.csv"
     )
-    pdf.h2("Apache Jena command examples")
-    pdf.code(
-        "python3 -m shacl_explainer.cli data.ttl shapes.ttl \\\n"
-        "  --report jena_report.ttl --report-format turtle\n\n"
-        "python3 -m shacl_explainer.cli data.ttl shapes.ttl \\\n"
-        "  --report jena_report.rdf --report-format xml\n\n"
-        "python3 -m shacl_explainer.cli test_cases/tc7_property_node.ttl \\\n"
-        "  test_cases/tc7_property_node.ttl \\\n"
-        "  --report test_cases/jena_report_tc7_node_source_no_detail.ttl --hints"
+    pdf.h2("Apache Jena calls and output examples")
+    jena_call = (
+        "python3 -m shacl_explainer.cli test_cases/tc7_property_node.ttl "
+        "test_cases/tc7_property_node.ttl --report "
+        "test_cases/jena_report_tc7_node_source_no_detail.ttl --report-format turtle"
     )
+    pdf.feature_examples_table([
+        ("External report",
+         jena_call,
+         "Reads test_cases/jena_report_tc7_node_source_no_detail.ttl instead of running pySHACL first.",
+         "via ex:CompanyShape path=ex:worksFor focus=ex:alice; [minCount] path=ex:legalName"),
+        ("No sh:detail",
+         jena_call,
+         "The Jena-style report has no nested sh:detail tree.",
+         "Fallback revalidation reconstructs the hidden leaf: ex:legalName minCount."),
+        ("sourceShape mapping",
+         jena_call,
+         "Uses the original shapes file test_cases/tc7_property_node.ttl to resolve sourceShape plus resultPath.",
+         "sourceShape ex:EmployeeShape + resultPath ex:worksFor resolves to referenced shape ex:CompanyShape."),
+        ("Property sh:node",
+         jena_call,
+         "Uses sh:value from the report, ex:acme, as the node validated against ex:CompanyShape.",
+         "The repair target is ex:acme, not ex:alice."),
+        ("Report format",
+         jena_call,
+         "Reads the Jena report as Turtle through --report-format turtle. RDF/XML reports can use --report-format xml.",
+         "The same explanation tree is produced after parsing the external report graph."),
+        ("With hints",
+         jena_call + " --hints",
+         "Terminal output only.",
+         "repair: Add at least one ex:legalName value to ex:acme."),
+    ])
 
     pdf.h1("4. Output Formats")
     pdf.kv_table([

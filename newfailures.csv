@@ -1,0 +1,7 @@
+focus_node,reference_chain,leaf_path,component,value,message,kind,repair_hint
+ex:frank,ex:ProjectLeadShape -> ex:EmploymentShape,ex:age,sh:DatatypeConstraintComponent,"""forty""",ex:age must be present and xsd:integer,referenced,"Replace ""forty"" on ex:age with a value of the required datatype."
+ex:frank,ex:ProjectLeadShape -> ex:EmploymentShape,ex:name,sh:MinCountConstraintComponent,,ex:name must be present and xsd:string,referenced,Add at least one ex:name value to ex:frank.
+ex:frank,ex:ProjectLeadShape -> ex:EmploymentShape,ex:email,sh:PatternConstraintComponent,"""frank-at-example""",ex:email must match a basic email pattern,referenced,"Change ""frank-at-example"" on ex:email so it matches the required pattern."
+ex:frank,ex:ProjectLeadShape,ex:employeeId,sh:MinCountConstraintComponent,,ex:employeeId is required,referenced,Add at least one ex:employeeId value to ex:frank.
+ex:frank,ex:ProjectLeadShape,ex:clearanceLevel,sh:InConstraintComponent,"""top-secret""","ex:clearanceLevel must be public, internal, or restricted",referenced,"Replace ""top-secret"" on ex:clearanceLevel with one of the allowed values."
+ex:frank,ex:ProjectLeadShape,ex:projectCode,sh:MinCountConstraintComponent,,ex:projectCode is required for project leads,referenced,Add at least one ex:projectCode value to ex:frank.
