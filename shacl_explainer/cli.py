@@ -26,7 +26,7 @@ def run(data_path: str, shapes_path: str, fmt="text",
         top=None, path=None, component=None, reference_path=None,
         hints=False, save_report=None, timing_csv=None, report_path=None,
         data_format="turtle", shapes_format="turtle", report_format="turtle",
-        output=None):
+        output=None, color="auto"):
     timings = {}
     output_path = resolve_output_path(fmt, output) if output else None
 
@@ -91,6 +91,7 @@ def run(data_path: str, shapes_path: str, fmt="text",
         write_csv(tree, csv_path)
 
     display_tree = limit_roots(tree, limit)
+    use_color = should_colorize(color, fmt, summary, output_path)
 
     start = time.perf_counter()
     if summary:
@@ -100,7 +101,7 @@ def run(data_path: str, shapes_path: str, fmt="text",
     elif fmt == "html":
         output_str = to_html(display_tree, title=f"SHACL Report - {data_path}")
     else:
-        output_str = to_text_tree(display_tree, hints=hints)
+        output_str = to_text_tree(display_tree, hints=hints, color=use_color)
     timings["render"] = time.perf_counter() - start
 
     if output_path:
@@ -134,6 +135,15 @@ def resolve_output_path(fmt, output):
     if fmt == "html" and not path.is_absolute() and path.parent == Path("."):
         return Path("html_outputs") / path
     return path
+
+def should_colorize(color, fmt, summary, output_path):
+    if fmt != "text" or summary:
+        return False
+    if color == "always":
+        return True
+    if color == "never":
+        return False
+    return output_path is None and sys.stdout.isatty()
 
 def print_timings(timings):
     print("\nTimings:", file=sys.stderr)
@@ -231,6 +241,12 @@ def parse_args(argv):
         help="Add repair hints to text output.",
     )
     parser.add_argument(
+        "--color",
+        choices=["auto", "always", "never"],
+        default="auto",
+        help="Colorize text-tree output: auto for terminals, always to force, never for plain text.",
+    )
+    parser.add_argument(
         "--csv",
         dest="csv_path",
         help="Write leaf failures to a CSV file.",
@@ -293,6 +309,7 @@ if __name__ == "__main__":
         shapes_format=args.shapes_format,
         report_format=args.report_format,
         output=args.output,
+        color=args.color,
     )
     
 # Running against TC3 should produce:

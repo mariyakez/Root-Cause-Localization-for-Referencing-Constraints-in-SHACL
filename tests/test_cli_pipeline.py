@@ -65,7 +65,7 @@ class ShaclExplainerCliTests(unittest.TestCase):
         self.assert_contains_all(
             output,
             [
-                "↳ sh:node ex:EmployeeShape",
+                "sh:node ex:EmployeeShape",
                 "datatype",
                 "ex:age",
                 '"twenty"',
@@ -78,7 +78,7 @@ class ShaclExplainerCliTests(unittest.TestCase):
         self.assert_contains_all(
             output,
             [
-                "↳ sh:node ex:EmployeeShape",
+                "sh:node ex:EmployeeShape",
                 "minCount    ex:age",
                 "minCount    ex:name",
                 "pattern     ex:email",
@@ -92,7 +92,7 @@ class ShaclExplainerCliTests(unittest.TestCase):
         self.assert_contains_all(
             output,
             [
-                "↳ sh:node ex:ContractorShape",
+                "sh:node ex:ContractorShape",
                 "ex:ContractorShape",
                 "ex:EmployeeShape",
                 "datatype",
@@ -107,7 +107,7 @@ class ShaclExplainerCliTests(unittest.TestCase):
         self.assert_contains_all(
             output,
             [
-                "↳ sh:node ex:ManagerShape",
+                "sh:node ex:ManagerShape",
                 "datatype    ex:age",
                 "minCount    ex:name",
                 "minCount    ex:department",
@@ -121,7 +121,7 @@ class ShaclExplainerCliTests(unittest.TestCase):
         self.assert_contains_all(
             output,
             [
-                "↳ sh:node ex:StaffShape",
+                "sh:node ex:StaffShape",
                 "ex:FulltimeShape",
                 "ex:ParttimeShape",
                 "datatype    ex:age",
@@ -141,9 +141,9 @@ class ShaclExplainerCliTests(unittest.TestCase):
         self.assert_contains_all(
             output,
             [
-                "↳ sh:node ex:ProjectLeadShape",
+                "sh:node ex:ProjectLeadShape",
                 "Focus node: ex:frank",
-                "↳ sh:node ex:EmploymentShape",
+                "sh:node ex:EmploymentShape",
                 "ex:SecurityClearanceShape",
                 "datatype    ex:age",
                 "minCount    ex:name",
@@ -164,7 +164,7 @@ class ShaclExplainerCliTests(unittest.TestCase):
         self.assert_contains_all(
             output,
             [
-                "↳ sh:node ex:CompanyShape  path=ex:worksFor",
+                "sh:node ex:CompanyShape  path=ex:worksFor",
                 "Focus node: ex:alice",
                 "minCount    ex:legalName",
                 "ex:legalName is required",
@@ -192,7 +192,7 @@ class ShaclExplainerCliTests(unittest.TestCase):
         self.assert_contains_all(
             result.stdout,
             [
-                "↳ sh:node ex:EmployeeShape",
+                "sh:node ex:EmployeeShape",
                 "minCount    ex:age",
                 "minCount    ex:name",
                 "pattern     ex:email",
@@ -211,7 +211,7 @@ class ShaclExplainerCliTests(unittest.TestCase):
         self.assert_contains_all(
             result.stdout,
             [
-                "↳ sh:node ex:CompanyShape  path=ex:worksFor",
+                "sh:node ex:CompanyShape  path=ex:worksFor",
                 "Focus node: ex:alice",
                 "minCount    ex:legalName",
                 "→ fix: Add at least one ex:legalName value to ex:acme.",
@@ -231,13 +231,13 @@ class ShaclExplainerCliTests(unittest.TestCase):
         self.assert_contains_all(
             result.stdout,
             [
-                "↳ sh:node ex:CompanyShape  path=ex:worksFor",
+                "sh:node ex:CompanyShape  path=ex:worksFor",
                 "Focus node: ex:alice",
                 "minCount    ex:legalName",
                 "→ fix: Add at least one ex:legalName value to ex:acme.",
             ],
         )
-        self.assertNotIn("↳ sh:node ex:EmployeeShape", result.stdout)
+        self.assertNotIn("sh:node ex:EmployeeShape", result.stdout)
 
     def test_summary_mode(self):
         result = self.run_cli(
@@ -304,6 +304,24 @@ class ShaclExplainerCliTests(unittest.TestCase):
 
         self.assertIn("→ fix: Add at least one ex:age value to ex:bob.", result.stdout)
         self.assertIn("→ fix: Change \"not-an-email\" on ex:email", result.stdout)
+
+    def test_text_tree_color_modes(self):
+        plain = self.run_cli(
+            f"{CASE_DIR}/tc1_single_leaf.ttl",
+            f"{CASE_DIR}/tc1_single_leaf.ttl",
+            "--color",
+            "never",
+        )
+        colored = self.run_cli(
+            f"{CASE_DIR}/tc1_single_leaf.ttl",
+            f"{CASE_DIR}/tc1_single_leaf.ttl",
+            "--color",
+            "always",
+        )
+
+        self.assertNotIn("\033[", plain.stdout)
+        self.assertIn("\033[", colored.stdout)
+        self.assertIn("sh:node ex:EmployeeShape", colored.stdout)
 
     def test_path_and_component_filters(self):
         result = self.run_cli(

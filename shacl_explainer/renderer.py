@@ -84,9 +84,24 @@ def repair_hint(leaf: LeafFailure) -> str | None:
 
 COMPONENT_WIDTH = 10   # fixed column width for component names
 
-def to_text_tree(nodes: list, indent=0, hints=False) -> str:
-    lines = []
+ANSI = {
+    "reset": "\033[0m",
+    "bold": "\033[1m",
+    "dim": "\033[2m",
+    "red": "\033[31m",
+    "green": "\033[32m",
+    "yellow": "\033[33m",
+    "magenta": "\033[35m",
+    "cyan": "\033[36m",
+}
 
+def color_text(text: str, *styles: str, enabled=False) -> str:
+    if not enabled:
+        return text
+    prefix = "".join(ANSI[style] for style in styles)
+    return f"{prefix}{text}{ANSI['reset']}"
+
+def to_text_tree(nodes: list, indent=0, hints=False, color=False) -> str:
     # At the top level, group by focus node and print a header per group
     if indent == 0:
         groups = {}
@@ -97,15 +112,17 @@ def to_text_tree(nodes: list, indent=0, hints=False) -> str:
         blocks = []
         for fn, group_nodes in groups.items():
             block = []
-            block.append(f"Focus node: {short_uri_from_str(fn)}")
-            block.append("─" * 44)
-            block.append(_render_nodes(group_nodes, indent=0, hints=hints))
+            focus_line = f"Focus node: {short_uri_from_str(fn)}/"
+            block.append(color_text(focus_line, "cyan", "bold", enabled=color))
+            rendered = _render_nodes(group_nodes, prefix="", hints=hints, color=color)
+            if rendered:
+                block.append(rendered)
             blocks.append("\n".join(block))
 
-        sep = "\n\n" + "━" * 44 + "\n\n"
+        sep = "\n\n"
         return sep.join(blocks)
 
-    return _render_nodes(nodes, indent, hints)
+    return _render_nodes(nodes, prefix="   " * indent, hints=hints, color=color)
 
 
 def short_uri_from_str(s: str) -> str:
@@ -116,47 +133,60 @@ def short_uri_from_str(s: str) -> str:
     return f"<{s}>"
 
 
-def _render_nodes(nodes: list, indent: int, hints: bool) -> str:
+def _render_nodes(nodes: list, prefix: str, hints: bool, color: bool) -> str:
     lines = []
-    pad = "   " * indent
 
-    for node in nodes:
+    for index, node in enumerate(nodes):
+        is_last = index == len(nodes) - 1
+        branch = "└── " if is_last else "├── "
+        child_prefix = prefix + ("    " if is_last else "│   ")
+
         if isinstance(node, LeafFailure):
             comp  = component_label(node.component).ljust(COMPONENT_WIDTH)
             path  = short_uri(node.result_path) if node.result_path else ""
             value = short_uri(node.value_node)  if node.value_node  else "(missing)"
 
             # main violation line
-            lines.append(f"{pad}❌ {comp}  {path} = {value}")
+            error_icon = color_text("❌", "red", "bold", enabled=color)
+            comp_text = color_text(comp, "red", "bold", enabled=color)
+            path_text = color_text(path, "yellow", enabled=color)
+            value_style = ("red",) if value == "(missing)" else ("yellow",)
+            value_text = color_text(value, *value_style, enabled=color)
+            lines.append(f"{prefix}{branch}{error_icon} {comp_text}  {path_text} = {value_text}")
 
-            # message
+            details = []
             if node.message:
-                lines.append(f"{pad}   {'':>{COMPONENT_WIDTH}}  {node.message}")
-
-            # repair hint
+                details.append(color_text(f"message: {node.message}", "dim", enabled=color))
             if hints:
                 hint = repair_hint(node)
                 if hint:
-                    lines.append(f"{pad}   {'':>{COMPONENT_WIDTH}}  → fix: {hint}")
-
-            # alt chains
+                    details.append(color_text(f"→ fix: {hint}", "green", enabled=color))
             if node.alt_chains:
                 for chain in node.alt_chains:
                     if chain:
-                        lines.append(
-                            f"{pad}   {'':>{COMPONENT_WIDTH}}  "
-                            f"⎇  also via {format_chain(chain)}"
-                        )
+                        details.append(color_text(f"also via {format_chain(chain)}", "magenta", enabled=color))
+
+            lines.extend(_render_detail_lines(details, child_prefix))
 
         else:   # ReferenceNode
             label = short_uri(node.source_shape)
             if node.result_path:
                 label += f"  path={short_uri(node.result_path)}"
 
-            lines.append(f"{pad}↳ sh:node {label}")
-            lines.append(_render_nodes(node.children, indent + 1, hints))
+            ref_text = color_text(f"sh:node {label}/", "magenta", "bold", enabled=color)
+            lines.append(f"{prefix}{branch}{ref_text}")
+            rendered_children = _render_nodes(node.children, child_prefix, hints, color)
+            if rendered_children:
+                lines.append(rendered_children)
 
     return "\n".join(lines)
+
+def _render_detail_lines(details: list[str], prefix: str) -> list[str]:
+    lines = []
+    for index, detail in enumerate(details):
+        branch = "└── " if index == len(details) - 1 else "├── "
+        lines.append(f"{prefix}{branch}{detail}")
+    return lines
 
 def iter_leaves(nodes):
     for node in nodes:
