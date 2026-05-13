@@ -1,0 +1,15 @@
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix ex:  <http://example.org/> .
+
+ex:PersonShape
+    a sh:NodeShape ;
+    sh:targetNode ex:alice ;
+    sh:property [
+        sh:path ex:email ;
+        sh:minCount 1 ;
+        sh:severity sh:Warning ;
+        sh:message "Email is recommended" ;
+    ] .
+
+ex:alice
+    a ex:Person .

@@ -1,0 +1,23 @@
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix ex:  <http://example.org/> .
+
+ex:NamePropertyShape
+    a sh:PropertyShape ;
+    sh:path ex:name ;
+    sh:minCount 1 ;
+    sh:message "Named property shape requires a name" .
+
+ex:PersonShape
+    a sh:NodeShape ;
+    sh:targetNode ex:dana ;
+    sh:property ex:NamePropertyShape ;
+    sh:property [
+        sh:path ex:age ;
+        sh:datatype xsd:integer ;
+        sh:message "Blank property shape requires integer age" ;
+    ] .
+
+ex:dana
+    a ex:Person ;
+    ex:age "forty" .

@@ -1,0 +1,16 @@
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix ex:  <http://example.org/> .
+
+ex:PersonShape
+    a sh:NodeShape ;
+    sh:targetNode ex:bob ;
+    sh:property [
+        sh:path ex:nickname ;
+        sh:maxCount 1 ;
+        sh:message "A person may have at most one nickname" ;
+    ] .
+
+ex:bob
+    a ex:Person ;
+    ex:nickname "Bob" ;
+    ex:nickname "Bobby" .

@@ -1,0 +1,14 @@
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix ex:  <http://example.org/> .
+
+ex:PersonShape
+    a sh:NodeShape ;
+    sh:targetNode ex:alice ;
+    sh:property [
+        sh:path [ sh:inversePath ex:member ] ;
+        sh:minCount 1 ;
+        sh:message "A person must be a member of at least one group" ;
+    ] .
+
+ex:alice
+    a ex:Person .

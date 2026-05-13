@@ -1,0 +1,17 @@
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix ex:  <http://example.org/> .
+
+ex:MinimalPersonShape
+    a sh:NodeShape ;
+    sh:targetNode ex:fred ;
+    sh:closed true ;
+    sh:ignoredProperties (ex:name) ;
+    sh:property [
+        sh:path ex:name ;
+        sh:minCount 1 ;
+    ] ;
+    sh:message "Only declared properties are allowed" .
+
+ex:fred
+    ex:name "Fred" ;
+    ex:unknownProperty "extra" .

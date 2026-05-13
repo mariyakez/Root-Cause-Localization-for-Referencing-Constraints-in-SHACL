@@ -1,0 +1,45 @@
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix ex:  <http://example.org/> .
+
+ex:AddressShape
+    a sh:NodeShape ;
+    sh:property [
+        sh:path ex:city ;
+        sh:minCount 1 ;
+        sh:message "City is required" ;
+    ] .
+
+ex:CustomerShape
+    a sh:NodeShape ;
+    sh:targetClass ex:Customer ;
+    sh:property [
+        sh:path ex:customerId ;
+        sh:minCount 1 ;
+        sh:message "Customer ID is required" ;
+    ] ;
+    sh:property [
+        sh:path ex:age ;
+        sh:datatype xsd:integer ;
+        sh:message "Customer age must be an integer" ;
+    ] ;
+    sh:property [
+        sh:path ex:address ;
+        sh:node ex:AddressShape ;
+        sh:message "Address must satisfy AddressShape" ;
+    ] .
+
+ex:alice
+    a ex:Customer ;
+    ex:age "old" ;
+    ex:address ex:aliceAddress .
+
+ex:bob
+    a ex:Customer ;
+    ex:address ex:bobAddress .
+
+ex:aliceAddress
+    a ex:Address .
+
+ex:bobAddress
+    a ex:Address .

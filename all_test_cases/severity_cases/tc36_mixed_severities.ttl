@@ -1,0 +1,29 @@
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix ex:  <http://example.org/> .
+
+ex:PersonShape
+    a sh:NodeShape ;
+    sh:targetNode ex:carol ;
+    sh:property [
+        sh:path ex:name ;
+        sh:minCount 1 ;
+        sh:severity sh:Violation ;
+        sh:message "Name is mandatory" ;
+    ] ;
+    sh:property [
+        sh:path ex:email ;
+        sh:minCount 1 ;
+        sh:severity sh:Warning ;
+        sh:message "Email is recommended" ;
+    ] ;
+    sh:property [
+        sh:path ex:age ;
+        sh:datatype xsd:integer ;
+        sh:severity sh:Info ;
+        sh:message "Age should be numeric when present" ;
+    ] .
+
+ex:carol
+    a ex:Person ;
+    ex:age "unknown" .

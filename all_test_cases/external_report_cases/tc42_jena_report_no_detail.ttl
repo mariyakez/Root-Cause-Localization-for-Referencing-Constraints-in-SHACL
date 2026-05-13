@@ -1,0 +1,12 @@
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix ex:  <http://example.org/> .
+
+[] a sh:ValidationReport ;
+    sh:conforms false ;
+    sh:result [
+        a sh:ValidationResult ;
+        sh:focusNode ex:alice ;
+        sh:sourceShape ex:PersonShape ;
+        sh:sourceConstraintComponent sh:NodeConstraintComponent ;
+        sh:resultMessage "Jena-style node result without sh:detail" ;
+    ] .

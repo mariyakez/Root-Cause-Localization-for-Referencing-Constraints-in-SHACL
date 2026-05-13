@@ -1,0 +1,15 @@
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix ex:  <http://example.org/> .
+
+ex:SelfShape
+    a sh:NodeShape ;
+    sh:targetNode ex:root ;
+    sh:node ex:SelfShape ;
+    sh:property [
+        sh:path ex:required ;
+        sh:minCount 1 ;
+        sh:message "Required property must still be reported despite recursion" ;
+    ] .
+
+ex:root
+    a ex:Thing .

@@ -1,0 +1,24 @@
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix ex:  <http://example.org/> .
+
+ex:ShapeA
+    a sh:NodeShape ;
+    sh:targetNode ex:item ;
+    sh:node ex:ShapeB ;
+    sh:property [
+        sh:path ex:aRequired ;
+        sh:minCount 1 ;
+        sh:message "A-side required property is missing" ;
+    ] .
+
+ex:ShapeB
+    a sh:NodeShape ;
+    sh:node ex:ShapeA ;
+    sh:property [
+        sh:path ex:bRequired ;
+        sh:minCount 1 ;
+        sh:message "B-side required property is missing" ;
+    ] .
+
+ex:item
+    a ex:Thing .

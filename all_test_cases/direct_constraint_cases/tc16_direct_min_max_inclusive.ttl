@@ -1,0 +1,23 @@
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix ex:  <http://example.org/> .
+
+ex:CourseShape
+    a sh:NodeShape ;
+    sh:targetNode ex:course5Low ;
+    sh:targetNode ex:course5High ;
+    sh:property [
+        sh:path ex:score ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 100 ;
+        sh:message "Score must be between 0 and 100" ;
+    ] .
+
+ex:course5Low
+    a ex:Course ;
+    ex:score -5 .
+
+ex:course5High
+    a ex:Course ;
+    ex:score 150 .

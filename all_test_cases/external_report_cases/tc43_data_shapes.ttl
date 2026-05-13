@@ -1,0 +1,26 @@
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix ex:  <http://example.org/> .
+
+ex:CompanyShape
+    a sh:NodeShape ;
+    sh:property [
+        sh:path ex:legalName ;
+        sh:minCount 1 ;
+        sh:message "Company legal name is required" ;
+    ] .
+
+ex:PersonShape
+    a sh:NodeShape ;
+    sh:targetNode ex:bob ;
+    sh:property [
+        sh:path ex:worksFor ;
+        sh:node ex:CompanyShape ;
+        sh:message "Employer must satisfy CompanyShape" ;
+    ] .
+
+ex:bob
+    a ex:Person ;
+    ex:worksFor ex:acme .
+
+ex:acme
+    a ex:Company .

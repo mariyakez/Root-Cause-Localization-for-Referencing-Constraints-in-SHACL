@@ -9,7 +9,7 @@ from shacl_explainer.renderer import to_text_tree
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-CASE_DIR = PROJECT_ROOT / "test_cases"
+CASE_DIR = PROJECT_ROOT / "all_test_cases/sh_node_cases"
 SH = Namespace("http://www.w3.org/ns/shacl#")
 
 

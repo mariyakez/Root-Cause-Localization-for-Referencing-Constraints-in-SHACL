@@ -1,0 +1,32 @@
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix ex:  <http://example.org/> .
+
+ex:PersonShape
+    a sh:NodeShape ;
+    sh:targetClass ex:Person ;
+    sh:property [
+        sh:path ex:name ;
+        sh:minCount 1 ;
+        sh:message "Name is required" ;
+    ] .
+
+ex:p001 a ex:Person . ex:p002 a ex:Person . ex:p003 a ex:Person . ex:p004 a ex:Person . ex:p005 a ex:Person .
+ex:p006 a ex:Person . ex:p007 a ex:Person . ex:p008 a ex:Person . ex:p009 a ex:Person . ex:p010 a ex:Person .
+ex:p011 a ex:Person . ex:p012 a ex:Person . ex:p013 a ex:Person . ex:p014 a ex:Person . ex:p015 a ex:Person .
+ex:p016 a ex:Person . ex:p017 a ex:Person . ex:p018 a ex:Person . ex:p019 a ex:Person . ex:p020 a ex:Person .
+ex:p021 a ex:Person . ex:p022 a ex:Person . ex:p023 a ex:Person . ex:p024 a ex:Person . ex:p025 a ex:Person .
+ex:p026 a ex:Person . ex:p027 a ex:Person . ex:p028 a ex:Person . ex:p029 a ex:Person . ex:p030 a ex:Person .
+ex:p031 a ex:Person . ex:p032 a ex:Person . ex:p033 a ex:Person . ex:p034 a ex:Person . ex:p035 a ex:Person .
+ex:p036 a ex:Person . ex:p037 a ex:Person . ex:p038 a ex:Person . ex:p039 a ex:Person . ex:p040 a ex:Person .
+ex:p041 a ex:Person . ex:p042 a ex:Person . ex:p043 a ex:Person . ex:p044 a ex:Person . ex:p045 a ex:Person .
+ex:p046 a ex:Person . ex:p047 a ex:Person . ex:p048 a ex:Person . ex:p049 a ex:Person . ex:p050 a ex:Person .
+ex:p051 a ex:Person . ex:p052 a ex:Person . ex:p053 a ex:Person . ex:p054 a ex:Person . ex:p055 a ex:Person .
+ex:p056 a ex:Person . ex:p057 a ex:Person . ex:p058 a ex:Person . ex:p059 a ex:Person . ex:p060 a ex:Person .
+ex:p061 a ex:Person . ex:p062 a ex:Person . ex:p063 a ex:Person . ex:p064 a ex:Person . ex:p065 a ex:Person .
+ex:p066 a ex:Person . ex:p067 a ex:Person . ex:p068 a ex:Person . ex:p069 a ex:Person . ex:p070 a ex:Person .
+ex:p071 a ex:Person . ex:p072 a ex:Person . ex:p073 a ex:Person . ex:p074 a ex:Person . ex:p075 a ex:Person .
+ex:p076 a ex:Person . ex:p077 a ex:Person . ex:p078 a ex:Person . ex:p079 a ex:Person . ex:p080 a ex:Person .
+ex:p081 a ex:Person . ex:p082 a ex:Person . ex:p083 a ex:Person . ex:p084 a ex:Person . ex:p085 a ex:Person .
+ex:p086 a ex:Person . ex:p087 a ex:Person . ex:p088 a ex:Person . ex:p089 a ex:Person . ex:p090 a ex:Person .
+ex:p091 a ex:Person . ex:p092 a ex:Person . ex:p093 a ex:Person . ex:p094 a ex:Person . ex:p095 a ex:Person .
+ex:p096 a ex:Person . ex:p097 a ex:Person . ex:p098 a ex:Person . ex:p099 a ex:Person . ex:p100 a ex:Person .

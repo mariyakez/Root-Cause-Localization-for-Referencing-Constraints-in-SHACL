@@ -24,6 +24,20 @@ COMPONENT_SHORT = {
     "PatternConstraintComponent": "pattern",
     "ClassConstraintComponent":   "class",
     "InConstraintComponent":      "in",
+    "NodeKindConstraintComponent":"nodeKind",
+    "MinInclusiveConstraintComponent":"minInclusive",
+    "MaxInclusiveConstraintComponent":"maxInclusive",
+    "MinExclusiveConstraintComponent":"minExclusive",
+    "MaxExclusiveConstraintComponent":"maxExclusive",
+    "LessThanConstraintComponent":"lessThan",
+    "LessThanOrEqualsConstraintComponent":"lessThanOrEquals",
+    "HasValueConstraintComponent":"hasValue",
+    "EqualsConstraintComponent":  "equals",
+    "DisjointConstraintComponent":"disjoint",
+    "ClosedConstraintComponent":  "closed",
+    "OrConstraintComponent":      "or",
+    "XoneConstraintComponent":    "xone",
+    "NotConstraintComponent":     "not",
 }
 
 def configure_prefixes(*graphs):

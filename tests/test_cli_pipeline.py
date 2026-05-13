@@ -6,7 +6,17 @@ from pathlib import Path
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-CASE_DIR = "test_cases"
+CASE_DIR = "all_test_cases/sh_node_cases"
+DIRECT_CASE_DIR = "all_test_cases/direct_constraint_cases"
+ADDITIONAL_CASE_DIRS = [
+    "all_test_cases/mixed_constraint_cases",
+    "all_test_cases/multi_focus_cases",
+    "all_test_cases/property_path_cases",
+    "all_test_cases/severity_cases",
+    "all_test_cases/message_metadata_cases",
+    "all_test_cases/cycle_cases",
+    "all_test_cases/scale_cases",
+]
 
 
 class ShaclExplainerCliTests(unittest.TestCase):
@@ -41,6 +51,94 @@ class ShaclExplainerCliTests(unittest.TestCase):
         for part in expected_parts:
             with self.subTest(part=part):
                 self.assertIn(part, output)
+
+    def test_direct_core_constraint_cases_have_no_sh_node(self):
+        expected = {
+            "tc9_direct_min_count.ttl": ["minCount", "ex:name"],
+            "tc10_direct_max_count.ttl": ["maxCount", "ex:nickname"],
+            "tc11_direct_datatype.ttl": ["datatype", "ex:credits"],
+            "tc12_direct_class.ttl": ["class", "ex:student"],
+            "tc13_direct_pattern.ttl": ["pattern", "ex:courseCode"],
+            "tc14_direct_in.ttl": ["in", "ex:level"],
+            "tc15_direct_node_kind.ttl": ["nodeKind", "ex:teacher"],
+            "tc16_direct_min_max_inclusive.ttl": ["minInclusive", "maxInclusive", "ex:score"],
+            "tc17_direct_less_than.ttl": ["lessThan", "ex:startDate"],
+            "tc18_direct_has_value.ttl": ["hasValue", "ex:status"],
+            "tc19_direct_equals.ttl": ["equals", "ex:preferredEmail"],
+            "tc20_direct_disjoint.ttl": ["disjoint", "ex:primaryRole"],
+            "tc21_direct_closed_shape.ttl": ["closed", "ex:unknownProperty"],
+            "tc22_direct_logical_constraints.ttl": ["or", "xone", "not"],
+            "tc23_direct_core_mix.ttl": ["minCount", "datatype", "in", "pattern"],
+        }
+
+        for filename, expected_parts in expected.items():
+            with self.subTest(filename=filename):
+                path = f"{DIRECT_CASE_DIR}/{filename}"
+                result = self.run_cli(path, path, "--summary")
+
+                self.assertIn("via sh:node,  ", result.stdout)
+                self.assertIn("0 via sh:node", result.stdout)
+                self.assertNotIn("sh:node ex:", result.stdout)
+                self.assert_contains_all(result.stdout, expected_parts)
+
+    def test_additional_case_groups_run_in_summary_mode(self):
+        for case_dir in ADDITIONAL_CASE_DIRS:
+            for path in sorted((PROJECT_ROOT / case_dir).glob("tc*.ttl")):
+                relative_path = path.relative_to(PROJECT_ROOT).as_posix()
+                with self.subTest(path=relative_path):
+                    result = self.run_cli(relative_path, relative_path, "--summary")
+
+                    self.assertTrue(
+                        "SHACL Explanation Summary" in result.stdout
+                        or "Data is valid." in result.stdout
+                    )
+
+    def test_external_report_compatibility_cases_run(self):
+        cases = [
+            (
+                "all_test_cases/external_report_cases/tc41_data_shapes.ttl",
+                "all_test_cases/external_report_cases/tc41_data_shapes.ttl",
+                "all_test_cases/external_report_cases/tc41_pyshacl_report_with_detail.ttl",
+                "ex:name",
+            ),
+            (
+                "all_test_cases/external_report_cases/tc41_data_shapes.ttl",
+                "all_test_cases/external_report_cases/tc41_data_shapes.ttl",
+                "all_test_cases/external_report_cases/tc42_jena_report_no_detail.ttl",
+                "ex:name",
+            ),
+            (
+                "all_test_cases/external_report_cases/tc43_data_shapes.ttl",
+                "all_test_cases/external_report_cases/tc43_data_shapes.ttl",
+                "all_test_cases/external_report_cases/tc43_jena_property_shape_report.ttl",
+                "ex:legalName",
+            ),
+            (
+                "all_test_cases/external_report_cases/tc43_data_shapes.ttl",
+                "all_test_cases/external_report_cases/tc43_data_shapes.ttl",
+                "all_test_cases/external_report_cases/tc44_topbraid_like_report.ttl",
+                "ex:legalName",
+            ),
+            (
+                "all_test_cases/external_report_cases/tc41_data_shapes.ttl",
+                "all_test_cases/external_report_cases/tc41_data_shapes.ttl",
+                "all_test_cases/external_report_cases/tc45_report_missing_source_shape.ttl",
+                "ex:name",
+            ),
+        ]
+
+        for data_path, shapes_path, report_path, expected_path in cases:
+            with self.subTest(report=report_path):
+                result = self.run_cli(
+                    data_path,
+                    shapes_path,
+                    "--report",
+                    report_path,
+                    "--summary",
+                )
+
+                self.assertIn("SHACL Explanation Summary", result.stdout)
+                self.assertIn(expected_path, result.stdout)
 
     def test_valid_separate_data_and_shapes(self):
         result = subprocess.run(
@@ -409,7 +507,7 @@ class ShaclExplainerCliTests(unittest.TestCase):
 
         self.assertIn("<!DOCTYPE html>", result.stdout)
         self.assertIn("const REPORT_DATA =", result.stdout)
-        self.assertIn("SHACL Report - test_cases/tc6_complex_org.ttl", result.stdout)
+        self.assertIn("SHACL Report - all_test_cases/sh_node_cases/tc6_complex_org.ttl", result.stdout)
         self.assertIn("ex:ProjectLeadShape", result.stdout)
         self.assertIn("ex:projectCode", result.stdout)
 

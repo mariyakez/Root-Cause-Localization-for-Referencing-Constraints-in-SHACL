@@ -1,0 +1,30 @@
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix ex:  <http://example.org/> .
+
+ex:PersonShape
+    a sh:NodeShape ;
+    sh:targetNode ex:dana ;
+    sh:property [
+        sh:path ex:name ;
+        sh:minCount 1 ;
+        sh:message "Name is required by PersonShape" ;
+    ] .
+
+ex:EmployeeShape
+    a sh:NodeShape ;
+    sh:targetNode ex:dana ;
+    sh:property [
+        sh:path ex:employeeId ;
+        sh:minCount 1 ;
+        sh:message "Employee ID is required by EmployeeShape" ;
+    ] ;
+    sh:property [
+        sh:path ex:age ;
+        sh:datatype xsd:integer ;
+        sh:message "Age must be an integer" ;
+    ] .
+
+ex:dana
+    a ex:Person, ex:Employee ;
+    ex:age "forty" .
