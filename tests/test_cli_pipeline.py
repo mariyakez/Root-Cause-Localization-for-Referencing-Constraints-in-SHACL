@@ -151,7 +151,9 @@ class ShaclExplainerCliTests(unittest.TestCase):
                 "minCount    ex:employeeId",
                 "in          ex:clearanceLevel",
                 "minCount    ex:projectCode",
-                "also via ex:ProjectLeadShape -> ex:SecurityClearanceShape",
+                "via ex:ProjectLeadShape -> ex:EmploymentShape -> ex:PersonShape",
+                "also via ex:ProjectLeadShape -> ex:SecurityClearanceShape -> ex:PersonShape",
+                "via ex:ProjectLeadShape -> ex:EmploymentShape -> ex:ContactShape",
             ],
         )
 
@@ -256,6 +258,8 @@ class ShaclExplainerCliTests(unittest.TestCase):
                 "ex:email",
                 "minCount",
                 "pattern",
+                "Top full leaf reference chains",
+                "ex:EmployeeShape",
             ],
         )
 
@@ -292,8 +296,26 @@ class ShaclExplainerCliTests(unittest.TestCase):
             csv_text = Path(tmp.name).read_text()
 
         self.assertIn("Total leaf failures   : 3", result.stdout)
-        self.assertIn("focus_node,depth,reference_chain,leaf_path,component,value,message,kind,repair_hint", csv_text)
+        self.assertIn(
+            "focus_node,depth,reference_chain,alternate_reference_chains,leaf_path,component,value,message,kind,repair_hint",
+            csv_text,
+        )
         self.assertIn("ex:email", csv_text)
+
+        with tempfile.NamedTemporaryFile(suffix=".csv") as tmp:
+            self.run_cli(
+                f"{CASE_DIR}/tc6_complex_org.ttl",
+                f"{CASE_DIR}/tc6_complex_org.ttl",
+                "--csv",
+                tmp.name,
+                "--summary",
+            )
+            tc6_csv_text = Path(tmp.name).read_text()
+
+        self.assertIn(
+            "ex:ProjectLeadShape -> ex:SecurityClearanceShape -> ex:PersonShape",
+            tc6_csv_text,
+        )
 
     def test_repair_hints(self):
         result = self.run_cli(
@@ -359,6 +381,23 @@ class ShaclExplainerCliTests(unittest.TestCase):
 
         by_leaf_path = result.stdout.split("Top failing paths", 1)[1].split("Top components", 1)[0]
         self.assertEqual(by_leaf_path.count("ex:"), 1)
+
+    def test_summary_includes_full_leaf_reference_chains(self):
+        result = self.run_cli(
+            f"{CASE_DIR}/tc6_complex_org.ttl",
+            f"{CASE_DIR}/tc6_complex_org.ttl",
+            "--summary",
+        )
+
+        self.assertIn("Top full leaf reference chains", result.stdout)
+        self.assertIn(
+            "ex:ProjectLeadShape -> ex:EmploymentShape -> ex:PersonShape",
+            result.stdout,
+        )
+        self.assertIn(
+            "ex:ProjectLeadShape -> ex:SecurityClearanceShape -> ex:PersonShape",
+            result.stdout,
+        )
 
     def test_html_output_to_stdout(self):
         result = self.run_cli(

@@ -39,6 +39,13 @@ def property_shapes_for(source_shape, result_path, report_graph: Graph, shapes_g
             candidates.append(prop_shape)
     return candidates
 
+def owner_shape_for_property_shape(property_shape, report_graph: Graph, shapes_graph: Graph):
+    for graph in (report_graph, shapes_graph):
+        owner = graph.value(predicate=SH.property, object=property_shape)
+        if owner is not None:
+            return owner
+    return property_shape
+
 def referenced_shapes_for(source_shape, result_path, report_graph: Graph, shapes_graph: Graph):
     direct = values_from_graphs(source_shape, SH.node, report_graph, shapes_graph)
     if direct:
@@ -84,13 +91,14 @@ def expand_result(result_node, report_graph: Graph,
     message   = get(SH.resultMessage)
 
     if str(component) != str(SH.NodeConstraintComponent):
+        leaf_shape = owner_shape_for_property_shape(shape, report_graph, shapes_graph)
         # Base case — this is a leaf
         return LeafFailure(
             focus_node   = focus,
             value_node   = get(SH.value),
             result_path  = get(SH.resultPath),
             component    = component,
-            source_shape = shape,
+            source_shape = leaf_shape,
             message      = str(message) if message else None,
             ref_chain    = ref_chain.copy(),
         )

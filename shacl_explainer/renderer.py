@@ -6,7 +6,7 @@ import json
 from collections import Counter
 from dataclasses import replace
 from pathlib import Path
-from rdflib import Literal
+from rdflib import BNode, Literal
 from .tree import LeafFailure, ReferenceNode
 
 PREFIXES = [
@@ -57,6 +57,26 @@ def short_uri(uri) -> str:
 
 def format_chain(chain) -> str:
     return " -> ".join(short_uri(shape) for shape in chain)
+
+def full_leaf_chain(leaf: LeafFailure, chain=None) -> list:
+    full_chain = list(chain if chain is not None else leaf.ref_chain)
+    source_shape = leaf.source_shape
+    if (
+        full_chain
+        and source_shape is not None
+        and not isinstance(source_shape, BNode)
+        and str(source_shape) not in {str(shape) for shape in full_chain}
+    ):
+        full_chain.append(source_shape)
+    return full_chain
+
+def format_alt_chains(leaf: LeafFailure) -> str:
+    chains = []
+    for chain in getattr(leaf, "alt_chains", []):
+        full_chain = full_leaf_chain(leaf, chain)
+        if full_chain:
+            chains.append(format_chain(full_chain))
+    return " | ".join(chains)
 
 def component_label(component) -> str:
     compact = short_uri(component).split(":")[-1]
@@ -155,6 +175,9 @@ def _render_nodes(nodes: list, prefix: str, hints: bool, color: bool) -> str:
             lines.append(f"{prefix}{branch}{error_icon} {comp_text}  {path_text} = {value_text}")
 
             details = []
+            primary_chain = full_leaf_chain(node)
+            if primary_chain:
+                details.append(color_text(f"via {format_chain(primary_chain)}", "magenta", enabled=color))
             if node.message:
                 details.append(color_text(f"message: {node.message}", "dim", enabled=color))
             if hints:
@@ -163,8 +186,9 @@ def _render_nodes(nodes: list, prefix: str, hints: bool, color: bool) -> str:
                     details.append(color_text(f"→ fix: {hint}", "green", enabled=color))
             if node.alt_chains:
                 for chain in node.alt_chains:
-                    if chain:
-                        details.append(color_text(f"also via {format_chain(chain)}", "magenta", enabled=color))
+                    alt_chain = full_leaf_chain(node, chain)
+                    if alt_chain:
+                        details.append(color_text(f"also via {format_chain(alt_chain)}", "magenta", enabled=color))
 
             lines.extend(_render_detail_lines(details, child_prefix))
 
@@ -269,7 +293,7 @@ def to_summary(nodes: list, top=None, stats=None) -> str:
     focus_nodes = {str(getattr(n, "focus_node", "")) for n in nodes}
 
     # max reference depth
-    max_depth = max((len(l.ref_chain) for l in leaves), default=0)
+    max_depth = max((len(full_leaf_chain(l)) for l in leaves), default=0)
 
     # counters
     leaf_paths = Counter(
@@ -278,6 +302,17 @@ def to_summary(nodes: list, top=None, stats=None) -> str:
         for l in leaves
     )
     leaf_components = Counter(component_label(l.component) for l in leaves)
+    leaf_chain_errors = Counter()
+    for leaf in leaves:
+        leaf_error = f"{component_label(leaf.component)} {short_uri(leaf.result_path) or 'none'}"
+        chain = full_leaf_chain(leaf)
+        if chain:
+            leaf_chain_errors[(format_chain(chain), leaf_error)] += 1
+        for alt_chain in getattr(leaf, "alt_chains", []):
+            full_alt_chain = full_leaf_chain(leaf, alt_chain)
+            if full_alt_chain:
+                leaf_chain_errors[(format_chain(full_alt_chain), leaf_error)] += 1
+
     reference_paths = Counter(
         f"{short_uri(ref.result_path)} -> {short_uri(ref.source_shape)}"
         for ref in references
@@ -285,7 +320,7 @@ def to_summary(nodes: list, top=None, stats=None) -> str:
     )
 
     direct   = sum(1 for l in leaves if not l.ref_chain)
-    via_node = sum(1 for l in leaves if     l.ref_chain)
+    via_node = sum(1 for l in leaves if     full_leaf_chain(l))
 
     sep = "━" * 44
     lines = [
@@ -338,6 +373,13 @@ def to_summary(nodes: list, top=None, stats=None) -> str:
         [(path, count) for path, count
          in reference_paths.most_common(top)],
     )
+    lines.append("")
+    lines.append("Top full leaf reference chains")
+    if not leaf_chain_errors:
+        lines.append("  (none)")
+    else:
+        for (chain, error), count in leaf_chain_errors.most_common(top):
+            lines.append(f"  {str(count):>5}  {chain}  → {error}")
 
     lines.append(sep)
     return "\n".join(lines)
@@ -355,6 +397,7 @@ def write_csv(nodes: list, destination):
                 "focus_node",
                 "depth",
                 "reference_chain",
+                "alternate_reference_chains",
                 "leaf_path",
                 "component",
                 "value",
@@ -365,15 +408,17 @@ def write_csv(nodes: list, destination):
         )
         writer.writeheader()
         for leaf in iter_leaves(nodes):
+            chain = full_leaf_chain(leaf)
             writer.writerow({
                 "focus_node": short_uri(leaf.focus_node),
-                "depth": len(leaf.ref_chain),          
-                "reference_chain": format_chain(leaf.ref_chain),
+                "depth": len(chain),
+                "reference_chain": format_chain(chain),
+                "alternate_reference_chains": format_alt_chains(leaf),
                 "leaf_path": short_uri(leaf.result_path),
                 "component": short_uri(leaf.component),
                 "value": short_uri(leaf.value_node),
                 "message": leaf.message or "",
-                "kind": "referenced" if leaf.ref_chain else "direct",
+                "kind": "referenced" if chain else "direct",
                 "repair_hint": repair_hint(leaf) or "",
             })
     finally:
@@ -399,11 +444,11 @@ def tree_to_data(nodes: list) -> list:
                 "value":      serialise_value(node.value_node) if node.value_node else None,
                 "message":    node.message,
                 "repairHint": repair_hint(node),
-                "refChain":   [short_uri(s) for s in node.ref_chain],
+                "refChain":   [short_uri(s) for s in full_leaf_chain(node)],
                 "altChains":  [
-                    [short_uri(s) for s in chain]
+                    [short_uri(s) for s in full_leaf_chain(node, chain)]
                     for chain in getattr(node, "alt_chains", [])
-                    if chain
+                    if full_leaf_chain(node, chain)
                 ],
             }
         else:
@@ -440,162 +485,5 @@ def to_html(nodes: list, title: str = "SHACL Explanation Report") -> str:
     return html
 
 def _load_template() -> str:
-    prototype_path = Path(__file__).resolve().parents[1] / "shacl_report_prototype.html"
-    if prototype_path.exists():
-        return _template_from_prototype(prototype_path.read_text(encoding="utf-8"))
-    return _HTML_TEMPLATE
-
-def _template_from_prototype(html: str) -> str:
-    start = html.find("const REPORT_DATA = [")
-    end_marker = "// ── END DATA"
-    end = html.find(end_marker, start)
-
-    if start != -1 and end != -1:
-        semi = html.rfind(";", start, end)
-        if semi != -1:
-            html = html[:start] + "const REPORT_DATA = __REPORT_DATA__;" + html[semi + 1:]
-
-    html = html.replace(
-        "<title>SHACL Explanation Report</title>",
-        "<title>__TITLE__</title>",
-    )
-    html = html.replace(
-        '<span id="gen-time"></span>',
-        '<span id="gen-time">__TIMESTAMP__</span>',
-    )
-    html = html.replace(
-        'document.getElementById("gen-time").textContent = new Date().toLocaleString();',
-        'document.getElementById("gen-time").textContent = "__TIMESTAMP__";',
-    )
-    return html
-
-_HTML_TEMPLATE = r"""<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>__TITLE__</title>
-<style>
-body { margin: 0; font-family: Arial, sans-serif; background: #111827; color: #e5e7eb; }
-header { padding: 18px 24px; border-bottom: 1px solid #374151; background: #0f172a; }
-h1 { margin: 0; font-size: 20px; }
-.generated { color: #9ca3af; font-size: 13px; margin-top: 4px; }
-main { display: grid; grid-template-columns: 280px 1fr; min-height: calc(100vh - 74px); }
-aside { border-right: 1px solid #374151; padding: 18px; background: #111827; }
-section { padding: 22px; }
-.focus-link, .node { border: 1px solid #374151; background: #1f2937; border-radius: 8px; margin-bottom: 10px; padding: 10px; }
-.focus-link { cursor: pointer; }
-.node.leaf { border-left: 4px solid #ef4444; }
-.node.reference { border-left: 4px solid #38bdf8; }
-.badge { display: inline-block; padding: 2px 7px; border-radius: 999px; background: #374151; color: #d1d5db; font-size: 12px; margin-left: 6px; }
-.children { margin-left: 18px; margin-top: 10px; }
-.muted { color: #9ca3af; }
-.hint { margin-top: 8px; padding: 8px; background: #052e16; border: 1px solid #166534; border-radius: 6px; color: #bbf7d0; }
-.toolbar { margin-bottom: 16px; }
-button { cursor: pointer; border: 1px solid #4b5563; background: #1f2937; color: #e5e7eb; border-radius: 6px; padding: 6px 10px; margin-right: 6px; }
-button.active { background: #2563eb; border-color: #60a5fa; }
-</style>
-</head>
-<body>
-<header>
-  <h1>__TITLE__</h1>
-  <div class="generated">Generated by shacl_explainer · <span id="gen-time">__TIMESTAMP__</span></div>
-</header>
-<main>
-  <aside>
-    <h2>Focus Nodes</h2>
-    <div id="focus-list"></div>
-  </aside>
-  <section>
-    <div class="toolbar">
-      <button class="filter-btn active" data-filter="all">all</button>
-      <button class="filter-btn" data-filter="nested">nested only</button>
-      <button class="filter-btn" data-filter="direct">direct only</button>
-    </div>
-    <div id="report"></div>
-  </section>
-</main>
-<script>
-const REPORT_DATA = __REPORT_DATA__;
-
-let activeFilter = "all";
-let activeFocus = null;
-
-function leaves(node) {
-  if (node.type === "leaf") return [node];
-  return (node.children || []).flatMap(leaves);
-}
-
-function allNodes(nodes) {
-  return nodes.flatMap(n => [n, ...allNodes(n.children || [])]);
-}
-
-function focusCounts() {
-  const counts = {};
-  REPORT_DATA.forEach(root => leaves(root).forEach(leaf => {
-    counts[leaf.focusNode] = (counts[leaf.focusNode] || 0) + 1;
-  }));
-  return counts;
-}
-
-function passesFilter(root) {
-  const rootLeaves = leaves(root);
-  if (activeFilter === "nested") return rootLeaves.some(l => (l.refChain || []).length > 0);
-  if (activeFilter === "direct") return rootLeaves.some(l => !(l.refChain || []).length);
-  return true;
-}
-
-function renderSidebar() {
-  const list = document.getElementById("focus-list");
-  const counts = focusCounts();
-  list.innerHTML = Object.entries(counts).map(([focus, count]) =>
-    `<div class="focus-link" data-focus="${focus}">${focus}<span class="badge">${count}</span></div>`
-  ).join("");
-  list.querySelectorAll(".focus-link").forEach(el => {
-    el.onclick = () => { activeFocus = el.dataset.focus; render(); };
-  });
-}
-
-function renderNode(node) {
-  if (node.type === "leaf") {
-    return `<div class="node leaf">
-      <strong>${node.component || "constraint"}</strong>
-      <span class="badge">${node.path || "no path"}</span>
-      <div class="muted">Focus: ${node.focusNode || ""}${node.value ? " · Value: " + node.value : ""}</div>
-      ${node.message ? `<div>${node.message}</div>` : ""}
-      ${node.repairHint ? `<div class="hint">${node.repairHint}</div>` : ""}
-      ${(node.refChain || []).length ? `<div class="muted">Reference chain: ${node.refChain.join(" -> ")}</div>` : ""}
-    </div>`;
-  }
-  return `<details class="node reference" open>
-    <summary><strong>sh:node</strong>
-      <span class="badge">${node.path || "reference"}</span>
-      <span class="muted">${node.shape || ""} -> ${node.referencedShape || ""}</span>
-    </summary>
-    <div class="children">${(node.children || []).map(renderNode).join("")}</div>
-  </details>`;
-}
-
-function render() {
-  const report = document.getElementById("report");
-  const roots = REPORT_DATA.filter(root =>
-    (!activeFocus || leaves(root).some(l => l.focusNode === activeFocus)) && passesFilter(root)
-  );
-  report.innerHTML = roots.length
-    ? roots.map(renderNode).join("")
-    : '<div class="muted">No matching explanation nodes.</div>';
-}
-
-document.querySelectorAll(".filter-btn").forEach(btn => {
-  btn.onclick = () => {
-    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-    activeFilter = btn.dataset.filter;
-    render();
-  };
-});
-
-renderSidebar();
-render();
-</script>
-</body>
-</html>"""
+    template = Path(__file__).with_name("report_template.html")
+    return template.read_text(encoding="utf-8")
