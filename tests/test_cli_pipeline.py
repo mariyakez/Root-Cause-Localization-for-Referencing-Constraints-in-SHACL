@@ -1,8 +1,11 @@
+import pickle
 import subprocess
 import sys
 import tempfile
 import unittest
 from pathlib import Path
+
+from rdflib import Graph
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -156,6 +159,30 @@ class ShaclExplainerCliTests(unittest.TestCase):
         )
 
         self.assertIn("Data is valid.", result.stdout)
+
+    def test_pickle_data_graph_input(self):
+        ttl_path = PROJECT_ROOT / CASE_DIR / "tc1_single_leaf.ttl"
+        graph = Graph().parse(ttl_path, format="turtle")
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            pkl_path = Path(temp_dir) / "tc1_single_leaf.pkl"
+            with open(pkl_path, "wb") as handle:
+                pickle.dump(graph, handle)
+
+            result = self.run_cli(
+                str(pkl_path),
+                f"{CASE_DIR}/tc1_single_leaf.ttl",
+            )
+
+        self.assert_contains_all(
+            result.stdout,
+            [
+                "sh:node ex:EmployeeShape",
+                "datatype",
+                "ex:age",
+                '"twenty"',
+            ],
+        )
 
     def test_tc1_single_leaf_violation(self):
         output = self.run_explainer("tc1_single_leaf.ttl")

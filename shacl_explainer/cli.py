@@ -1,6 +1,7 @@
 # entry point: accepts .ttl files, prints result
 import argparse
 import csv
+import pickle
 import sys
 import time
 from pathlib import Path
@@ -31,17 +32,17 @@ def run(data_path: str, shapes_path: str, fmt="text",
     output_path = resolve_output_path(fmt, output) if output else None
 
     start = time.perf_counter()
-    data_graph   = Graph().parse(data_path,   format=data_format)
+    data_graph = load_graph(data_path, rdf_format=data_format)
     timings["parse data"] = time.perf_counter() - start
 
     start = time.perf_counter()
-    shapes_graph = Graph().parse(shapes_path, format=shapes_format)
+    shapes_graph = load_graph(shapes_path, rdf_format=shapes_format)
     timings["parse shapes"] = time.perf_counter() - start
     configure_prefixes(data_graph, shapes_graph)
 
     if report_path:
         start = time.perf_counter()
-        report_graph = Graph().parse(report_path, format=report_format)
+        report_graph = load_graph(report_path, rdf_format=report_format)
         timings["parse report"] = time.perf_counter() - start
         conforms_value = report_graph.value(predicate=SH.conforms)
         conforms = bool(conforms_value.toPython()) if conforms_value is not None else False
@@ -130,6 +131,19 @@ def collect_stats(data_graph, shapes_graph, report_graph):
         "all_results": len(all_results),
     }
 
+def load_graph(path, rdf_format="turtle"):
+    graph_path = Path(path)
+    if graph_path.suffix.lower() in {".pkl", ".pickle"}:
+        with open(graph_path, "rb") as handle:
+            graph = pickle.load(handle)
+        if not isinstance(graph, Graph):
+            raise TypeError(
+                f"Expected an rdflib.Graph in {graph_path}, got {type(graph).__name__}"
+            )
+        return graph
+
+    return Graph().parse(path, format=rdf_format)
+
 def resolve_output_path(fmt, output):
     path = Path(output)
     if fmt == "html" and not path.is_absolute() and path.parent == Path("."):
@@ -186,8 +200,8 @@ def parse_args(argv):
     parser = argparse.ArgumentParser(
         description="Explain SHACL sh:node validation failures as a tree."
     )
-    parser.add_argument("data_path", help="Turtle data graph path")
-    parser.add_argument("shapes_path", help="Turtle shapes graph path")
+    parser.add_argument("data_path", help="Data graph path, e.g. .ttl or pickled rdflib.Graph")
+    parser.add_argument("shapes_path", help="Shapes graph path, e.g. .ttl or pickled rdflib.Graph")
     parser.add_argument(
         "legacy_format",
         nargs="?",
@@ -263,17 +277,17 @@ def parse_args(argv):
     parser.add_argument(
         "--data-format",
         default="turtle",
-        help="RDF format for the data graph, e.g. turtle, xml, json-ld, nt.",
+        help="RDF format for the data graph when it is not .pkl/.pickle, e.g. turtle, xml, json-ld, nt.",
     )
     parser.add_argument(
         "--shapes-format",
         default="turtle",
-        help="RDF format for the shapes graph, e.g. turtle, xml, json-ld, nt.",
+        help="RDF format for the shapes graph when it is not .pkl/.pickle, e.g. turtle, xml, json-ld, nt.",
     )
     parser.add_argument(
         "--report-format",
         default="turtle",
-        help="RDF format for --report, e.g. turtle, xml, json-ld, nt.",
+        help="RDF format for --report when it is not .pkl/.pickle, e.g. turtle, xml, json-ld, nt.",
     )
     parser.add_argument(
         "--timing",

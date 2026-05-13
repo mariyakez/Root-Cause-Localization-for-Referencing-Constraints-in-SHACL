@@ -48,6 +48,14 @@ Run the explainer with a data graph and a shapes graph:
 python3 -m shacl_explainer.cli DATA.ttl SHAPES.ttl
 ```
 
+The data graph, shapes graph, and external report can also be loaded from a
+trusted `.pkl`/`.pickle` file if it contains an `rdflib.Graph`. This is useful
+for large datasets because it skips Turtle parsing:
+
+```bash
+python3 -m shacl_explainer.cli DATA.pkl SHAPES.ttl --summary --timing
+```
+
 Many test files in this repository contain both data and shapes in the same Turtle file. For those, pass the same file twice:
 
 ```bash

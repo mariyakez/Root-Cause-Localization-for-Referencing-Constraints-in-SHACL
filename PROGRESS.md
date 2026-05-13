@@ -6,6 +6,29 @@ is added.
 
 ## 2026-05-13
 
+### Pickled RDF Graph Input
+
+Added `.pkl`/`.pickle` loading for graph inputs when the file contains a
+trusted `rdflib.Graph`. This lets large pre-parsed datasets skip Turtle parsing
+and go directly into validation.
+
+Updated:
+
+- `shacl_explainer/cli.py`
+- `tests/test_cli_pipeline.py`
+- `README.md`
+
+Example:
+
+```bash
+python3 -m shacl_explainer.cli DATA.pkl SHAPES.ttl --summary --timing
+```
+
+Test coverage:
+
+- Added `test_pickle_data_graph_input`
+- Full suite now passes with `33 tests OK`
+
 ### Unified Test Case Folder
 
 Moved all test case groups under one parent folder:
@@ -244,7 +267,7 @@ render: 0.022s
 Latest full test suite result:
 
 ```text
-32 tests OK
+33 tests OK
 ```
 
 ## Template For Future Entries
