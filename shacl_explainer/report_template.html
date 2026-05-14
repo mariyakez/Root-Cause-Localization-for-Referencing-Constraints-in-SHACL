@@ -900,26 +900,6 @@ body.resizing-sidebar {
   </nav>
 
   <main class="main">
-    <div class="filter-bar">
-      <div class="filter-group" id="component-filters"></div>
-      <span class="filter-sep">|</span>
-      <div class="filter-group" id="path-filters"></div>
-      <span class="filter-sep">|</span>
-      <div class="filter-group" id="reference-path-filters"></div>
-      <span class="filter-sep">|</span>
-      <div class="filter-group" id="shape-filters"></div>
-      <span class="filter-sep">|</span>
-      <div class="filter-group" id="kind-filters"></div>
-      <span class="showing-count" id="showing-count">Showing — of — failures</span>
-      <div class="filter-actions">
-        <button class="expand-all-btn" onclick="expandVisible()">expand visible only</button>
-        <button class="expand-all-btn" onclick="expandAll()">expand all</button>
-        <button class="expand-all-btn" onclick="collapseAll()">collapse all</button>
-        <button class="export-btn" type="button" onclick="exportVisibleCsv(event, this)">export visible CSV</button>
-        <button class="export-btn" type="button" onclick="copyVisibleJson(event, this)">copy visible JSON</button>
-        <button class="export-btn" type="button" onclick="copyRootCauseSummary(event, this)">copy root-cause summary</button>
-      </div>
-    </div>
     <section class="summary-panel" aria-label="Report summary">
       <div>
         <div class="summary-title">Report summary</div>
@@ -968,6 +948,26 @@ body.resizing-sidebar {
         </div>
       </div>
     </section>
+    <div class="filter-bar">
+      <div class="filter-group" id="component-filters"></div>
+      <span class="filter-sep">|</span>
+      <div class="filter-group" id="path-filters"></div>
+      <span class="filter-sep">|</span>
+      <div class="filter-group" id="reference-path-filters"></div>
+      <span class="filter-sep">|</span>
+      <div class="filter-group" id="shape-filters"></div>
+      <span class="filter-sep">|</span>
+      <div class="filter-group" id="kind-filters"></div>
+      <span class="showing-count" id="showing-count">Showing — of — failures</span>
+      <div class="filter-actions">
+        <button class="expand-all-btn" onclick="expandVisible()">expand visible only</button>
+        <button class="expand-all-btn" onclick="expandAll()">expand all</button>
+        <button class="expand-all-btn" onclick="collapseAll()">collapse all</button>
+        <button class="export-btn" type="button" onclick="exportVisibleCsv(event, this)">export visible CSV</button>
+        <button class="export-btn" type="button" onclick="copyVisibleJson(event, this)">copy visible JSON</button>
+        <button class="export-btn" type="button" onclick="copyRootCauseSummary(event, this)">copy root-cause summary</button>
+      </div>
+    </div>
     <noscript>
       <div class="fallback-card">
         <div class="fallback-title">Interactive report requires JavaScript</div>

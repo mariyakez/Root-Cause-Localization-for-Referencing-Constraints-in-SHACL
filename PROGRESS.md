@@ -6,6 +6,26 @@ is added.
 
 ## 2026-05-14
 
+### HTML Summary Panel Placement
+
+Moved the HTML summary panel above the filter bar.
+
+This makes the report read more naturally:
+
+1. overview of the validation result
+2. filters and controls for exploring the details
+
+The sticky filter bar still remains available during long scrolling, but the
+user now sees the high-level report context first.
+
+Updated:
+
+- `shacl_explainer/report_template.html`
+
+Test coverage:
+
+- HTML output tests pass
+
 ### HTML Performance Precomputation
 
 Optimized the HTML report for future larger validation outputs by moving several
