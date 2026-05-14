@@ -6,6 +6,54 @@ is added.
 
 ## 2026-05-14
 
+### HTML Root-Cause Breakdown Table
+
+Added a root-cause breakdown table to the HTML summary panel.
+
+The table combines:
+
+- repeated leaf symptom, such as `missing ub:name`
+- how the failure was reached, such as `direct` or
+  `via ub:doctoralDegreeFrom -> ub:UniversityShape`
+- the count for that combination
+
+This makes large reports much more thesis-friendly because repeated symptoms are
+now paired with their path-based explanation instead of appearing only as flat
+issue counts.
+
+Updated:
+
+- `shacl_explainer/report_template.html`
+
+Test coverage:
+
+- HTML output tests pass
+
+### Issue View Causal Context
+
+Improved the HTML `By issue` view so repeated leaf failures keep their causal
+reference context visible.
+
+Expanded leaf bodies in issue mode can now show:
+
+- original focus node (`reached from`)
+- reference path
+- target/value node
+- referenced shape
+
+This makes repeated issue clusters such as `missing ub:name` much more useful,
+because the user can immediately see whether the failure was reached through
+paths such as `ub:doctoralDegreeFrom`, `ub:mastersDegreeFrom`, or
+`ub:undergraduateDegreeFrom`.
+
+Updated:
+
+- `shacl_explainer/report_template.html`
+
+Test coverage:
+
+- HTML output tests pass
+
 ### HTML No-Script Fallback
 
 Added a fallback for HTML reports before JavaScript renders.

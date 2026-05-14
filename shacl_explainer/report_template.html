@@ -739,6 +739,38 @@ body.resizing-sidebar {
   padding: 1px 6px;
   font-size: 10px;
 }
+.summary-breakdown {
+  margin-top: 14px;
+}
+.summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 11px;
+}
+.summary-table th,
+.summary-table td {
+  padding: 7px 8px;
+  border-top: 1px solid var(--border);
+  vertical-align: top;
+}
+.summary-table th {
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  font-weight: 500;
+  text-align: left;
+}
+.summary-table td {
+  color: var(--text-muted);
+}
+.summary-table td:last-child,
+.summary-table th:last-child {
+  text-align: right;
+}
+.summary-path {
+  color: var(--blue);
+}
 .fallback-card {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -883,6 +915,23 @@ body.resizing-sidebar {
             <span class="summary-issue-name">JavaScript will populate issue clusters.</span>
           </div>
         </div>
+        <div class="summary-breakdown">
+          <div class="summary-title">Root cause breakdown</div>
+          <table class="summary-table" aria-label="Root cause breakdown">
+            <thead>
+              <tr>
+                <th>Root cause</th>
+                <th>How reached</th>
+                <th>Count</th>
+              </tr>
+            </thead>
+            <tbody id="summary-breakdown-body">
+              <tr>
+                <td colspan="3">JavaScript will populate the breakdown.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </section>
     <noscript>
@@ -1016,7 +1065,7 @@ function allLeaves(nodes) {
   return out;
 }
 
-function collectLeafEntries(nodes, ctx={ referencePaths: [], shapes: [] }) {
+function collectLeafEntries(nodes, ctx={ referencePaths: [], shapes: [], rootFocus: null }) {
   const out = [];
   function walk(ns, currentCtx) {
     for (const n of ns || []) {
@@ -1035,6 +1084,7 @@ function collectLeafEntries(nodes, ctx={ referencePaths: [], shapes: [] }) {
           shapes: (n.referencedShape || n.shape)
             ? [...(currentCtx.shapes || []), n.referencedShape || n.shape]
             : [...(currentCtx.shapes || [])],
+          rootFocus: currentCtx.rootFocus || n.focusNode || null,
         };
         walk(n.children, next);
       }
@@ -1065,7 +1115,7 @@ function collectFilterStats(nodes) {
     kind: new Map(),
   };
 
-  function walk(ns, ctx={ referencePaths: [], shapes: [] }) {
+  function walk(ns, ctx={ referencePaths: [], shapes: [], rootFocus: null }) {
     for (const n of ns) {
       if (n.type === "leaf") {
         const info = compInfo(n.component);
@@ -1083,6 +1133,7 @@ function collectFilterStats(nodes) {
           shapes: (n.referencedShape || n.shape)
             ? [...ctx.shapes, n.referencedShape || n.shape]
             : [...ctx.shapes],
+          rootFocus: ctx.rootFocus || n.focusNode || null,
         };
         walk(n.children, next);
       }
@@ -1106,7 +1157,7 @@ function leafHeaderText(node, info) {
   return `${info.short} ${path}`;
 }
 
-function mkLeaf(node, ctx={ referencePaths: [], shapes: [] }) {
+function mkLeaf(node, ctx={ referencePaths: [], shapes: [], rootFocus: null }) {
   const info  = compInfo(node.component);
   const compCls = attrSafe(info.cls);
   const id    = `leaf-${leafId++}`;
@@ -1114,6 +1165,12 @@ function mkLeaf(node, ctx={ referencePaths: [], shapes: [] }) {
   const depth = chain.length;
   const kind  = depth === 0 ? "direct" : "nested";
   const headerText = leafHeaderText(node, info);
+  const rootFocus = ctx.rootFocus || null;
+  const referencePaths = ctx.referencePaths || [];
+  const referenceShapes = ctx.shapes || [];
+  const lastReferencePath = referencePaths.length ? referencePaths[referencePaths.length - 1] : null;
+  const lastReferencedShape = referenceShapes.length ? referenceShapes[referenceShapes.length - 1] : null;
+  const reachedFrom = rootFocus && rootFocus !== node.focusNode ? rootFocus : null;
 
   const el = document.createElement("div");
   el.className = `leaf-node lf-${compCls}`;
@@ -1149,6 +1206,30 @@ function mkLeaf(node, ctx={ referencePaths: [], shapes: [] }) {
           <span class="leaf-hint">→ ${esc(node.repairHint)}</span>
           ${copyButton(node.repairHint, "repair hint")}
         </span>` : ""}
+      ${reachedFrom ? `
+        <span class="leaf-row-label">reached from</span>
+        <span class="copy-wrap">
+          <span class="leaf-row-val">${esc(reachedFrom)}</span>
+          ${copyButton(reachedFrom, "original focus node IRI")}
+        </span>` : ""}
+      ${referencePaths.length ? `
+        <span class="leaf-row-label">reference path</span>
+        <span class="copy-wrap">
+          <span class="leaf-row-val leaf-chain">${referencePaths.map(esc).join(" → ")}</span>
+          ${copyButton(lastReferencePath, "reference path")}
+        </span>` : ""}
+      ${depth > 0 ? `
+        <span class="leaf-row-label">target/value node</span>
+        <span class="copy-wrap">
+          <span class="leaf-row-val">${esc(node.focusNode)}</span>
+          ${copyButton(node.focusNode, "target/value node IRI")}
+        </span>` : ""}
+      ${lastReferencedShape ? `
+        <span class="leaf-row-label">referenced shape</span>
+        <span class="copy-wrap">
+          <span class="leaf-row-val">${esc(lastReferencedShape)}</span>
+          ${copyButton(lastReferencedShape, "referenced shape")}
+        </span>` : ""}
       <span class="leaf-row-label">focus</span>
       <span class="copy-wrap">
         <span class="leaf-row-val">${esc(node.focusNode)}</span>
@@ -1171,7 +1252,7 @@ function mkLeaf(node, ctx={ referencePaths: [], shapes: [] }) {
 
 // ── reference DOM ─────────────────────────────────────────────────────────
 let refId = 0;
-function mkRef(node, depth=0, ctx={ referencePaths: [], shapes: [] }) {
+function mkRef(node, depth=0, ctx={ referencePaths: [], shapes: [], rootFocus: null }) {
   const id = `ref-${refId++}`;
   const depthLabel = depth === 0 ? "1st reference" : `${depth + 1} levels deep`;
   const leafCount = countLeaves(node.children || []);
@@ -1184,6 +1265,7 @@ function mkRef(node, depth=0, ctx={ referencePaths: [], shapes: [] }) {
     shapes: (node.referencedShape || node.shape)
       ? [...(ctx.shapes || []), node.referencedShape || node.shape]
       : [...(ctx.shapes || [])],
+    rootFocus: ctx.rootFocus || node.focusNode || null,
   };
 
   const el = document.createElement("div");
@@ -1695,6 +1777,33 @@ function updateSummaryPanel(groups) {
       selectIssue(issue);
     };
     issueBox.appendChild(row);
+  });
+
+  const breakdownBody = document.getElementById("summary-breakdown-body");
+  if (!breakdownBody) return;
+  breakdownBody.innerHTML = "";
+  const breakdown = new Map();
+  ISSUE_ENTRIES.forEach(entry => {
+    const pathChain = entry.ctx?.referencePaths || [];
+    const shapeChain = entry.ctx?.shapes || [];
+    const howReached = pathChain.length
+      ? `via ${pathChain.map((path, index) => {
+          const shape = shapeChain[index];
+          return shape ? `${path} -> ${shape}` : path;
+        }).join(" -> ")}`
+      : "direct";
+    const key = `${entry.issue}|||${howReached}`;
+    breakdown.set(key, (breakdown.get(key) || 0) + 1);
+  });
+
+  countMapEntries(breakdown).slice(0, 8).forEach(([key, count]) => {
+    const [issue, howReached] = key.split("|||");
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${esc(issue)}</td>
+      <td class="summary-path">${esc(howReached)}</td>
+      <td>${count}</td>`;
+    breakdownBody.appendChild(tr);
   });
 }
 
