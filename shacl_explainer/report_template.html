@@ -238,12 +238,19 @@ body.resizing-sidebar {
   background: rgba(255,255,255,.02);
 }
 .focus-item {
+  appearance: none;
+  width: 100%;
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 7px 16px;
   cursor: pointer;
   border-left: 2px solid transparent;
+  border-top: none;
+  border-right: none;
+  border-bottom: none;
+  background: transparent;
+  text-align: left;
   transition: all .12s;
   font-family: var(--mono);
   font-size: 12px;
@@ -256,6 +263,11 @@ body.resizing-sidebar {
   white-space: nowrap;
 }
 .focus-item:hover { background: var(--surface2); color: var(--text); }
+.focus-item:focus-visible {
+  outline: none;
+  background: rgba(34,211,238,.06);
+  box-shadow: inset 0 0 0 1px rgba(34,211,238,.22);
+}
 .focus-item.active {
   background: var(--surface2);
   border-left-color: var(--cyan);
@@ -859,26 +871,27 @@ body.resizing-sidebar {
 
 <div class="layout">
   <nav class="sidebar">
-    <div class="sidebar-tabs">
-      <button class="sidebar-tab active" id="tab-focus" onclick="setSidebarMode('focus')">By focus</button>
-      <button class="sidebar-tab" id="tab-issue" onclick="setSidebarMode('issue')">By issue</button>
+    <div class="sidebar-tabs" role="tablist" aria-label="Sidebar navigation">
+      <button class="sidebar-tab active" id="tab-focus" role="tab" aria-selected="true" aria-controls="focus-panel" tabindex="0" onclick="setSidebarMode('focus')">By focus</button>
+      <button class="sidebar-tab" id="tab-issue" role="tab" aria-selected="false" aria-controls="issue-panel" tabindex="-1" onclick="setSidebarMode('issue')">By issue</button>
     </div>
     <div class="focus-search-wrap">
       <input
         id="focus-search"
         class="focus-search"
         type="search"
+        aria-label="Search focus nodes or issue clusters"
         placeholder="Search focus node"
         autocomplete="off"
       >
     </div>
-    <div id="focus-panel" class="sidebar-panel">
+    <div id="focus-panel" class="sidebar-panel" role="tabpanel" aria-labelledby="tab-focus">
       <div class="sidebar-label">Focus nodes</div>
       <div id="sidebar-items"></div>
       <button id="focus-show-toggle" class="sidebar-more-btn" type="button" onclick="toggleFocusShowAll()">show all focus nodes</button>
       <div id="focus-empty" class="focus-empty">No matching focus nodes</div>
     </div>
-    <div id="issue-panel" class="sidebar-panel" hidden>
+    <div id="issue-panel" class="sidebar-panel" role="tabpanel" aria-labelledby="tab-issue" hidden>
       <div class="sidebar-label">Issue clusters</div>
       <div id="issue-items"></div>
       <div id="issue-empty" class="focus-empty">No matching issues</div>
@@ -1711,6 +1724,20 @@ function updateSidebarVisibility() {
   if (issueEmpty) issueEmpty.style.display = visibleIssues ? "none" : "block";
 }
 
+function onSidebarTabKeydown(event, mode) {
+  if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+  event.preventDefault();
+  const tabs = ["focus", "issue"];
+  let index = tabs.indexOf(mode);
+  if (event.key === "ArrowRight") index = Math.min(tabs.length - 1, index + 1);
+  if (event.key === "ArrowLeft") index = Math.max(0, index - 1);
+  if (event.key === "Home") index = 0;
+  if (event.key === "End") index = tabs.length - 1;
+  const nextMode = tabs[index];
+  setSidebarMode(nextMode);
+  document.getElementById(nextMode === "focus" ? "tab-focus" : "tab-issue")?.focus();
+}
+
 function applyFilter() {
   if (sidebarMode === "focus" && selectedFocus && countMatchingLeavesData(REPORT_GROUPS[selectedFocus] || []) === 0) {
     selectedFocus = firstVisibleFocus();
@@ -1831,11 +1858,13 @@ function buildSidebar(groups) {
   Object.entries(groups).forEach(([fn, nodes], i) => {
     const lc = countLeaves(nodes);
     const targetId = `focus-${fn.replace(/[^a-z0-9]/gi,"_")}`;
-    const item = document.createElement("div");
+    const item = document.createElement("button");
+    item.type = "button";
     item.className = "focus-item" + (i === 0 ? " active" : "");
     item.dataset.focus = fn.toLowerCase();
     item.dataset.focusKey = fn;
     item.dataset.target = targetId;
+    item.setAttribute("aria-label", `Focus node ${fn}, ${lc} failures`);
     item.innerHTML = `
       <span class="focus-dot"></span>
       <span class="focus-name" title="${esc(fn)}">${esc(displayIri(fn, "local"))}</span>
@@ -1860,10 +1889,12 @@ function buildIssueSidebar() {
   ISSUE_ENTRIES.forEach(entry => addCount(counts, entry.issue));
 
   countMapEntries(counts).forEach(([issue, count], i) => {
-    const item = document.createElement("div");
+    const item = document.createElement("button");
+    item.type = "button";
     item.className = "focus-item issue-item" + (i === 0 ? " active" : "");
     item.dataset.issue = issue.toLowerCase();
     item.dataset.issueKey = issue;
+    item.setAttribute("aria-label", `Issue cluster ${issue}, ${count} affected nodes`);
     item.innerHTML = `
       <span class="focus-dot"></span>
       <span class="focus-name" title="${esc(issue)}">${esc(issue)}</span>
@@ -2001,6 +2032,10 @@ function setSidebarMode(mode) {
   document.getElementById("issue-panel").hidden = mode !== "issue";
   document.getElementById("tab-focus").classList.toggle("active", mode === "focus");
   document.getElementById("tab-issue").classList.toggle("active", mode === "issue");
+  document.getElementById("tab-focus").setAttribute("aria-selected", mode === "focus" ? "true" : "false");
+  document.getElementById("tab-issue").setAttribute("aria-selected", mode === "issue" ? "true" : "false");
+  document.getElementById("tab-focus").tabIndex = mode === "focus" ? 0 : -1;
+  document.getElementById("tab-issue").tabIndex = mode === "issue" ? 0 : -1;
   const search = document.getElementById("focus-search");
   if (search) search.placeholder = mode === "focus" ? "Search focus node" : "Search issue";
   if (mode === "focus" && (!selectedFocus || countMatchingLeavesData(REPORT_GROUPS[selectedFocus] || []) === 0))
@@ -2127,6 +2162,8 @@ function render() {
   updateStats(groups);
   updateSummaryPanel(groups);
   initSidebarResize();
+  document.getElementById("tab-focus")?.addEventListener("keydown", event => onSidebarTabKeydown(event, "focus"));
+  document.getElementById("tab-issue")?.addEventListener("keydown", event => onSidebarTabKeydown(event, "issue"));
   document.getElementById("gen-time").textContent = "__TIMESTAMP__";
 
   applyFilter();

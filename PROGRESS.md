@@ -6,6 +6,33 @@ is added.
 
 ## 2026-05-14
 
+### HTML Sidebar Accessibility
+
+Improved accessibility for the HTML sidebar before thesis and demo use.
+
+Changes:
+
+- sidebar focus-node and issue-cluster entries are now real `button` elements
+- sidebar mode switch now uses tab semantics:
+  - `role="tablist"`
+  - `role="tab"`
+  - `aria-selected`
+  - `aria-controls`
+  - arrow-key, Home, and End navigation
+- the search input now has an explicit `aria-label`
+- focus styling was strengthened for keyboard users
+
+This brings the sidebar closer to the same accessibility standard already used
+for expandable reference and leaf headers.
+
+Updated:
+
+- `shacl_explainer/report_template.html`
+
+Test coverage:
+
+- HTML output tests pass
+
 ### Offline HTML Font Stack
 
 Removed the external Google Fonts dependency from the HTML report template.
