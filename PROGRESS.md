@@ -4,6 +4,123 @@ This file tracks implemented changes and thesis-relevant progress. Add a new
 entry whenever a feature, test case, output format, or compatibility improvement
 is added.
 
+## 2026-05-14
+
+### HTML Filtering Prunes Empty Branches
+
+Improved HTML filtering for large reports.
+
+Filtering now also hides:
+
+- reference branches with no visible leaf failures
+- focus blocks with no visible leaf failures
+- sidebar focus-node entries whose focus block has no visible leaf failures
+
+Added a visible count so the user can see the filter result size:
+
+```text
+Showing 981 of 10099 failures
+```
+
+Changed the default HTML report state to compressed:
+
+- reference children start collapsed
+- leaf bodies start collapsed
+- `expand all` remains available
+- added `collapse all`
+- added `expand visible only`
+
+Updated:
+
+- `shacl_explainer/report_template.html`
+
+Test coverage:
+
+- HTML output tests pass
+
+### Dynamic HTML Filter Chips
+
+Replaced hard-coded HTML component filters with filter chips generated from the
+actual report data.
+
+The HTML report now builds chips for:
+
+- component, such as `minCount` and `maxCount`
+- leaf path, such as `ub:type`, `ub:name`, and `ub:teacherOf`
+- reference path, such as `ub:takesCourse` and `ub:doctoralDegreeFrom`
+- referenced shape, such as `ub:CourseShape` and `ub:UniversityShape`
+- violation kind, direct or nested
+
+Each chip includes the number of matching leaf failures and filters the visible
+tree without requiring a new CLI run.
+
+Updated:
+
+- `shacl_explainer/report_template.html`
+
+Test coverage:
+
+- HTML output tests pass
+
+### HTML Leaf Header Shows Broken RDF Node
+
+Updated future HTML reports so each leaf failure header identifies the failing
+focus/value node without requiring expansion.
+
+Before, many rows could look identical in large reports:
+
+```text
+minCount ub:type (missing)
+```
+
+Now the header is self-contained:
+
+```text
+Course43 · missing ub:type
+University384 · missing ub:name
+FullProfessor1 · too many ub:teacherOf
+```
+
+Updated:
+
+- `shacl_explainer/report_template.html`
+
+Note:
+
+- Existing HTML files were not regenerated for this change.
+
+Test coverage:
+
+- HTML output tests pass
+
+### HTML Reference Header Shows Causal Path
+
+Updated the HTML report reference-node header so the property path that caused a
+`sh:node` reference is visible immediately.
+
+Before, the header emphasized the source shape and referenced shape but hid the
+causal bridge. Now it shows:
+
+```text
+reference path -> referenced shape · leaf failure count
+```
+
+Example:
+
+```text
+ub:doctoralDegreeFrom -> ub:UniversityShape · 2 leaf failures
+```
+
+Updated:
+
+- `shacl_explainer/report_template.html`
+- `html_outputs/jena_tc7_report.html`
+- `html_outputs/lubm_skg1_schema2_report.html`
+
+Test coverage:
+
+- Full suite passes with `33 tests OK`
+
 ## 2026-05-13
 
 ### Pickled RDF Graph Input
