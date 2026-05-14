@@ -6,6 +6,35 @@ is added.
 
 ## 2026-05-14
 
+### HTML Export Actions
+
+Added export actions directly to the HTML report so the interactive view also
+works as an analysis artifact.
+
+The filter bar now includes:
+
+- `export visible CSV`
+- `copy visible JSON`
+- `copy root-cause summary`
+
+The visible-failure exports follow the current HTML state:
+
+- active filters
+- selected focus node in `By focus` mode
+- selected issue cluster in `By issue` mode
+
+The root-cause summary export mirrors the report summary and copies the current
+filtered breakdown as tab-delimited text.
+
+Updated:
+
+- `shacl_explainer/report_template.html`
+
+Test coverage:
+
+- HTML output tests pass
+- full test suite passes
+
 ### HTML Root-Cause Breakdown Table
 
 Added a root-cause breakdown table to the HTML summary panel.

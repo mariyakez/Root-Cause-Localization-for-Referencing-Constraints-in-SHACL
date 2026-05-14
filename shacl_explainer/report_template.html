@@ -657,6 +657,26 @@ body.resizing-sidebar {
   color: var(--text-muted);
   background: rgba(255,255,255,.02);
 }
+.export-btn {
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 3px;
+  border: 1px solid rgba(34,211,238,.18);
+  background: rgba(34,211,238,.04);
+  color: var(--cyan);
+  cursor: pointer;
+  transition: all .12s;
+}
+.export-btn:hover {
+  border-color: rgba(34,211,238,.34);
+  background: rgba(34,211,238,.08);
+}
+.export-btn.copied {
+  color: var(--green);
+  border-color: rgba(74,222,128,.3);
+  background: rgba(74,222,128,.08);
+}
 .filter-actions {
   margin-left: auto;
   display: flex;
@@ -884,6 +904,9 @@ body.resizing-sidebar {
         <button class="expand-all-btn" onclick="expandVisible()">expand visible only</button>
         <button class="expand-all-btn" onclick="expandAll()">expand all</button>
         <button class="expand-all-btn" onclick="collapseAll()">collapse all</button>
+        <button class="export-btn" type="button" onclick="exportVisibleCsv(event, this)">export visible CSV</button>
+        <button class="export-btn" type="button" onclick="copyVisibleJson(event, this)">copy visible JSON</button>
+        <button class="export-btn" type="button" onclick="copyRootCauseSummary(event, this)">copy root-cause summary</button>
       </div>
     </div>
     <section class="summary-panel" aria-label="Report summary">
@@ -1010,9 +1033,7 @@ function copyButton(value, label="copy") {
   return `<button class="copy-btn" type="button" title="Copy ${esc(label)}" data-copy="${esc(value)}" onclick="copyText(event, this)">copy</button>`;
 }
 
-async function copyText(event, btn) {
-  event.stopPropagation();
-  const value = btn.dataset.copy || "";
+async function copyPlainText(value) {
   try {
     await navigator.clipboard.writeText(value);
   } catch (_) {
@@ -1026,13 +1047,23 @@ async function copyText(event, btn) {
     document.execCommand("copy");
     document.body.removeChild(area);
   }
+}
+
+function flashButtonState(btn, label="copied") {
   const old = btn.textContent;
-  btn.textContent = "copied";
+  btn.textContent = label;
   btn.classList.add("copied");
   setTimeout(() => {
     btn.textContent = old;
     btn.classList.remove("copied");
   }, 900);
+}
+
+async function copyText(event, btn) {
+  event.stopPropagation();
+  const value = btn.dataset.copy || "";
+  await copyPlainText(value);
+  flashButtonState(btn);
 }
 
 function countLeaves(nodes) {
@@ -1142,6 +1173,115 @@ function collectFilterStats(nodes) {
 
   walk(nodes);
   return stats;
+}
+
+function formatHowReached(referencePaths=[], shapeChain=[]) {
+  return referencePaths.length
+    ? `via ${referencePaths.map((path, index) => {
+        const shape = shapeChain[index];
+        return shape ? `${path} -> ${shape}` : path;
+      }).join(" -> ")}`
+    : "direct";
+}
+
+function visibleEntriesForCurrentView() {
+  if (sidebarMode === "issue") {
+    return ISSUE_ENTRIES.filter(entry =>
+      entry.issue === selectedIssue && dataLeafMatches(entry.node, entry.ctx)
+    );
+  }
+
+  if (!selectedFocus || !REPORT_GROUPS[selectedFocus]) return [];
+  return collectLeafEntries(REPORT_GROUPS[selectedFocus]).filter(entry =>
+    dataLeafMatches(entry.node, entry.ctx)
+  );
+}
+
+function exportRow(entry) {
+  return {
+    issue: entry.issue,
+    focus_node: entry.node.focusNode || "",
+    root_focus_node: entry.ctx?.rootFocus || "",
+    path: entry.node.path || "",
+    component: entry.node.component || "",
+    value_node: entry.node.value || "",
+    message: entry.node.message || "",
+    repair_hint: entry.node.repairHint || "",
+    reference_path: (entry.ctx?.referencePaths || []).join(" -> "),
+    referenced_shape: (entry.ctx?.shapes || []).join(" -> "),
+    leaf_shape_chain: (entry.node.refChain || []).join(" -> "),
+    how_reached: formatHowReached(entry.ctx?.referencePaths || [], entry.ctx?.shapes || []),
+  };
+}
+
+function csvEscape(value) {
+  const text = String(value ?? "");
+  if (/[",\n]/.test(text)) return `"${text.replace(/"/g, "\"\"")}"`;
+  return text;
+}
+
+function toCsv(rows) {
+  if (!rows.length) {
+    return "issue,focus_node,root_focus_node,path,component,value_node,message,repair_hint,reference_path,referenced_shape,leaf_shape_chain,how_reached\n";
+  }
+  const headers = Object.keys(rows[0]);
+  return [
+    headers.join(","),
+    ...rows.map(row => headers.map(header => csvEscape(row[header])).join(",")),
+  ].join("\n");
+}
+
+function downloadText(filename, text, type="text/plain;charset=utf-8") {
+  const blob = new Blob([text], { type });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  setTimeout(() => URL.revokeObjectURL(url), 0);
+}
+
+async function exportVisibleCsv(event, btn) {
+  event.stopPropagation();
+  const rows = visibleEntriesForCurrentView().map(exportRow);
+  const prefix = sidebarMode === "issue" ? "visible_issue_cluster" : "visible_focus";
+  downloadText(`${prefix}_failures.csv`, toCsv(rows), "text/csv;charset=utf-8");
+  flashButtonState(btn, "downloaded");
+}
+
+async function copyVisibleJson(event, btn) {
+  event.stopPropagation();
+  const rows = visibleEntriesForCurrentView().map(exportRow);
+  await copyPlainText(JSON.stringify(rows, null, 2));
+  flashButtonState(btn);
+}
+
+function rootCauseBreakdownRows() {
+  const breakdown = new Map();
+  ISSUE_ENTRIES.forEach(entry => {
+    if (!dataLeafMatches(entry.node, entry.ctx)) return;
+    const howReached = formatHowReached(entry.ctx?.referencePaths || [], entry.ctx?.shapes || []);
+    const key = `${entry.issue}|||${howReached}`;
+    breakdown.set(key, (breakdown.get(key) || 0) + 1);
+  });
+
+  return countMapEntries(breakdown).map(([key, count]) => {
+    const [issue, howReached] = key.split("|||");
+    return { issue, how_reached: howReached, count };
+  });
+}
+
+async function copyRootCauseSummary(event, btn) {
+  event.stopPropagation();
+  const rows = rootCauseBreakdownRows();
+  const text = [
+    "Root cause\tHow reached\tCount",
+    ...rows.map(row => `${row.issue}\t${row.how_reached}\t${row.count}`),
+  ].join("\n");
+  await copyPlainText(text);
+  flashButtonState(btn);
 }
 
 // ── leaf DOM ─────────────────────────────────────────────────────────────
@@ -1782,27 +1922,12 @@ function updateSummaryPanel(groups) {
   const breakdownBody = document.getElementById("summary-breakdown-body");
   if (!breakdownBody) return;
   breakdownBody.innerHTML = "";
-  const breakdown = new Map();
-  ISSUE_ENTRIES.forEach(entry => {
-    const pathChain = entry.ctx?.referencePaths || [];
-    const shapeChain = entry.ctx?.shapes || [];
-    const howReached = pathChain.length
-      ? `via ${pathChain.map((path, index) => {
-          const shape = shapeChain[index];
-          return shape ? `${path} -> ${shape}` : path;
-        }).join(" -> ")}`
-      : "direct";
-    const key = `${entry.issue}|||${howReached}`;
-    breakdown.set(key, (breakdown.get(key) || 0) + 1);
-  });
-
-  countMapEntries(breakdown).slice(0, 8).forEach(([key, count]) => {
-    const [issue, howReached] = key.split("|||");
+  rootCauseBreakdownRows().slice(0, 8).forEach(row => {
     const tr = document.createElement("tr");
     tr.innerHTML = `
-      <td>${esc(issue)}</td>
-      <td class="summary-path">${esc(howReached)}</td>
-      <td>${count}</td>`;
+      <td>${esc(row.issue)}</td>
+      <td class="summary-path">${esc(row.how_reached)}</td>
+      <td>${row.count}</td>`;
     breakdownBody.appendChild(tr);
   });
 }
