@@ -695,6 +695,15 @@ body.resizing-sidebar {
   align-items: center;
 }
 
+/* ── report-level actions ── */
+.report-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
 /* ── summary panel ── */
 .summary-panel {
   display: grid;
@@ -724,6 +733,34 @@ body.resizing-sidebar {
   border: 1px solid var(--border);
   border-radius: 6px;
   padding: 8px 10px;
+}
+.summary-metric.focus-metric {
+  background: rgba(34,211,238,.06);
+  border-color: rgba(34,211,238,.18);
+}
+.summary-metric.focus-metric .summary-value {
+  color: var(--cyan);
+}
+.summary-metric.leaf-metric {
+  background: rgba(248,113,113,.08);
+  border-color: rgba(248,113,113,.22);
+}
+.summary-metric.leaf-metric .summary-value {
+  color: var(--red);
+}
+.summary-metric.direct-metric {
+  background: rgba(250,204,21,.06);
+  border-color: rgba(250,204,21,.18);
+}
+.summary-metric.direct-metric .summary-value {
+  color: #facc15;
+}
+.summary-metric.nested-metric {
+  background: rgba(96,165,250,.08);
+  border-color: rgba(96,165,250,.22);
+}
+.summary-metric.nested-metric .summary-value {
+  color: var(--blue);
 }
 .summary-value {
   display: block;
@@ -771,6 +808,11 @@ body.resizing-sidebar {
 }
 .summary-breakdown {
   margin-top: 14px;
+  background: rgba(255,255,255,.02);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px 4px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.02);
 }
 .summary-table {
   width: 100%;
@@ -900,23 +942,28 @@ body.resizing-sidebar {
   </nav>
 
   <main class="main">
+    <div class="report-actions" aria-label="Report actions">
+      <button class="export-btn" type="button" onclick="exportVisibleCsv(event, this)">export visible CSV</button>
+      <button class="export-btn" type="button" onclick="copyVisibleJson(event, this)">copy visible JSON</button>
+      <button class="export-btn" type="button" onclick="copyRootCauseSummary(event, this)">copy root-cause summary</button>
+    </div>
     <section class="summary-panel" aria-label="Report summary">
       <div>
         <div class="summary-title">Report summary</div>
         <div class="summary-grid">
-          <div class="summary-metric">
+          <div class="summary-metric focus-metric">
             <span class="summary-value" id="summary-focus">—</span>
             <span class="summary-label">focus nodes</span>
           </div>
-          <div class="summary-metric">
+          <div class="summary-metric leaf-metric">
             <span class="summary-value" id="summary-leaves">—</span>
             <span class="summary-label">leaf failures</span>
           </div>
-          <div class="summary-metric">
+          <div class="summary-metric direct-metric">
             <span class="summary-value" id="summary-direct">—</span>
             <span class="summary-label">direct</span>
           </div>
-          <div class="summary-metric">
+          <div class="summary-metric nested-metric">
             <span class="summary-value" id="summary-nested">—</span>
             <span class="summary-label">via sh:node</span>
           </div>
@@ -963,9 +1010,6 @@ body.resizing-sidebar {
         <button class="expand-all-btn" onclick="expandVisible()">expand visible only</button>
         <button class="expand-all-btn" onclick="expandAll()">expand all</button>
         <button class="expand-all-btn" onclick="collapseAll()">collapse all</button>
-        <button class="export-btn" type="button" onclick="exportVisibleCsv(event, this)">export visible CSV</button>
-        <button class="export-btn" type="button" onclick="copyVisibleJson(event, this)">copy visible JSON</button>
-        <button class="export-btn" type="button" onclick="copyRootCauseSummary(event, this)">copy root-cause summary</button>
       </div>
     </div>
     <noscript>

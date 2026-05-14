@@ -6,6 +6,53 @@ is added.
 
 ## 2026-05-14
 
+### HTML Summary Visual Hierarchy
+
+Improved the visual hierarchy of the HTML summary panel with restrained,
+semantic color coding.
+
+Changes:
+
+- `focus nodes` metric uses a cyan-tinted card
+- `leaf failures` metric uses a red-tinted card
+- `direct` metric uses a warm yellow-tinted card
+- `via sh:node` metric uses a blue-tinted card
+- the root-cause breakdown section now has a slightly stronger framed surface so
+  it stands out as a key explanatory block
+
+This makes the summary easier to scan in demos and thesis review without making
+the page look overly decorative.
+
+Updated:
+
+- `shacl_explainer/report_template.html`
+
+Test coverage:
+
+- HTML output tests pass
+
+### HTML Report Actions Bar
+
+Moved the HTML export actions out of the filter bar and into a separate
+report-level actions row above the summary panel.
+
+This separates:
+
+- report actions: export/copy
+- overview: summary panel
+- exploration controls: sticky filter bar
+
+The result is less visual crowding in the filter bar and a clearer distinction
+between report-wide actions and detail-exploration controls.
+
+Updated:
+
+- `shacl_explainer/report_template.html`
+
+Test coverage:
+
+- HTML output tests pass
+
 ### HTML Summary Panel Placement
 
 Moved the HTML summary panel above the filter bar.
