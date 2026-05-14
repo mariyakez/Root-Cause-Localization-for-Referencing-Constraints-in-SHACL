@@ -6,6 +6,88 @@ is added.
 
 ## 2026-05-14
 
+### HTML No-Script Fallback
+
+Added a fallback for HTML reports before JavaScript renders.
+
+The report now includes:
+
+- a `noscript` block explaining that the interactive tree needs JavaScript
+- static metadata in the no-script view
+- a non-empty loading card inside `#report` so the body is not blank before the
+  JavaScript renderer runs
+
+Updated:
+
+- `shacl_explainer/report_template.html`
+
+Test coverage:
+
+- HTML output tests pass
+
+### HTML Keyboard Accessibility
+
+Improved keyboard accessibility for expandable HTML report nodes.
+
+Reference and leaf headers now include:
+
+- `role="button"`
+- `tabindex="0"`
+- `aria-expanded`
+- `aria-controls`
+- Enter/Space keyboard toggling
+- visible focus outline
+
+Expansion controls keep `aria-expanded` synchronized when nodes are opened,
+collapsed, expanded all, or collapsed all.
+
+Updated:
+
+- `shacl_explainer/report_template.html`
+
+Test coverage:
+
+- HTML output tests pass
+
+### Focus Sidebar Preview Limit
+
+Limited the HTML focus-node sidebar to the first 20 matching focus nodes by
+default.
+
+When more than 20 focus nodes match the current filters, the sidebar now shows a
+toggle:
+
+```text
+show all N focus nodes
+show first 20 focus nodes
+```
+
+Search still works across the matching focus-node set, and the currently
+selected focus node remains visible even when it is outside the first 20.
+
+Updated:
+
+- `shacl_explainer/report_template.html`
+
+Test coverage:
+
+- HTML output tests pass
+
+### Sticky HTML Filter Bar
+
+Made the HTML filter bar sticky under the top report header.
+
+This keeps component/path/reference/shape filters and view controls available
+during long scrolling sessions in large reports.
+
+Updated:
+
+- `shacl_explainer/report_template.html`
+
+Test coverage:
+
+- HTML output tests pass
+
 ### HTML Main Summary Panel
 
 Added an orientation panel at the top of the HTML main area.
