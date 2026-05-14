@@ -1197,13 +1197,13 @@ function formatHowReached(referencePaths=[], shapeChain=[]) {
 
 function visibleEntriesForCurrentView() {
   if (sidebarMode === "issue") {
-    return ISSUE_ENTRIES.filter(entry =>
-      entry.issue === selectedIssue && dataLeafMatches(entry.node, entry.ctx)
+    return (ISSUE_INDEX.get(selectedIssue) || []).filter(entry =>
+      dataLeafMatches(entry.node, entry.ctx)
     );
   }
 
-  if (!selectedFocus || !REPORT_GROUPS[selectedFocus]) return [];
-  return collectLeafEntries(REPORT_GROUPS[selectedFocus]).filter(entry =>
+  if (!selectedFocus || !FOCUS_ENTRY_INDEX.has(selectedFocus)) return [];
+  return (FOCUS_ENTRY_INDEX.get(selectedFocus) || []).filter(entry =>
     dataLeafMatches(entry.node, entry.ctx)
   );
 }
@@ -1567,6 +1567,9 @@ function collapseAll() {
 // ── filter ────────────────────────────────────────────────────────────────
 let REPORT_GROUPS = {};
 let ISSUE_ENTRIES = [];
+let ALL_LEAF_ENTRIES = [];
+let FOCUS_ENTRY_INDEX = new Map();
+let ISSUE_INDEX = new Map();
 let selectedFocus = null;
 let selectedIssue = null;
 let sidebarMode = "focus";
@@ -1618,46 +1621,35 @@ function dataLeafMatches(node, ctx={ referencePaths: [], shapes: [] }) {
   return true;
 }
 
-function countMatchingLeavesData(nodes, ctx={ referencePaths: [], shapes: [] }) {
+function countMatchingEntries(entries=[]) {
   let count = 0;
-  for (const node of nodes || []) {
-    if (node.type === "leaf") {
-      if (dataLeafMatches(node, ctx)) count += 1;
-    } else if (node.children) {
-      const next = {
-        referencePaths: node.path
-          ? [...(ctx.referencePaths || []), node.path]
-          : [...(ctx.referencePaths || [])],
-        shapes: (node.referencedShape || node.shape)
-          ? [...(ctx.shapes || []), node.referencedShape || node.shape]
-          : [...(ctx.shapes || [])],
-      };
-      count += countMatchingLeavesData(node.children, next);
-    }
+  for (const entry of entries) {
+    if (dataLeafMatches(entry.node, entry.ctx)) count += 1;
   }
   return count;
 }
 
 function updateShowingCount() {
-  const total = allLeaves(REPORT_DATA).length;
+  const total = ALL_LEAF_ENTRIES.length;
   const visible = sidebarMode === "issue" && selectedIssue
-    ? ISSUE_ENTRIES.filter(e => e.issue === selectedIssue && dataLeafMatches(e.node, e.ctx)).length
-    : countMatchingLeavesData(REPORT_DATA);
+    ? countMatchingEntries(ISSUE_INDEX.get(selectedIssue) || [])
+    : countMatchingEntries(ALL_LEAF_ENTRIES);
   const el = document.getElementById("showing-count");
   if (el) el.textContent = `Showing ${visible} of ${total} failures`;
 }
 
 function firstVisibleFocus() {
-  return Object.keys(REPORT_GROUPS).find(fn =>
-    countMatchingLeavesData(REPORT_GROUPS[fn]) > 0
-  ) || Object.keys(REPORT_GROUPS)[0] || null;
+  for (const fn of Object.keys(REPORT_GROUPS)) {
+    if (countMatchingEntries(FOCUS_ENTRY_INDEX.get(fn) || []) > 0) return fn;
+  }
+  return Object.keys(REPORT_GROUPS)[0] || null;
 }
 
 function firstVisibleIssue() {
   const counts = new Map();
-  ISSUE_ENTRIES.forEach(entry => {
-    if (dataLeafMatches(entry.node, entry.ctx))
-      addCount(counts, entry.issue);
+  ISSUE_INDEX.forEach((entries, issue) => {
+    const count = countMatchingEntries(entries);
+    if (count > 0) counts.set(issue, count);
   });
   return countMapEntries(counts)[0]?.[0] || null;
 }
@@ -1674,7 +1666,7 @@ function updateSidebarVisibility() {
   const matchingFocusItems = [];
 
   document.querySelectorAll("#sidebar-items .focus-item").forEach(item => {
-    const visibleCount = countMatchingLeavesData(REPORT_GROUPS[item.dataset.focusKey] || []);
+    const visibleCount = countMatchingEntries(FOCUS_ENTRY_INDEX.get(item.dataset.focusKey) || []);
     const hasVisibleLeaves = visibleCount > 0;
     const searchMatch = !q || item.dataset.focus.includes(q);
     const countEl = item.querySelector(".focus-count");
@@ -1702,9 +1694,9 @@ function updateSidebarVisibility() {
   }
 
   const issueCounts = new Map();
-  ISSUE_ENTRIES.forEach(entry => {
-    if (dataLeafMatches(entry.node, entry.ctx))
-      addCount(issueCounts, entry.issue);
+  ISSUE_INDEX.forEach((entries, issue) => {
+    const count = countMatchingEntries(entries);
+    if (count > 0) issueCounts.set(issue, count);
   });
 
   let visibleIssues = 0;
@@ -1739,10 +1731,10 @@ function onSidebarTabKeydown(event, mode) {
 }
 
 function applyFilter() {
-  if (sidebarMode === "focus" && selectedFocus && countMatchingLeavesData(REPORT_GROUPS[selectedFocus] || []) === 0) {
+  if (sidebarMode === "focus" && selectedFocus && countMatchingEntries(FOCUS_ENTRY_INDEX.get(selectedFocus) || []) === 0) {
     selectedFocus = firstVisibleFocus();
   }
-  if (sidebarMode === "issue" && selectedIssue && !ISSUE_ENTRIES.some(e => e.issue === selectedIssue && dataLeafMatches(e.node, e.ctx))) {
+  if (sidebarMode === "issue" && selectedIssue && countMatchingEntries(ISSUE_INDEX.get(selectedIssue) || []) === 0) {
     selectedIssue = firstVisibleIssue();
   }
 
@@ -1856,7 +1848,7 @@ function buildSidebar(groups) {
   container.innerHTML = "";
 
   Object.entries(groups).forEach(([fn, nodes], i) => {
-    const lc = countLeaves(nodes);
+    const lc = (FOCUS_ENTRY_INDEX.get(fn) || []).length;
     const targetId = `focus-${fn.replace(/[^a-z0-9]/gi,"_")}`;
     const item = document.createElement("button");
     item.type = "button";
@@ -1885,10 +1877,7 @@ function buildIssueSidebar() {
   if (!container) return;
   container.innerHTML = "";
 
-  const counts = new Map();
-  ISSUE_ENTRIES.forEach(entry => addCount(counts, entry.issue));
-
-  countMapEntries(counts).forEach(([issue, count], i) => {
+  countMapEntries(new Map(Array.from(ISSUE_INDEX.entries()).map(([issue, entries]) => [issue, entries.length]))).forEach(([issue, count], i) => {
     const item = document.createElement("button");
     item.type = "button";
     item.className = "focus-item issue-item" + (i === 0 ? " active" : "");
@@ -1908,34 +1897,30 @@ function buildIssueSidebar() {
 
 // ── stats ─────────────────────────────────────────────────────────────────
 function updateStats(groups) {
-  const allL = Object.values(groups).flatMap(ns => allLeaves(ns));
   document.getElementById("stat-focus").textContent  = Object.keys(groups).length;
-  document.getElementById("stat-leaves").textContent = allL.length;
+  document.getElementById("stat-leaves").textContent = ALL_LEAF_ENTRIES.length;
   document.getElementById("stat-depth").textContent  =
     maxDepth(Object.values(groups).flat());
   document.getElementById("stat-direct").textContent =
-    allL.filter(l => l.refChain.length === 0).length;
+    ALL_LEAF_ENTRIES.filter(entry => (entry.node.refChain || []).length === 0).length;
 }
 
 function updateSummaryPanel(groups) {
-  const allL = Object.values(groups).flatMap(ns => allLeaves(ns));
-  const direct = allL.filter(l => l.refChain.length === 0).length;
-  const nested = allL.length - direct;
+  const direct = ALL_LEAF_ENTRIES.filter(entry => (entry.node.refChain || []).length === 0).length;
+  const nested = ALL_LEAF_ENTRIES.length - direct;
   const focusEl = document.getElementById("summary-focus");
   const leavesEl = document.getElementById("summary-leaves");
   const directEl = document.getElementById("summary-direct");
   const nestedEl = document.getElementById("summary-nested");
   if (focusEl) focusEl.textContent = Object.keys(groups).length;
-  if (leavesEl) leavesEl.textContent = allL.length;
+  if (leavesEl) leavesEl.textContent = ALL_LEAF_ENTRIES.length;
   if (directEl) directEl.textContent = direct;
   if (nestedEl) nestedEl.textContent = nested;
 
   const issueBox = document.getElementById("summary-issues");
   if (!issueBox) return;
   issueBox.innerHTML = "";
-  const counts = new Map();
-  ISSUE_ENTRIES.forEach(entry => addCount(counts, entry.issue));
-  countMapEntries(counts).slice(0, 5).forEach(([issue, count]) => {
+  countMapEntries(new Map(Array.from(ISSUE_INDEX.entries()).map(([issue, entries]) => [issue, entries.length]))).slice(0, 5).forEach(([issue, count]) => {
     const row = document.createElement("div");
     row.className = "summary-issue";
     row.innerHTML = `
@@ -2038,9 +2023,9 @@ function setSidebarMode(mode) {
   document.getElementById("tab-issue").tabIndex = mode === "issue" ? 0 : -1;
   const search = document.getElementById("focus-search");
   if (search) search.placeholder = mode === "focus" ? "Search focus node" : "Search issue";
-  if (mode === "focus" && (!selectedFocus || countMatchingLeavesData(REPORT_GROUPS[selectedFocus] || []) === 0))
+  if (mode === "focus" && (!selectedFocus || countMatchingEntries(FOCUS_ENTRY_INDEX.get(selectedFocus) || []) === 0))
     selectedFocus = firstVisibleFocus();
-  if (mode === "issue" && (!selectedIssue || !ISSUE_ENTRIES.some(e => e.issue === selectedIssue && dataLeafMatches(e.node, e.ctx))))
+  if (mode === "issue" && (!selectedIssue || countMatchingEntries(ISSUE_INDEX.get(selectedIssue) || []) === 0))
     selectedIssue = firstVisibleIssue();
   renderMainPanel();
   updateShowingCount();
@@ -2069,8 +2054,8 @@ function renderSelectedFocus() {
   }
 
   const nodes = REPORT_GROUPS[selectedFocus];
-  const totalCount = countLeaves(nodes);
-  const visibleCount = countMatchingLeavesData(nodes);
+  const totalCount = (FOCUS_ENTRY_INDEX.get(selectedFocus) || []).length;
+  const visibleCount = countMatchingEntries(FOCUS_ENTRY_INDEX.get(selectedFocus) || []);
 
   const block = document.createElement("div");
   block.className = "focus-block";
@@ -2108,9 +2093,7 @@ function renderSelectedIssue() {
   leafId = 0;
   refId = 0;
 
-  const entries = ISSUE_ENTRIES.filter(e =>
-    e.issue === selectedIssue && dataLeafMatches(e.node, e.ctx)
-  );
+  const entries = (ISSUE_INDEX.get(selectedIssue) || []).filter(e => dataLeafMatches(e.node, e.ctx));
 
   if (!selectedIssue || entries.length === 0) {
     const empty = document.createElement("div");
@@ -2152,7 +2135,17 @@ function render() {
     (groups[fn] = groups[fn] || []).push(node);
   }
   REPORT_GROUPS = groups;
-  ISSUE_ENTRIES = collectLeafEntries(REPORT_DATA);
+  ALL_LEAF_ENTRIES = collectLeafEntries(REPORT_DATA);
+  ISSUE_ENTRIES = ALL_LEAF_ENTRIES;
+  FOCUS_ENTRY_INDEX = new Map();
+  Object.keys(groups).forEach(fn => {
+    FOCUS_ENTRY_INDEX.set(fn, collectLeafEntries(groups[fn]));
+  });
+  ISSUE_INDEX = new Map();
+  ALL_LEAF_ENTRIES.forEach(entry => {
+    if (!ISSUE_INDEX.has(entry.issue)) ISSUE_INDEX.set(entry.issue, []);
+    ISSUE_INDEX.get(entry.issue).push(entry);
+  });
   selectedFocus = Object.keys(groups)[0] || null;
   selectedIssue = firstVisibleIssue();
 

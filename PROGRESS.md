@@ -6,6 +6,39 @@ is added.
 
 ## 2026-05-14
 
+### HTML Performance Precomputation
+
+Optimized the HTML report for future larger validation outputs by moving several
+filtering and sidebar count operations onto precomputed flat indexes.
+
+The report now builds and reuses:
+
+- a flat leaf-entry list for all failures
+- a focus-node entry index
+- an issue-cluster entry index
+
+This means repeated UI actions such as:
+
+- updating the visible failure count
+- deciding which focus nodes remain visible
+- deciding which issue clusters remain visible
+- exporting the currently visible failures
+
+no longer require recursive traversal of the whole explanation tree on every
+interaction.
+
+Tree rendering still uses the original grouped structure, but the frequent
+counting and filtering paths now operate on cached leaf records.
+
+Updated:
+
+- `shacl_explainer/report_template.html`
+
+Test coverage:
+
+- HTML output tests pass
+- full test suite passes
+
 ### HTML Sidebar Accessibility
 
 Improved accessibility for the HTML sidebar before thesis and demo use.
