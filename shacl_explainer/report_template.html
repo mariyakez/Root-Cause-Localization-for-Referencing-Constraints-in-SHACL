@@ -640,6 +640,21 @@ body.resizing-sidebar {
   color: var(--text-dim);
   margin-left: 4px;
 }
+.filter-summary-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  background: rgba(255,255,255,.03);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 4px 10px;
+}
+.filter-summary-chip .filter-summary-value {
+  color: var(--text);
+}
 .showing-count {
   font-family: var(--mono);
   font-size: 10px;
@@ -1835,15 +1850,28 @@ function makeFilterButton(type, value, label, count, active=false) {
   return btn;
 }
 
-function buildFilterGroup(id, type, label, rows, allLabel="all") {
+function buildFilterGroup(id, type, label, rows, allLabel="all", options={}) {
   const container = document.getElementById(id);
   if (!container) return;
   container.innerHTML = "";
-  const total = rows.reduce((sum, [, count]) => sum + count, 0);
+  const { collapseSingle=false } = options;
   const labelEl = document.createElement("span");
   labelEl.className = "filter-label";
   labelEl.textContent = label;
   container.appendChild(labelEl);
+
+  if (collapseSingle && rows.length === 1) {
+    const [value, count] = rows[0];
+    activeFilters[type] = "all";
+    const chip = document.createElement("span");
+    chip.className = "filter-summary-chip";
+    chip.innerHTML = `<span class="filter-summary-value">${esc(value)}</span><span class="filter-count">${count}</span>`;
+    chip.title = `${label}: ${value}`;
+    container.appendChild(chip);
+    return;
+  }
+
+  const total = rows.reduce((sum, [, count]) => sum + count, 0);
   container.appendChild(makeFilterButton(type, "all", allLabel, total, true));
   rows.forEach(([value, count]) => {
     container.appendChild(makeFilterButton(type, value, value, count));
@@ -1857,12 +1885,16 @@ function buildFilters(nodes) {
     "component",
     "component",
     countMapEntries(stats.component),
+    "all",
+    { collapseSingle: true },
   );
   buildFilterGroup(
     "path-filters",
     "path",
     "path",
     countMapEntries(stats.path),
+    "all",
+    { collapseSingle: true },
   );
   buildFilterGroup(
     "reference-path-filters",
@@ -1875,6 +1907,8 @@ function buildFilters(nodes) {
     "shape",
     "shape",
     countMapEntries(stats.shape),
+    "all",
+    { collapseSingle: true },
   );
   buildFilterGroup(
     "kind-filters",

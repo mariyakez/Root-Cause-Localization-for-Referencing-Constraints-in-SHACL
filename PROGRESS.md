@@ -6,6 +6,33 @@ is added.
 
 ## 2026-05-14
 
+### Adaptive HTML Filter Noise Reduction
+
+Reduced visual noise in the HTML filter bar for reports where some facets have
+only a single meaningful value.
+
+When the following filter groups have only one non-`all` option, they now
+render as passive summary chips instead of full button groups:
+
+- component
+- leaf path
+- shape
+
+This keeps high-value controls such as reference path and kind filters
+prominent, while still exposing useful context like:
+
+- `component: minCount`
+- `path: ub:name`
+- `shape: ub:UniversityShape`
+
+Updated:
+
+- `shacl_explainer/report_template.html`
+
+Test coverage:
+
+- HTML output tests pass
+
 ### HTML Summary Visual Hierarchy
 
 Improved the visual hierarchy of the HTML summary panel with restrained,
