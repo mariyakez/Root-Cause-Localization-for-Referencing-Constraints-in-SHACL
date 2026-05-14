@@ -6,6 +6,26 @@ is added.
 
 ## 2026-05-14
 
+### Offline HTML Font Stack
+
+Removed the external Google Fonts dependency from the HTML report template.
+
+The report now uses only system font stacks:
+
+- `--mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace`
+- `--sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`
+
+This keeps the generated HTML report fully self-contained and portable for
+offline thesis sharing, local review, and archival use.
+
+Updated:
+
+- `shacl_explainer/report_template.html`
+
+Test coverage:
+
+- HTML output tests pass
+
 ### HTML Export Actions
 
 Added export actions directly to the HTML report so the interactive view also
