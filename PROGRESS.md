@@ -6,6 +6,34 @@ is added.
 
 ## 2026-05-14
 
+### Lazy HTML Focus Rendering
+
+Changed the HTML report from eager full-DOM rendering to focus-node rendering.
+
+Before, the browser created every focus block, reference branch, and leaf row at
+page load. That was acceptable for small examples but heavy for large reports
+with thousands of leaf failures.
+
+Now:
+
+- the sidebar still indexes all focus nodes
+- filter chips are still computed from the full report data
+- the main panel renders only the selected focus node
+- clicking a sidebar focus node replaces the main panel content
+- filtering updates sidebar visibility and selects the first focus node with
+  matching failures when needed
+
+This makes the generated HTML more practical for large LUBM-style reports
+because the initial browser DOM is much smaller.
+
+Updated:
+
+- `shacl_explainer/report_template.html`
+
+Test coverage:
+
+- Full suite passes with `33 tests OK`
+
 ### HTML Filtering Prunes Empty Branches
 
 Improved HTML filtering for large reports.

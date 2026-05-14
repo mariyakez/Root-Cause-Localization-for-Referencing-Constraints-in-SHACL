@@ -902,6 +902,9 @@ function collapseAll() {
 }
 
 // ── filter ────────────────────────────────────────────────────────────────
+let REPORT_GROUPS = {};
+let selectedFocus = null;
+
 let activeFilters = {
   component: "all",
   path: "all",
@@ -925,16 +928,59 @@ function filterMatches(el, type, value) {
   return el.dataset[type] === value;
 }
 
-function visibleLeafCount(root=document) {
-  return Array.from(root.querySelectorAll(".leaf-node"))
-    .filter(leaf => leaf.style.display !== "none").length;
+function dataLeafMatches(node, ctx={ referencePaths: [], shapes: [] }) {
+  const info = compInfo(node.component);
+  const kind = (node.refChain || []).length === 0 ? "direct" : "nested";
+  const values = {
+    component: info.short,
+    path: node.path || "(no path)",
+    kind,
+  };
+
+  for (const [type, value] of Object.entries(activeFilters)) {
+    if (value === "all") continue;
+    if (type === "referencePath" && !(ctx.referencePaths || []).includes(value))
+      return false;
+    if (type === "shape" && !(ctx.shapes || []).includes(value))
+      return false;
+    if (!["referencePath", "shape"].includes(type) && values[type] !== value)
+      return false;
+  }
+
+  return true;
+}
+
+function countMatchingLeavesData(nodes, ctx={ referencePaths: [], shapes: [] }) {
+  let count = 0;
+  for (const node of nodes || []) {
+    if (node.type === "leaf") {
+      if (dataLeafMatches(node, ctx)) count += 1;
+    } else if (node.children) {
+      const next = {
+        referencePaths: node.path
+          ? [...(ctx.referencePaths || []), node.path]
+          : [...(ctx.referencePaths || [])],
+        shapes: (node.referencedShape || node.shape)
+          ? [...(ctx.shapes || []), node.referencedShape || node.shape]
+          : [...(ctx.shapes || [])],
+      };
+      count += countMatchingLeavesData(node.children, next);
+    }
+  }
+  return count;
 }
 
 function updateShowingCount() {
-  const total = document.querySelectorAll(".leaf-node").length;
-  const visible = visibleLeafCount();
+  const total = allLeaves(REPORT_DATA).length;
+  const visible = countMatchingLeavesData(REPORT_DATA);
   const el = document.getElementById("showing-count");
   if (el) el.textContent = `Showing ${visible} of ${total} failures`;
+}
+
+function firstVisibleFocus() {
+  return Object.keys(REPORT_GROUPS).find(fn =>
+    countMatchingLeavesData(REPORT_GROUPS[fn]) > 0
+  ) || Object.keys(REPORT_GROUPS)[0] || null;
 }
 
 function updateSidebarVisibility() {
@@ -944,11 +990,13 @@ function updateSidebarVisibility() {
   let visible = 0;
 
   document.querySelectorAll(".focus-item").forEach(item => {
-    const block = document.getElementById(item.dataset.target);
-    const hasVisibleLeaves = block && block.style.display !== "none";
+    const visibleCount = countMatchingLeavesData(REPORT_GROUPS[item.dataset.focusKey] || []);
+    const hasVisibleLeaves = visibleCount > 0;
     const searchMatch = !q || item.dataset.focus.includes(q);
     const show = hasVisibleLeaves && searchMatch;
     item.style.display = show ? "" : "none";
+    const countEl = item.querySelector(".focus-count");
+    if (countEl) countEl.textContent = visibleCount;
     if (show) visible += 1;
   });
 
@@ -956,6 +1004,16 @@ function updateSidebarVisibility() {
 }
 
 function applyFilter() {
+  if (selectedFocus && countMatchingLeavesData(REPORT_GROUPS[selectedFocus] || []) === 0) {
+    selectedFocus = firstVisibleFocus();
+  }
+
+  renderSelectedFocus();
+  updateShowingCount();
+  updateSidebarVisibility();
+}
+
+function applyDomFilter() {
   document.querySelectorAll(".leaf-node").forEach(el => {
     const visible = Object.entries(activeFilters).every(([type, value]) =>
       filterMatches(el, type, value)
@@ -980,9 +1038,6 @@ function applyFilter() {
       .some(leaf => leaf.style.display !== "none");
     el.style.display = hasVisibleLeaf ? "" : "none";
   });
-
-  updateShowingCount();
-  updateSidebarVisibility();
 }
 
 function setFilter(btn) {
@@ -1069,15 +1124,14 @@ function buildSidebar(groups) {
     const item = document.createElement("div");
     item.className = "focus-item" + (i === 0 ? " active" : "");
     item.dataset.focus = fn.toLowerCase();
+    item.dataset.focusKey = fn;
     item.dataset.target = targetId;
     item.innerHTML = `
       <span class="focus-dot"></span>
       <span class="focus-name" title="${esc(fn)}">${esc(fn.split(":").pop())}</span>
       <span class="focus-count">${lc}</span>`;
     item.onclick = () => {
-      document.querySelectorAll(".focus-item").forEach(x => x.classList.remove("active"));
-      item.classList.add("active");
-      document.getElementById(targetId)?.scrollIntoView({ behavior:"smooth", block:"start" });
+      selectFocus(fn);
     };
     container.appendChild(item);
   });
@@ -1144,6 +1198,62 @@ function esc(s) {
     .replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 }
 
+function focusBlockId(fn) {
+  return `focus-${fn.replace(/[^a-z0-9]/gi,"_")}`;
+}
+
+function selectFocus(fn) {
+  selectedFocus = fn;
+  renderSelectedFocus();
+  updateSidebarVisibility();
+}
+
+function renderSelectedFocus() {
+  const report = document.getElementById("report");
+  if (!report) return;
+  report.innerHTML = "";
+  leafId = 0;
+  refId = 0;
+
+  if (!selectedFocus || !REPORT_GROUPS[selectedFocus]) {
+    const empty = document.createElement("div");
+    empty.className = "focus-empty";
+    empty.style.display = "block";
+    empty.textContent = "No focus node matches the current filters";
+    report.appendChild(empty);
+    return;
+  }
+
+  const nodes = REPORT_GROUPS[selectedFocus];
+  const totalCount = countLeaves(nodes);
+  const visibleCount = countMatchingLeavesData(nodes);
+
+  const block = document.createElement("div");
+  block.className = "focus-block";
+  block.id = focusBlockId(selectedFocus);
+
+  const hdr = document.createElement("div");
+  hdr.className = "focus-header";
+  hdr.innerHTML = `
+    <span class="focus-node-label">${esc(selectedFocus)}</span>
+    <span class="focus-badge">focus node</span>
+    <span class="failure-count">${visibleCount} of ${totalCount} failure${totalCount!==1?"s":""}</span>`;
+
+  const tree = document.createElement("div");
+  tree.className = "tree";
+  nodes.forEach(n => tree.appendChild(n.type==="leaf" ? mkLeaf(n) : mkRef(n,0)));
+
+  block.appendChild(hdr);
+  block.appendChild(tree);
+  report.appendChild(block);
+
+  document.querySelectorAll(".focus-item").forEach(item => {
+    item.classList.toggle("active", item.dataset.focusKey === selectedFocus);
+  });
+
+  applyDomFilter();
+}
+
 function render() {
   // group by focus node
   const groups = {};
@@ -1151,35 +1261,14 @@ function render() {
     const fn = node.focusNode || node.focus_node || "unknown";
     (groups[fn] = groups[fn] || []).push(node);
   }
+  REPORT_GROUPS = groups;
+  selectedFocus = Object.keys(groups)[0] || null;
 
   buildSidebar(groups);
   buildFilters(REPORT_DATA);
   updateStats(groups);
   initSidebarResize();
   document.getElementById("gen-time").textContent = "__TIMESTAMP__";
-
-  const report = document.getElementById("report");
-  Object.entries(groups).forEach(([fn, nodes]) => {
-    const lc = countLeaves(nodes);
-    const block = document.createElement("div");
-    block.className = "focus-block";
-    block.id = `focus-${fn.replace(/[^a-z0-9]/gi,"_")}`;
-
-    const hdr = document.createElement("div");
-    hdr.className = "focus-header";
-    hdr.innerHTML = `
-      <span class="focus-node-label">${esc(fn)}</span>
-      <span class="focus-badge">focus node</span>
-      <span class="failure-count">${lc} failure${lc!==1?"s":""}</span>`;
-
-    const tree = document.createElement("div");
-    tree.className = "tree";
-    nodes.forEach(n => tree.appendChild(n.type==="leaf" ? mkLeaf(n) : mkRef(n,0)));
-
-    block.appendChild(hdr);
-    block.appendChild(tree);
-    report.appendChild(block);
-  });
 
   applyFilter();
 }
