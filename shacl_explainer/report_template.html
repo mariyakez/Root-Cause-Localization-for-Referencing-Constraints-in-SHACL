@@ -931,6 +931,7 @@ body.resizing-sidebar {
     <div class="sidebar-tabs" role="tablist" aria-label="Sidebar navigation">
       <button class="sidebar-tab active" id="tab-focus" role="tab" aria-selected="true" aria-controls="focus-panel" tabindex="0" onclick="setSidebarMode('focus')">By focus</button>
       <button class="sidebar-tab" id="tab-issue" role="tab" aria-selected="false" aria-controls="issue-panel" tabindex="-1" onclick="setSidebarMode('issue')">By issue</button>
+      <button class="sidebar-tab" id="tab-all" role="tab" aria-selected="false" aria-controls="all-panel" tabindex="-1" onclick="setSidebarMode('all')">All</button>
     </div>
     <div class="focus-search-wrap">
       <input
@@ -952,6 +953,10 @@ body.resizing-sidebar {
       <div class="sidebar-label">Issue clusters</div>
       <div id="issue-items"></div>
       <div id="issue-empty" class="focus-empty">No matching issues</div>
+    </div>
+    <div id="all-panel" class="sidebar-panel" role="tabpanel" aria-labelledby="tab-all" hidden>
+      <div class="sidebar-label">All visible violations</div>
+      <div class="focus-empty" style="display:block">Shows every currently visible failure without grouping by focus node or issue cluster.</div>
     </div>
     <div id="sidebar-resizer" class="sidebar-resizer" title="Drag to resize focus panel"></div>
   </nav>
@@ -1255,6 +1260,11 @@ function formatHowReached(referencePaths=[], shapeChain=[]) {
 }
 
 function visibleEntriesForCurrentView() {
+  if (sidebarMode === "all") {
+    return ALL_LEAF_ENTRIES.filter(entry =>
+      dataLeafMatches(entry.node, entry.ctx)
+    );
+  }
   if (sidebarMode === "issue") {
     return (ISSUE_INDEX.get(selectedIssue) || []).filter(entry =>
       dataLeafMatches(entry.node, entry.ctx)
@@ -1316,7 +1326,11 @@ function downloadText(filename, text, type="text/plain;charset=utf-8") {
 async function exportVisibleCsv(event, btn) {
   event.stopPropagation();
   const rows = visibleEntriesForCurrentView().map(exportRow);
-  const prefix = sidebarMode === "issue" ? "visible_issue_cluster" : "visible_focus";
+  const prefix = sidebarMode === "issue"
+    ? "visible_issue_cluster"
+    : sidebarMode === "all"
+      ? "visible_all"
+      : "visible_focus";
   downloadText(`${prefix}_failures.csv`, toCsv(rows), "text/csv;charset=utf-8");
   flashButtonState(btn, "downloaded");
 }
@@ -1690,9 +1704,11 @@ function countMatchingEntries(entries=[]) {
 
 function updateShowingCount() {
   const total = ALL_LEAF_ENTRIES.length;
-  const visible = sidebarMode === "issue" && selectedIssue
-    ? countMatchingEntries(ISSUE_INDEX.get(selectedIssue) || [])
-    : countMatchingEntries(ALL_LEAF_ENTRIES);
+  const visible = sidebarMode === "focus" && selectedFocus
+    ? countMatchingEntries(FOCUS_ENTRY_INDEX.get(selectedFocus) || [])
+    : sidebarMode === "issue" && selectedIssue
+      ? countMatchingEntries(ISSUE_INDEX.get(selectedIssue) || [])
+      : countMatchingEntries(ALL_LEAF_ENTRIES);
   const el = document.getElementById("showing-count");
   if (el) el.textContent = `Showing ${visible} of ${total} failures`;
 }
@@ -1778,7 +1794,7 @@ function updateSidebarVisibility() {
 function onSidebarTabKeydown(event, mode) {
   if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
   event.preventDefault();
-  const tabs = ["focus", "issue"];
+  const tabs = ["focus", "issue", "all"];
   let index = tabs.indexOf(mode);
   if (event.key === "ArrowRight") index = Math.min(tabs.length - 1, index + 1);
   if (event.key === "ArrowLeft") index = Math.max(0, index - 1);
@@ -1786,7 +1802,8 @@ function onSidebarTabKeydown(event, mode) {
   if (event.key === "End") index = tabs.length - 1;
   const nextMode = tabs[index];
   setSidebarMode(nextMode);
-  document.getElementById(nextMode === "focus" ? "tab-focus" : "tab-issue")?.focus();
+  const nextId = nextMode === "focus" ? "tab-focus" : nextMode === "issue" ? "tab-issue" : "tab-all";
+  document.getElementById(nextId)?.focus();
 }
 
 function applyFilter() {
@@ -2093,14 +2110,21 @@ function setSidebarMode(mode) {
   sidebarMode = mode;
   document.getElementById("focus-panel").hidden = mode !== "focus";
   document.getElementById("issue-panel").hidden = mode !== "issue";
+  document.getElementById("all-panel").hidden = mode !== "all";
   document.getElementById("tab-focus").classList.toggle("active", mode === "focus");
   document.getElementById("tab-issue").classList.toggle("active", mode === "issue");
+  document.getElementById("tab-all").classList.toggle("active", mode === "all");
   document.getElementById("tab-focus").setAttribute("aria-selected", mode === "focus" ? "true" : "false");
   document.getElementById("tab-issue").setAttribute("aria-selected", mode === "issue" ? "true" : "false");
+  document.getElementById("tab-all").setAttribute("aria-selected", mode === "all" ? "true" : "false");
   document.getElementById("tab-focus").tabIndex = mode === "focus" ? 0 : -1;
   document.getElementById("tab-issue").tabIndex = mode === "issue" ? 0 : -1;
+  document.getElementById("tab-all").tabIndex = mode === "all" ? 0 : -1;
   const search = document.getElementById("focus-search");
-  if (search) search.placeholder = mode === "focus" ? "Search focus node" : "Search issue";
+  if (search) {
+    search.placeholder = mode === "focus" ? "Search focus node" : mode === "issue" ? "Search issue" : "Search hidden in all view";
+    search.disabled = mode === "all";
+  }
   if (mode === "focus" && (!selectedFocus || countMatchingEntries(FOCUS_ENTRY_INDEX.get(selectedFocus) || []) === 0))
     selectedFocus = firstVisibleFocus();
   if (mode === "issue" && (!selectedIssue || countMatchingEntries(ISSUE_INDEX.get(selectedIssue) || []) === 0))
@@ -2112,6 +2136,7 @@ function setSidebarMode(mode) {
 
 function renderMainPanel() {
   if (sidebarMode === "issue") renderSelectedIssue();
+  else if (sidebarMode === "all") renderAllViolations();
   else renderSelectedFocus();
 }
 
@@ -2205,6 +2230,43 @@ function renderSelectedIssue() {
   });
 }
 
+function renderAllViolations() {
+  const report = document.getElementById("report");
+  if (!report) return;
+  report.innerHTML = "";
+  leafId = 0;
+  refId = 0;
+
+  const entries = ALL_LEAF_ENTRIES.filter(entry => dataLeafMatches(entry.node, entry.ctx));
+
+  if (entries.length === 0) {
+    const empty = document.createElement("div");
+    empty.className = "focus-empty";
+    empty.style.display = "block";
+    empty.textContent = "No violations match the current filters";
+    report.appendChild(empty);
+    return;
+  }
+
+  const block = document.createElement("div");
+  block.className = "focus-block";
+
+  const hdr = document.createElement("div");
+  hdr.className = "focus-header";
+  hdr.innerHTML = `
+    <span class="focus-node-label">All visible violations</span>
+    <span class="focus-badge">global view</span>
+    <span class="failure-count">${entries.length} failure${entries.length!==1?"s":""}</span>`;
+
+  const tree = document.createElement("div");
+  tree.className = "tree";
+  entries.forEach(entry => tree.appendChild(mkLeaf(entry.node, entry.ctx)));
+
+  block.appendChild(hdr);
+  block.appendChild(tree);
+  report.appendChild(block);
+}
+
 function render() {
   // group by focus node
   const groups = {};
@@ -2235,6 +2297,7 @@ function render() {
   initSidebarResize();
   document.getElementById("tab-focus")?.addEventListener("keydown", event => onSidebarTabKeydown(event, "focus"));
   document.getElementById("tab-issue")?.addEventListener("keydown", event => onSidebarTabKeydown(event, "issue"));
+  document.getElementById("tab-all")?.addEventListener("keydown", event => onSidebarTabKeydown(event, "all"));
   document.getElementById("gen-time").textContent = "__TIMESTAMP__";
 
   applyFilter();

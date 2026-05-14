@@ -6,6 +6,35 @@ is added.
 
 ## 2026-05-14
 
+### HTML All-Violations View
+
+Added a third HTML navigation mode so users can inspect the full visible
+failure set without grouping by focus node or issue cluster.
+
+The sidebar now offers:
+
+- `By focus`
+- `By issue`
+- `All`
+
+The `All` view renders every currently visible violation in one global list,
+respecting the active filters but not requiring the user to select a specific
+focus node or repeated issue first.
+
+This is useful for:
+
+- seeing the total filtered violation set at once
+- scanning smaller reports globally
+- exporting the globally visible failures as CSV or JSON
+
+Updated:
+
+- `shacl_explainer/report_template.html`
+
+Test coverage:
+
+- HTML output tests pass
+
 ### Adaptive HTML Filter Noise Reduction
 
 Reduced visual noise in the HTML filter bar for reports where some facets have
