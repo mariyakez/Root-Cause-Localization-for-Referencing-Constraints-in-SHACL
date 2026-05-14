@@ -6,6 +6,187 @@ is added.
 
 ## 2026-05-14
 
+### HTML Main Summary Panel
+
+Added an orientation panel at the top of the HTML main area.
+
+The panel appears above the selected focus/issue content and shows:
+
+- total focus nodes
+- total leaf failures
+- direct failures
+- failures reached through `sh:node`
+- top issue clusters
+
+Top issue clusters are clickable and switch the report into `By issue` mode for
+that repeated failure pattern.
+
+Updated:
+
+- `shacl_explainer/report_template.html`
+
+Test coverage:
+
+- HTML output tests pass
+
+### Clearer HTML Reference Depth Labels
+
+Renamed the reference-depth pill in HTML reports.
+
+Before:
+
+```text
+root
+depth 1
+```
+
+Now:
+
+```text
+1st reference
+2 levels deep
+```
+
+This makes nested `sh:node` chains easier to read without thesis-specific
+terminology.
+
+Updated:
+
+- `shacl_explainer/report_template.html`
+
+### HTML Copy Buttons
+
+Added small copy controls to make repair workflows faster.
+
+Copy buttons now appear on hover for:
+
+- selected focus node IRI
+- leaf focus node IRI
+- leaf path
+- repair hint text
+
+The buttons use the browser clipboard API with a fallback copy method and are
+kept visually subtle so they do not compete with the validation content.
+
+Updated:
+
+- `shacl_explainer/report_template.html`
+
+Test coverage:
+
+- HTML output tests pass
+
+### HTML Metadata Panel
+
+Removed absolute local paths from the HTML report title.
+
+Before, reports could expose paths such as:
+
+```text
+/Users/.../Desktop/lubm_skg_1.ttl
+```
+
+Now the browser title is generic and the report shows a metadata panel with
+shareable information:
+
+```text
+Dataset: lubm_skg_1.ttl
+Shapes: schema2.ttl
+Generated: 2026-05-14 16:01
+Commit: <short git commit>
+```
+
+Updated:
+
+- `shacl_explainer/cli.py`
+- `shacl_explainer/renderer.py`
+- `shacl_explainer/report_template.html`
+- `tests/test_cli_pipeline.py`
+
+Test coverage:
+
+- HTML output tests verify the generic title and filename metadata
+
+### HTML Escaping Hardening
+
+Hardened HTML report rendering by escaping additional data-derived values before
+inserting them into `innerHTML`.
+
+Updated escaping for:
+
+- reference chains
+- alternate reference chains
+- component labels/classes used in generated markup
+
+This makes generated reports more robust when RDF literals or IRIs contain
+surprising characters.
+
+Updated:
+
+- `shacl_explainer/report_template.html`
+
+Test coverage:
+
+- HTML output tests pass
+
+### Improved HTML IRI Labels
+
+Improved IRI shortening in the HTML report.
+
+Before, the sidebar used `split(":").pop()`, which worked for compact names
+like `ex:alice` but produced poor labels for full HTTP IRIs.
+
+Now the template uses a display helper:
+
+```text
+<http://www.Department13.University6.edu/FullProfessor1>
+```
+
+can be displayed as:
+
+```text
+FullProfessor1
+```
+
+with the full IRI preserved in the hover title.
+
+Updated:
+
+- `shacl_explainer/report_template.html`
+
+Test coverage:
+
+- HTML output tests pass
+
+### HTML Issue Clusters View
+
+Added a second HTML navigation mode for issue clusters.
+
+The sidebar now has two tabs:
+
+- `By focus`: inspect one RDF focus node at a time
+- `By issue`: inspect repeated failure patterns across the dataset
+
+Issue clusters are generated from the leaf failures, for example:
+
+```text
+missing ub:type
+missing ub:name
+too many ub:teacherOf
+```
+
+Clicking an issue cluster renders the affected leaf failures in the main panel,
+making it easier to identify large-scale root-cause patterns instead of
+debugging only one RDF individual at a time.
+
+Updated:
+
+- `shacl_explainer/report_template.html`
+
+Test coverage:
+
+- HTML output tests pass
+
 ### Lazy HTML Focus Rendering
 
 Changed the HTML report from eager full-DOM rendering to focus-node rendering.

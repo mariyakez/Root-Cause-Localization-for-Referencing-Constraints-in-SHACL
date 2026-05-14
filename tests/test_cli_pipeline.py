@@ -534,7 +534,10 @@ class ShaclExplainerCliTests(unittest.TestCase):
 
         self.assertIn("<!DOCTYPE html>", result.stdout)
         self.assertIn("const REPORT_DATA =", result.stdout)
-        self.assertIn("SHACL Report - all_test_cases/sh_node_cases/tc6_complex_org.ttl", result.stdout)
+        self.assertIn("<title>SHACL Explanation Report</title>", result.stdout)
+        self.assertIn("Dataset", result.stdout)
+        self.assertIn("tc6_complex_org.ttl", result.stdout)
+        self.assertNotIn("SHACL Report - all_test_cases", result.stdout)
         self.assertIn("ex:ProjectLeadShape", result.stdout)
         self.assertIn("ex:projectCode", result.stdout)
 

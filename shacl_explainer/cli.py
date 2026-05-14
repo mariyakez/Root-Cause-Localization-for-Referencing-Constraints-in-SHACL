@@ -2,6 +2,7 @@
 import argparse
 import csv
 import pickle
+import subprocess
 import sys
 import time
 from pathlib import Path
@@ -100,7 +101,11 @@ def run(data_path: str, shapes_path: str, fmt="text",
     elif fmt == "json":
         output_str = to_json(display_tree)
     elif fmt == "html":
-        output_str = to_html(display_tree, title=f"SHACL Report - {data_path}")
+        output_str = to_html(
+            display_tree,
+            title="SHACL Explanation Report",
+            metadata=html_metadata(data_path, shapes_path),
+        )
     else:
         output_str = to_text_tree(display_tree, hints=hints, color=use_color)
     timings["render"] = time.perf_counter() - start
@@ -130,6 +135,26 @@ def collect_stats(data_graph, shapes_graph, report_graph):
         "top_results": len(top_results),
         "all_results": len(all_results),
     }
+
+def html_metadata(data_path, shapes_path):
+    return {
+        "dataset": Path(data_path).name,
+        "shapes": Path(shapes_path).name,
+        "commit": current_commit(),
+    }
+
+def current_commit():
+    try:
+        result = subprocess.run(
+            ["git", "rev-parse", "--short", "HEAD"],
+            cwd=Path(__file__).resolve().parents[1],
+            check=True,
+            text=True,
+            capture_output=True,
+        )
+        return result.stdout.strip() or "unknown"
+    except Exception:
+        return "unknown"
 
 def load_graph(path, rdf_format="turtle"):
     graph_path = Path(path)

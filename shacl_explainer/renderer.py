@@ -482,19 +482,24 @@ def tree_to_data(nodes: list) -> list:
 def to_json(nodes: list) -> str:
     return json.dumps(tree_to_data(nodes), indent=2)
 
-def to_html(nodes: list, title: str = "SHACL Explanation Report") -> str:
+def to_html(nodes: list, title: str = "SHACL Explanation Report", metadata=None) -> str:
     """
     Produce a self-contained HTML file embedding the explanation tree.
     The JSON data is injected into the REPORT_DATA constant in the
     page's <script> block. No external dependencies required.
     """
     import datetime
+    import html as _html
 
+    metadata = metadata or {}
     data_json = json.dumps(tree_to_data(nodes), indent=2)
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     html = _load_template().replace("__REPORT_DATA__", data_json)
-    html = html.replace("__TITLE__", title)
+    html = html.replace("__TITLE__", _html.escape(title))
+    html = html.replace("__DATASET__", _html.escape(metadata.get("dataset", "unknown")))
+    html = html.replace("__SHAPES__", _html.escape(metadata.get("shapes", "unknown")))
+    html = html.replace("__COMMIT__", _html.escape(metadata.get("commit", "unknown")))
     html = html.replace("__TIMESTAMP__", timestamp)
     return html
 
