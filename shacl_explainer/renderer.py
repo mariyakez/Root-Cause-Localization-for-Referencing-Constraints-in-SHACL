@@ -7,6 +7,7 @@ from collections import Counter
 from dataclasses import replace
 from pathlib import Path
 from rdflib import BNode, Literal
+from rdflib.namespace import RDF
 from .tree import LeafFailure, ReferenceNode
 
 PREFIXES = [
@@ -15,6 +16,8 @@ PREFIXES = [
     ("sh:", "http://www.w3.org/ns/shacl#"),
     ("xsd:", "http://www.w3.org/2001/XMLSchema#"),
 ]
+
+SHACL_NS = "http://www.w3.org/ns/shacl#"
 
 COMPONENT_SHORT = {
     "NodeConstraintComponent":    "sh:node",
@@ -479,10 +482,56 @@ def tree_to_data(nodes: list) -> list:
 
     return [serialise(n) for n in nodes]
 
+def shape_catalog_data(shapes_graph) -> dict:
+    """
+    Serialise a lightweight map of shape -> direct child constraints so HTML can
+    optionally show non-violating direct constraints in graph view.
+    """
+    from rdflib import Namespace
+
+    SH = Namespace(SHACL_NS)
+    catalog: dict[str, list[dict[str, str]]] = {}
+
+    for shape in set(shapes_graph.subjects(RDF.type, SH.NodeShape)):
+        shape_key = short_uri(shape)
+        children: list[dict[str, str]] = []
+        seen: set[tuple[str, str, str]] = set()
+
+        for prop_shape in shapes_graph.objects(shape, SH.property):
+            path = shapes_graph.value(prop_shape, SH.path)
+            if path is None:
+                continue
+            path_key = short_uri(path)
+            referenced = shapes_graph.value(prop_shape, SH.node)
+            if referenced is not None:
+                ref_key = short_uri(referenced)
+                marker = ("shape", path_key, ref_key)
+                if marker not in seen:
+                    seen.add(marker)
+                    children.append({
+                        "type": "shape",
+                        "path": path_key,
+                        "shape": ref_key,
+                    })
+            else:
+                marker = ("leaf", path_key, "")
+                if marker not in seen:
+                    seen.add(marker)
+                    children.append({
+                        "type": "leaf",
+                        "path": path_key,
+                    })
+
+        if children:
+            children.sort(key=lambda item: (item["type"] != "shape", item.get("shape", item["path"])))
+            catalog[shape_key] = children
+
+    return catalog
+
 def to_json(nodes: list) -> str:
     return json.dumps(tree_to_data(nodes), indent=2)
 
-def to_html(nodes: list, title: str = "SHACL Explanation Report", metadata=None) -> str:
+def to_html(nodes: list, title: str = "SHACL Explanation Report", metadata=None, shape_catalog=None) -> str:
     """
     Produce a self-contained HTML file embedding the explanation tree.
     The JSON data is injected into the REPORT_DATA constant in the
@@ -492,10 +541,13 @@ def to_html(nodes: list, title: str = "SHACL Explanation Report", metadata=None)
     import html as _html
 
     metadata = metadata or {}
+    shape_catalog = shape_catalog or {}
     data_json = json.dumps(tree_to_data(nodes), indent=2)
+    catalog_json = json.dumps(shape_catalog, indent=2)
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     html = _load_template().replace("__REPORT_DATA__", data_json)
+    html = html.replace("__SHAPE_CATALOG__", catalog_json)
     html = html.replace("__TITLE__", _html.escape(title))
     html = html.replace("__DATASET__", _html.escape(metadata.get("dataset", "unknown")))
     html = html.replace("__SHAPES__", _html.escape(metadata.get("shapes", "unknown")))

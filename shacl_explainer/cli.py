@@ -14,6 +14,7 @@ from .renderer import (
     filter_by_focus,
     filter_tree,
     limit_roots,
+    shape_catalog_data,
     to_html,
     to_json,
     to_summary,
@@ -105,6 +106,7 @@ def run(data_path: str, shapes_path: str, fmt="text",
             display_tree,
             title="SHACL Explanation Report",
             metadata=html_metadata(data_path, shapes_path),
+            shape_catalog=shape_catalog_data(shapes_graph),
         )
     else:
         output_str = to_text_tree(display_tree, hints=hints, color=use_color)
