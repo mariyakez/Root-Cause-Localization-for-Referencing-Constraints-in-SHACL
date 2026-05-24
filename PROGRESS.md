@@ -6,6 +6,37 @@ is added.
 
 ## 2026-05-25
 
+### React Flow Prototype For tc6
+
+Started an isolated React Flow prototype to evaluate whether an infinite-canvas
+graph interaction model is a better fit than the handcrafted HTML graph for
+thesis/demo use.
+
+The prototype:
+
+- lives in `reactflow_prototype/`
+- uses `@xyflow/react` with a Vite-based React app
+- loads the real tc6 explanation JSON exported from the current pipeline
+- renders only the visible expanded branch of the graph
+- supports pan, zoom, minimap, fit view, and lazy expand/collapse
+- keeps a detail panel outside the canvas so the graph itself stays readable
+
+This gives us a real comparison point for option B before deciding whether to
+replace or merge the current HTML graph implementation.
+
+Updated:
+
+- `reactflow_prototype/package.json`
+- `reactflow_prototype/index.html`
+- `reactflow_prototype/src/main.jsx`
+- `reactflow_prototype/src/App.jsx`
+- `reactflow_prototype/src/styles.css`
+- `reactflow_prototype/public/tc6_explanation.json`
+
+Test coverage:
+
+- Prototype app scaffolding created
+
 ### Graph View Auto-Fit Resizing
 
 Changed the expandable graph view so it prefers automatic fitting over
