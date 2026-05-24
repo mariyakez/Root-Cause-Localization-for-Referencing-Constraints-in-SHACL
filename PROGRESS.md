@@ -4,7 +4,139 @@ This file tracks implemented changes and thesis-relevant progress. Add a new
 entry whenever a feature, test case, output format, or compatibility improvement
 is added.
 
+## 2026-05-25
+
+### Graph View Fixed Horizontal Levels
+
+Adjusted the graph-view lane layout so nodes at the same depth stay on the same
+horizontal line instead of wrapping onto a second line when space is tight.
+
+Changes:
+
+- graph rows no longer wrap
+- level lanes use horizontal scrolling when needed
+- visible nodes in the same level stay top-aligned
+
+This prevents sibling shapes such as `SecurityClearanceShape` from dropping
+below the rest of their level when neighboring branches are expanded.
+
+Updated:
+
+- `shacl_explainer/report_template.html`
+
+Test coverage:
+
+- HTML output tests pass
+
+### Graph View Same-Level Property Placement
+
+Adjusted the expandable graph view so direct `sh:property` violations under a
+shape are placed on the same horizontal level as sibling referenced shapes.
+
+For example, if a shape has:
+
+- referenced shapes via nested `sh:node`
+- and direct property violations such as `ex:employeeId`
+
+those children now appear on one shared row under the parent shape instead of
+being split into separate shape and leaf rows.
+
+This matches the logical level structure better and is closer to the intended
+diagram style for `tc6_complex_org.ttl`.
+
+Updated:
+
+- `shacl_explainer/report_template.html`
+
+Test coverage:
+
+- HTML output tests pass
+
+### Graph View Progressive Expansion
+
+Refined the new HTML graph view so it behaves more like a scalable causal tree
+for larger reports.
+
+Changes:
+
+- the violated focus node starts as a clickable root button
+- referenced shapes start collapsed and expand only when clicked
+- the graph continues to show only violated leaves and the shape chains that
+  lead to them
+- connector lines were strengthened so shapes and violated leaves read as a
+  connected tree instead of separate floating cards
+
+This makes the graph view more suitable for larger explanations where showing
+every branch at once would take too much space.
+
+Updated:
+
+- `shacl_explainer/report_template.html`
+
+Test coverage:
+
+- HTML output tests pass
+
+### Expandable Graph View Trial
+
+Added a second HTML presentation mode for nested `sh:node` explanations:
+an expandable graph/tree view designed for thesis and demo use.
+
+The new `Graph view`:
+
+- keeps the current analytical HTML as the default `Analytical view`
+- reconstructs a shape graph from each leaf failure's full `refChain`
+- starts from the violated focus node
+- shows first-level and deeper referenced shapes as color-coded cards
+- shows violated leaves as red endpoint pills
+- replaces raw `sh:node` wording with more human-readable connectors:
+  - `does not conform to`
+  - `is referencing`
+- shows a details panel below the graph for the currently selected node
+
+The graph view is currently focused on `By focus` mode so the visual tree stays
+anchored to one violated resource, which matches the intended thesis/demo use
+for cases such as `tc6_complex_org.ttl`.
+
+Updated:
+
+- `shacl_explainer/report_template.html`
+
+Test coverage:
+
+- HTML output tests pass
+
 ## 2026-05-14
+
+### HTML Stacked Dropdown Filter Panel
+
+Reworked the HTML filter UI from an inline button strip into a stacked filter
+panel with one row per filter.
+
+The sticky panel now presents filters top-to-bottom as labeled rows:
+
+- component
+- path
+- reference path
+- shape
+- kind
+
+For filters with multiple meaningful options, the row renders as a dropdown.
+For low-variance filters that only have one meaningful value, the row renders as
+a passive summary chip instead of an unnecessary control.
+
+Added a `reset filters` action to return all dropdown filters to `all`.
+
+This makes large-report filtering feel calmer and more like an analysis panel
+than a dense button cloud.
+
+Updated:
+
+- `shacl_explainer/report_template.html`
+
+Test coverage:
+
+- HTML output tests pass
 
 ### HTML All-Violations View
 
