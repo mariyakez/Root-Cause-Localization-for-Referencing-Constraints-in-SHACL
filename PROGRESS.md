@@ -6,6 +6,82 @@ is added.
 
 ## 2026-05-25
 
+### Graph View Auto-Fit Resizing
+
+Changed the expandable graph view so it prefers automatic fitting over
+horizontal scrolling.
+
+Changes:
+
+- graph containers now hide horizontal overflow
+- graph nodes and leaf pills use responsive sizing clamps
+- the graph canvas measures its natural width and scales down to fit the
+  available panel width
+- expanding and collapsing branches re-runs the fit logic
+
+This keeps all nodes in view on one panel more reliably, while preserving the
+same depth lanes and branch structure.
+
+Updated:
+
+- `shacl_explainer/report_template.html`
+
+Test coverage:
+
+- HTML output tests pass
+
+### Graph View Depth-Based Color Scheme
+
+Refined the expandable graph color system so deeper reports stay readable
+without conflating node type, depth, and violation status.
+
+Changes:
+
+- the violated focus node remains orange
+- violated leaves remain red
+- optional non-violating catalog constraints remain green
+- shape levels now use a consistent dark fill with depth-specific border accents
+- deeper shapes gain explicit badges such as `L4`, `L5`, and `L6`
+
+This keeps the graph visually stable while still making multi-level reference
+chains easier to read in thesis and demo views.
+
+Updated:
+
+- `shacl_explainer/report_template.html`
+
+Test coverage:
+
+- HTML output tests pass
+
+### Graph View Leaf Visibility Modes
+
+Added a graph-specific visibility mode switch so the expandable graph can stay
+presentation-friendly by default while still offering a richer comparison mode.
+
+The graph now supports:
+
+- `Violations only` (default)
+- `All constraints`
+
+`Violations only` keeps the graph focused on the failing branches and failing
+leaf endpoints.
+
+`All constraints` uses a lightweight shape catalog derived from the SHACL shapes
+graph so the HTML can also show direct non-violating constraints for the
+expanded shapes, making it easier to compare what failed versus what was simply
+available on that shape.
+
+Updated:
+
+- `shacl_explainer/renderer.py`
+- `shacl_explainer/cli.py`
+- `shacl_explainer/report_template.html`
+
+Test coverage:
+
+- HTML output tests pass
+
 ### Graph View Fixed Horizontal Levels
 
 Adjusted the graph-view lane layout so nodes at the same depth stay on the same

@@ -301,7 +301,7 @@ body.resizing-sidebar {
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 22px 18px 18px;
-  overflow-x: auto;
+  overflow: hidden;
 }
 .graph-empty {
   border: 1px dashed var(--border2);
@@ -342,11 +342,22 @@ body.resizing-sidebar {
 .graph-legend-swatch.leaf {
   border-radius: 999px;
 }
+.graph-stage {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
 .graph-root {
+  --graph-scale: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 10px;
+  width: max-content;
+  max-width: none;
+  margin: 0 auto;
+  transform-origin: top center;
+  transform: scale(var(--graph-scale));
 }
 .graph-branch {
   position: relative;
@@ -357,15 +368,19 @@ body.resizing-sidebar {
 }
 .graph-node {
   appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   background: rgba(255,255,255,.03);
   border: 2px solid var(--border2);
   border-radius: 12px;
-  padding: 10px 18px;
-  min-width: 172px;
-  max-width: 280px;
+  padding: clamp(8px, 1vw, 10px) clamp(12px, 1.4vw, 18px);
+  min-width: clamp(118px, 12vw, 172px);
+  max-width: clamp(160px, 18vw, 280px);
   color: var(--text);
   font-family: var(--mono);
-  font-size: 12px;
+  font-size: clamp(10px, .85vw, 12px);
   font-weight: 600;
   cursor: pointer;
   text-align: center;
@@ -384,29 +399,51 @@ body.resizing-sidebar {
 }
 .graph-node.graph-focus {
   border-color: #ff7f41;
-  color: #ffbe98;
   background: rgba(255,127,65,.08);
+  box-shadow: inset 0 0 0 1px rgba(255,127,65,.18);
 }
 .graph-node.level-1 {
   border-color: var(--blue);
-  color: #d7eaff;
-  background: rgba(96,165,250,.08);
+  box-shadow: inset 0 0 0 1px rgba(96,165,250,.18);
 }
 .graph-node.level-2 {
   border-color: var(--purple);
-  color: #e4dbff;
-  background: rgba(167,139,250,.08);
+  box-shadow: inset 0 0 0 1px rgba(167,139,250,.18);
 }
 .graph-node.level-3 {
   border-color: #8fd14f;
-  color: #e4ffd0;
-  background: rgba(143,209,79,.08);
+  box-shadow: inset 0 0 0 1px rgba(143,209,79,.18);
 }
-.graph-node.level-4,
-.graph-node.level-5 {
+.graph-node.level-4 {
   border-color: #4fd1c5;
-  color: #d7fffb;
-  background: rgba(79,209,197,.08);
+  box-shadow: inset 0 0 0 1px rgba(79,209,197,.18);
+}
+.graph-node.level-5 {
+  border-color: #fbbf24;
+  box-shadow: inset 0 0 0 1px rgba(251,191,36,.18);
+}
+.graph-node.level-6 {
+  border-color: #94a3b8;
+  box-shadow: inset 0 0 0 1px rgba(148,163,184,.18);
+}
+.graph-node-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.graph-node-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+  background: rgba(255,255,255,.04);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .04em;
 }
 .graph-link {
   width: 1px;
@@ -427,7 +464,7 @@ body.resizing-sidebar {
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  min-width: max-content;
+  min-width: 100%;
 }
 .graph-children[hidden] {
   display: none;
@@ -436,11 +473,11 @@ body.resizing-sidebar {
   position: relative;
   display: flex;
   justify-content: center;
-  gap: 18px;
+  gap: clamp(10px, 1.8vw, 18px);
   flex-wrap: nowrap;
   align-items: flex-start;
-  width: max-content;
-  min-width: 100%;
+  width: 100%;
+  min-width: 0;
   padding-top: 18px;
   margin: 0 auto;
 }
@@ -474,12 +511,12 @@ body.resizing-sidebar {
   background: rgba(255,79,109,.09);
   border: 2px solid var(--red);
   border-radius: 999px;
-  padding: 10px 16px;
-  min-width: 120px;
-  max-width: 240px;
+  padding: clamp(8px, 1vw, 10px) clamp(12px, 1.2vw, 16px);
+  min-width: clamp(96px, 10vw, 120px);
+  max-width: clamp(150px, 16vw, 240px);
   color: #ffd7df;
   font-family: var(--mono);
-  font-size: 12px;
+  font-size: clamp(10px, .85vw, 12px);
   font-weight: 600;
   cursor: pointer;
   text-align: center;
@@ -490,6 +527,14 @@ body.resizing-sidebar {
 }
 .graph-leaf.selected {
   box-shadow: 0 0 0 3px rgba(255,79,109,.14);
+}
+.graph-leaf.pass {
+  border-color: var(--green);
+  background: rgba(52,211,153,.09);
+  color: #d5fff0;
+}
+.graph-leaf.pass:focus-visible {
+  outline-color: var(--green);
 }
 .graph-leaf-value {
   font-family: var(--mono);
@@ -996,6 +1041,9 @@ body.resizing-sidebar {
   flex-wrap: wrap;
   align-items: center;
 }
+.graph-filter-toggle[hidden] {
+  display: none;
+}
 .view-btn {
   font-family: var(--mono);
   font-size: 10px;
@@ -1265,6 +1313,10 @@ body.resizing-sidebar {
         <button class="view-btn active" id="view-list" type="button" onclick="setPresentationMode('list')">Analytical view</button>
         <button class="view-btn" id="view-graph" type="button" onclick="setPresentationMode('graph')">Graph view</button>
       </div>
+      <div class="graph-filter-toggle" id="graph-filter-toggle" hidden aria-label="Graph leaf visibility">
+        <button class="view-btn active" id="graph-filter-violated" type="button" onclick="setGraphLeafMode('violated')">Violations only</button>
+        <button class="view-btn" id="graph-filter-all" type="button" onclick="setGraphLeafMode('all')">All constraints</button>
+      </div>
       <div class="report-action-group">
         <button class="export-btn" type="button" onclick="exportVisibleCsv(event, this)">export visible CSV</button>
         <button class="export-btn" type="button" onclick="copyVisibleJson(event, this)">copy visible JSON</button>
@@ -1387,6 +1439,7 @@ body.resizing-sidebar {
 <script>
 // ── DATA (this block is replaced by renderer.py's to_html()) ──────────────
 const REPORT_DATA = __REPORT_DATA__;
+const SHAPE_CATALOG = __SHAPE_CATALOG__;
 // ── END DATA ──────────────────────────────────────────────────────────────
 
 const COMP_MAP = {
@@ -1970,6 +2023,7 @@ let selectedFocus = null;
 let selectedIssue = null;
 let sidebarMode = "focus";
 let presentationMode = "list";
+let graphLeafMode = "violated";
 let focusShowAll = false;
 const FOCUS_PREVIEW_LIMIT = 20;
 
@@ -2424,7 +2478,16 @@ function setPresentationMode(mode) {
   presentationMode = mode;
   document.getElementById("view-list")?.classList.toggle("active", mode === "list");
   document.getElementById("view-graph")?.classList.toggle("active", mode === "graph");
+  const graphToggle = document.getElementById("graph-filter-toggle");
+  if (graphToggle) graphToggle.hidden = mode !== "graph";
   renderMainPanel();
+}
+
+function setGraphLeafMode(mode) {
+  graphLeafMode = mode;
+  document.getElementById("graph-filter-violated")?.classList.toggle("active", mode === "violated");
+  document.getElementById("graph-filter-all")?.classList.toggle("active", mode === "all");
+  if (presentationMode === "graph") renderMainPanel();
 }
 
 function ordinal(n) {
@@ -2504,6 +2567,56 @@ function buildFocusGraph(entries, focusLabel) {
   return finalize(root);
 }
 
+function enrichGraphWithCatalog(node) {
+  if (graphLeafMode !== "all") return node;
+  if (!node || (node.type !== "shape" && node.type !== "focus")) return node;
+  if (node.type === "shape") {
+    const catalog = SHAPE_CATALOG[node.label] || [];
+    const shapeKeys = new Set((node.children || []).filter(child => child.type === "shape").map(child => child.label));
+    const leafKeys = new Set((node.children || []).filter(child => child.type === "leaf").map(child => child.label));
+
+    catalog.forEach(item => {
+      if (item.type === "shape" && !shapeKeys.has(item.shape)) {
+        node.children.push({
+          id: `catalog-shape|${node.label}|${item.shape}`,
+          type: "shape",
+          label: item.shape,
+          raw: item.shape,
+          depth: node.depth + 1,
+          entryCount: 0,
+          children: [],
+          status: "pass",
+          isCatalogOnly: true,
+        });
+      }
+      if (item.type === "leaf" && !leafKeys.has(item.path)) {
+        node.children.push({
+          id: `catalog-leaf|${node.label}|${item.path}`,
+          type: "leaf",
+          label: item.path,
+          issue: `conforms ${item.path}`,
+          raw: item.path,
+          entry: null,
+          depth: node.depth + 1,
+          value: "",
+          message: `No violation was reported for ${item.path} under ${node.label}.`,
+          repairHint: "",
+          fullChain: [],
+          status: "pass",
+          isCatalogOnly: true,
+        });
+      }
+    });
+
+    node.children.sort((a, b) => {
+      if (a.type !== b.type) return a.type === "shape" ? -1 : 1;
+      return String(a.label).localeCompare(String(b.label));
+    });
+  }
+  (node.children || []).forEach(enrichGraphWithCatalog);
+  return node;
+}
+
 function graphDetailHtml(node, focusLabel) {
   if (node.type === "focus") {
     return {
@@ -2534,6 +2647,15 @@ function graphDetailHtml(node, focusLabel) {
     };
   }
 
+  if (node.isCatalogOnly) {
+    return {
+      title: displayIri(node.label, "local"),
+      body: `
+        <p><code>${esc(node.label)}</code> is available on this shape but did not produce a violation for the current focus node.</p>
+      `,
+    };
+  }
+
   const entry = node.entry;
   const valueLine = node.value ? `<p>Observed value: <code>${esc(node.value)}</code></p>` : "";
   const repairLine = node.repairHint ? `<p>Suggested fix: ${esc(node.repairHint)}</p>` : "";
@@ -2559,10 +2681,16 @@ function graphDetailHtml(node, focusLabel) {
 function makeGraphNodeButton(node, detailEl, focusLabel, childContainer) {
   const btn = document.createElement("button");
   btn.type = "button";
-  btn.className = node.type === "focus"
-    ? "graph-node graph-focus"
-    : `graph-node level-${Math.min(node.depth, 5)}`;
-  btn.textContent = displayIri(node.label, "local");
+  if (node.type === "focus") {
+    btn.className = "graph-node graph-focus";
+  } else {
+    btn.className = `graph-node level-${Math.min(node.depth, 6)}`;
+  }
+  const label = esc(displayIri(node.label, "local"));
+  const badge = node.type === "shape" && node.depth >= 4
+    ? `<span class="graph-node-badge">L${esc(String(node.depth))}</span>`
+    : "";
+  btn.innerHTML = `<span class="graph-node-label">${label}</span>${badge}`;
   btn.setAttribute("aria-expanded", childContainer ? "false" : "false");
 
   btn.addEventListener("click", () => {
@@ -2577,6 +2705,7 @@ function makeGraphNodeButton(node, detailEl, focusLabel, childContainer) {
       const isHidden = childContainer.hidden;
       childContainer.hidden = !isHidden;
       btn.setAttribute("aria-expanded", isHidden ? "true" : "false");
+      scheduleGraphFit();
     }
   });
 
@@ -2588,7 +2717,7 @@ function makeGraphLeafButton(node, detailEl, focusLabel) {
   wrap.className = "graph-leaf-wrap";
   const btn = document.createElement("button");
   btn.type = "button";
-  btn.className = "graph-leaf";
+  btn.className = `graph-leaf${node.status === "pass" ? " pass" : ""}`;
   btn.textContent = displayIri(node.label, "local");
   btn.addEventListener("click", () => {
     document.querySelectorAll(".graph-node.selected, .graph-leaf.selected").forEach(el => el.classList.remove("selected"));
@@ -2608,6 +2737,33 @@ function makeGraphLeafButton(node, detailEl, focusLabel) {
   }
   return wrap;
 }
+
+let graphFitRaf = null;
+
+function fitGraphStage() {
+  const stage = document.querySelector(".graph-stage");
+  const root = document.querySelector(".graph-root");
+  if (!stage || !root) return;
+  root.style.setProperty("--graph-scale", "1");
+  stage.style.height = "auto";
+  const availableWidth = Math.max(stage.clientWidth - 4, 0);
+  const naturalWidth = root.scrollWidth;
+  const naturalHeight = root.scrollHeight;
+  if (!availableWidth || !naturalWidth || !naturalHeight) return;
+  const scale = Math.min(1, availableWidth / naturalWidth);
+  root.style.setProperty("--graph-scale", String(scale));
+  stage.style.height = `${Math.ceil(naturalHeight * scale)}px`;
+}
+
+function scheduleGraphFit() {
+  if (graphFitRaf) cancelAnimationFrame(graphFitRaf);
+  graphFitRaf = requestAnimationFrame(() => {
+    graphFitRaf = null;
+    fitGraphStage();
+  });
+}
+
+window.addEventListener("resize", scheduleGraphFit);
 
 function renderGraphBranch(node, detailEl, focusLabel) {
   if (node.type === "leaf") {
@@ -2731,6 +2887,7 @@ function renderGraphView() {
   }
 
   const graph = buildFocusGraph(entries, selectedFocus);
+  enrichGraphWithCatalog(graph);
   const shell = document.createElement("div");
   shell.className = "graph-view";
   shell.innerHTML = `
@@ -2739,7 +2896,9 @@ function renderGraphView() {
       <span class="graph-legend-item" style="color:var(--blue)"><span class="graph-legend-swatch"></span>first-level shape</span>
       <span class="graph-legend-item" style="color:var(--purple)"><span class="graph-legend-swatch"></span>second-level shape</span>
       <span class="graph-legend-item" style="color:#8fd14f"><span class="graph-legend-swatch"></span>third-level shape</span>
+      <span class="graph-legend-item" style="color:#4fd1c5"><span class="graph-legend-swatch"></span>deeper shape levels use badges</span>
       <span class="graph-legend-item" style="color:var(--red)"><span class="graph-legend-swatch leaf"></span>violated leaf</span>
+      <span class="graph-legend-item" style="color:var(--green)"><span class="graph-legend-swatch leaf" style="border-color:var(--green)"></span>available constraint</span>
     </div>`;
 
   const detail = document.createElement("div");
@@ -2749,16 +2908,20 @@ function renderGraphView() {
     <div class="graph-detail-title">${esc(initialDetail.title)}</div>
     <div class="graph-detail-body">${initialDetail.body}</div>`;
 
+  const stage = document.createElement("div");
+  stage.className = "graph-stage";
   const root = document.createElement("div");
   root.className = "graph-root";
   const graphDom = renderGraphBranch(graph, detail, selectedFocus);
   const rootButton = graphDom.querySelector(".graph-node");
   if (rootButton) rootButton.classList.add("selected");
   root.appendChild(graphDom);
+  stage.appendChild(root);
 
-  shell.appendChild(root);
+  shell.appendChild(stage);
   shell.appendChild(detail);
   report.appendChild(shell);
+  scheduleGraphFit();
 
   document.querySelectorAll(".focus-item").forEach(item => {
     item.classList.toggle("active", item.dataset.focusKey === selectedFocus);
