@@ -558,7 +558,8 @@ class ShaclExplainerCliTests(unittest.TestCase):
         self.assertEqual("", result.stdout)
         self.assertIn("Output written to", result.stderr)
         self.assertIn("<!DOCTYPE html>", html)
-        self.assertIn("filter-btn", html)
+        self.assertIn("filter-panel", html)
+        self.assertIn("filter-select", html)
         self.assertIn("ex:frank", html)
 
     def test_html_output_relative_file_goes_to_html_outputs(self):
