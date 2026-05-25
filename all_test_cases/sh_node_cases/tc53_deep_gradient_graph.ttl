@@ -1,0 +1,190 @@
+###############################################################################
+# TEST CASE 53 -- Deep graph palette and expansion stress case
+#
+# Purpose:
+#   - Exercises the graph-view color cycle across 8 nested sh:node levels:
+#     L1 yellow, L2 orange, L3 purple, L4 dark blue, L5 light blue, L6 fuchsia,
+#     then L7 repeats yellow and L8 repeats orange.
+#   - Gives every shape multiple violated leaf constraints and one passing
+#     constraint so graph "All constraints" mode mixes red and green leaves.
+#   - Keeps every leaf path distinct so deduplication does not hide branches.
+###############################################################################
+
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix ex:  <http://example.org/> .
+
+ex:GradientRootShape
+    a sh:NodeShape ;
+    sh:targetClass ex:DeepGradientCase ;
+    sh:node ex:Level1Shape .
+
+ex:Level1Shape
+    a sh:NodeShape ;
+    sh:node ex:Level2Shape ;
+    sh:property [
+        sh:path ex:l1Code ;
+        sh:minCount 1 ;
+        sh:message "ex:l1Code is required at level 1" ;
+    ] ;
+    sh:property [
+        sh:path ex:l1Score ;
+        sh:datatype xsd:integer ;
+        sh:message "ex:l1Score must be an xsd:integer" ;
+    ] ;
+    sh:property [
+        sh:path ex:l1Stable ;
+        sh:in ("yes" "no") ;
+        sh:message "ex:l1Stable must be yes or no" ;
+    ] .
+
+ex:Level2Shape
+    a sh:NodeShape ;
+    sh:node ex:Level3Shape ;
+    sh:property [
+        sh:path ex:l2Owner ;
+        sh:minCount 1 ;
+        sh:message "ex:l2Owner is required at level 2" ;
+    ] ;
+    sh:property [
+        sh:path ex:l2Email ;
+        sh:pattern "^\\S+@\\S+$" ;
+        sh:message "ex:l2Email must match a basic email pattern" ;
+    ] ;
+    sh:property [
+        sh:path ex:l2Status ;
+        sh:in ("open" "closed") ;
+        sh:message "ex:l2Status must be open or closed" ;
+    ] .
+
+ex:Level3Shape
+    a sh:NodeShape ;
+    sh:node ex:Level4Shape ;
+    sh:property [
+        sh:path ex:l3Region ;
+        sh:in ("emea" "apac" "amer") ;
+        sh:message "ex:l3Region must be emea, apac, or amer" ;
+    ] ;
+    sh:property [
+        sh:path ex:l3Approval ;
+        sh:minCount 1 ;
+        sh:message "ex:l3Approval is required at level 3" ;
+    ] ;
+    sh:property [
+        sh:path ex:l3Rank ;
+        sh:datatype xsd:integer ;
+        sh:message "ex:l3Rank must be an xsd:integer" ;
+    ] .
+
+ex:Level4Shape
+    a sh:NodeShape ;
+    sh:node ex:Level5Shape ;
+    sh:property [
+        sh:path ex:l4Budget ;
+        sh:datatype xsd:decimal ;
+        sh:message "ex:l4Budget must be an xsd:decimal" ;
+    ] ;
+    sh:property [
+        sh:path ex:l4Checkpoint ;
+        sh:minCount 1 ;
+        sh:message "ex:l4Checkpoint is required at level 4" ;
+    ] ;
+    sh:property [
+        sh:path ex:l4Ready ;
+        sh:datatype xsd:boolean ;
+        sh:message "ex:l4Ready must be an xsd:boolean" ;
+    ] .
+
+ex:Level5Shape
+    a sh:NodeShape ;
+    sh:node ex:Level6Shape ;
+    sh:property [
+        sh:path ex:l5Risk ;
+        sh:in ("low" "medium" "high") ;
+        sh:message "ex:l5Risk must be low, medium, or high" ;
+    ] ;
+    sh:property [
+        sh:path ex:l5Reviewer ;
+        sh:minCount 1 ;
+        sh:message "ex:l5Reviewer is required at level 5" ;
+    ] ;
+    sh:property [
+        sh:path ex:l5Window ;
+        sh:in ("morning" "afternoon") ;
+        sh:message "ex:l5Window must be morning or afternoon" ;
+    ] .
+
+ex:Level6Shape
+    a sh:NodeShape ;
+    sh:node ex:Level7Shape ;
+    sh:property [
+        sh:path ex:l6Reference ;
+        sh:minCount 1 ;
+        sh:message "ex:l6Reference is required at level 6" ;
+    ] ;
+    sh:property [
+        sh:path ex:l6Date ;
+        sh:datatype xsd:date ;
+        sh:message "ex:l6Date must be an xsd:date" ;
+    ] ;
+    sh:property [
+        sh:path ex:l6Count ;
+        sh:datatype xsd:integer ;
+        sh:message "ex:l6Count must be an xsd:integer" ;
+    ] .
+
+ex:Level7Shape
+    a sh:NodeShape ;
+    sh:node ex:Level8Shape ;
+    sh:property [
+        sh:path ex:l7Control ;
+        sh:minCount 1 ;
+        sh:message "ex:l7Control is required at level 7" ;
+    ] ;
+    sh:property [
+        sh:path ex:l7Flag ;
+        sh:datatype xsd:boolean ;
+        sh:message "ex:l7Flag must be an xsd:boolean" ;
+    ] ;
+    sh:property [
+        sh:path ex:l7Mode ;
+        sh:in ("manual" "auto") ;
+        sh:message "ex:l7Mode must be manual or auto" ;
+    ] .
+
+ex:Level8Shape
+    a sh:NodeShape ;
+    sh:property [
+        sh:path ex:l8Archive ;
+        sh:minCount 1 ;
+        sh:message "ex:l8Archive is required at level 8" ;
+    ] ;
+    sh:property [
+        sh:path ex:l8Status ;
+        sh:in ("ready" "blocked" "done") ;
+        sh:message "ex:l8Status must be ready, blocked, or done" ;
+    ] ;
+    sh:property [
+        sh:path ex:l8Checksum ;
+        sh:pattern "^[A-F0-9]{8}$" ;
+        sh:message "ex:l8Checksum must be an eight-character uppercase hex string" ;
+    ] .
+
+ex:deep-case
+    a ex:DeepGradientCase ;
+    ex:l1Score "not-an-integer" ;
+    ex:l1Stable "yes" ;
+    ex:l2Email "owner-at-example" ;
+    ex:l2Status "open" ;
+    ex:l3Region "antarctica" ;
+    ex:l3Rank 3 ;
+    ex:l4Budget "many" ;
+    ex:l4Ready true ;
+    ex:l5Risk "extreme" ;
+    ex:l5Window "morning" ;
+    ex:l6Date "tomorrow" ;
+    ex:l6Count 6 ;
+    ex:l7Flag "maybe" ;
+    ex:l7Mode "auto" ;
+    ex:l8Status "waiting" ;
+    ex:l8Checksum "A1B2C3D4" .

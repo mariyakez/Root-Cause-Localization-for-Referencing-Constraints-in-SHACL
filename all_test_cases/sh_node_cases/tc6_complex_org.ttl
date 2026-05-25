@@ -82,12 +82,54 @@ ex:ProjectAssignmentShape
         sh:message "ex:projectCode is required for project leads" ;
     ] .
 
+ex:AdditionalShape1
+    a sh:NodeShape ;
+    sh:property [
+        sh:path ex:budgetCode ;
+        sh:minCount 1 ;
+        sh:message "ex:budgetCode is required for project leads" ;
+    ] ;
+    sh:property [
+        sh:path ex:deliveryRegion ;
+        sh:minCount 1 ;
+        sh:message "ex:deliveryRegion is required for project leads" ;
+    ] .
+
+ex:AdditionalShape2
+    a sh:NodeShape ;
+    sh:property [
+        sh:path ex:riskOwner ;
+        sh:minCount 1 ;
+        sh:message "ex:riskOwner is required for project leads" ;
+    ] ;
+    sh:property [
+        sh:path ex:reviewCadence ;
+        sh:minCount 1 ;
+        sh:message "ex:reviewCadence is required for project leads" ;
+    ] .
+
+ex:AdditionalShape3
+    a sh:NodeShape ;
+    sh:property [
+        sh:path ex:handoffPlan ;
+        sh:minCount 1 ;
+        sh:message "ex:handoffPlan is required for project leads" ;
+    ] ;
+    sh:property [
+        sh:path ex:escalationContact ;
+        sh:minCount 1 ;
+        sh:message "ex:escalationContact is required for project leads" ;
+    ] .
+
 ex:ProjectLeadShape
     a sh:NodeShape ;
     sh:targetClass ex:ProjectLead ;
     sh:node ex:EmploymentShape ;
     sh:node ex:SecurityClearanceShape ;
-    sh:node ex:ProjectAssignmentShape .
+    sh:node ex:ProjectAssignmentShape ;
+    sh:node ex:AdditionalShape1 ;
+    sh:node ex:AdditionalShape2 ;
+    sh:node ex:AdditionalShape3 .
 
 ex:frank
     a ex:ProjectLead ;
