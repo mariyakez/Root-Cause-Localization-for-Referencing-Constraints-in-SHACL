@@ -678,6 +678,33 @@ body.resizing-sidebar {
 
 /* ── reference node ── */
 .ref-node { position: relative; }
+.shape-fold > .ref-header {
+  background: linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.015)), var(--surface2);
+}
+.shape-fold.depth-1 > .ref-header { opacity: 1; }
+.shape-fold.depth-2 > .ref-header { opacity: .92; }
+.shape-fold.depth-3 > .ref-header { opacity: .84; }
+.shape-fold.depth-4 > .ref-header { opacity: .76; }
+.shape-fold.depth-5 > .ref-header { opacity: .68; }
+.shape-fold.depth-6 > .ref-header { opacity: .6; }
+.shape-fold.depth-deep > .ref-header { opacity: .54; }
+.shape-fold > .ref-header:hover,
+.shape-fold > .ref-header:focus-visible {
+  opacity: 1;
+}
+.shape-fold > .ref-header .ref-icon {
+  color: var(--purple);
+}
+.shape-level-pill {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--cyan);
+  background: rgba(34,211,238,.07);
+  border: 1px solid rgba(34,211,238,.2);
+  border-radius: 3px;
+  padding: 1px 7px;
+  flex-shrink: 0;
+}
 .ref-header {
   display: flex;
   align-items: center;
@@ -792,7 +819,7 @@ body.resizing-sidebar {
 }
 .comp-mincount  { background: #1a1029; color: #c084fc; border: 1px solid #3b1d6e; }
 .comp-datatype  { background: #1a0e08; color: #fb923c; border: 1px solid #6b2d0d; }
-.comp-pattern   { background: #0d1a18; color: #34d399; border: 1px solid #0e4a37; }
+.comp-pattern   { background: #061721; color: #22d3ee; border: 1px solid #155e75; }
 .comp-in        { background: #0d1629; color: #60a5fa; border: 1px solid #1a3a6e; }
 .comp-maxcount  { background: #1a1a08; color: #facc15; border: 1px solid #6b5a0d; }
 .comp-default   { background: var(--surface2); color: var(--text-muted); border: 1px solid var(--border); }
@@ -863,6 +890,12 @@ body.resizing-sidebar {
   overflow: hidden;
   transition: max-height .22s ease, opacity .18s ease;
 }
+.leaf-detail-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 2px;
+}
 .leaf-body.collapsed { max-height: 0 !important; opacity: 0; border-top: none; padding: 0 14px; }
 .leaf-row-label {
   font-family: var(--mono);
@@ -932,7 +965,7 @@ body.resizing-sidebar {
 /* leaf node coloring by component */
 .leaf-node.lf-mincount  { border-left: 3px solid #c084fc; }
 .leaf-node.lf-datatype  { border-left: 3px solid #fb923c; }
-.leaf-node.lf-pattern   { border-left: 3px solid #34d399; }
+.leaf-node.lf-pattern   { border-left: 3px solid #22d3ee; }
 .leaf-node.lf-in        { border-left: 3px solid #60a5fa; }
 .leaf-node.lf-maxcount  { border-left: 3px solid #facc15; }
 
@@ -1080,6 +1113,25 @@ body.resizing-sidebar {
   gap: 5px;
   flex-wrap: wrap;
   align-items: center;
+}
+.component-legend {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 9px 12px;
+  margin-bottom: 12px;
+}
+.component-legend-title {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  margin-right: 2px;
 }
 
 /* ── report-level actions ── */
@@ -1433,6 +1485,15 @@ body.resizing-sidebar {
     </section>
     <div class="filter-bar">
       <div class="filter-panel">
+        <div class="component-legend" aria-label="Violation type color legend">
+          <span class="component-legend-title">Violation types</span>
+          <span class="leaf-comp comp-mincount">minCount</span>
+          <span class="leaf-comp comp-datatype">datatype</span>
+          <span class="leaf-comp comp-pattern">pattern</span>
+          <span class="leaf-comp comp-in">in</span>
+          <span class="leaf-comp comp-maxcount">maxCount</span>
+          <span class="leaf-comp comp-default">other</span>
+        </div>
         <div class="filter-panel-title">Filters</div>
         <div class="filter-stack">
           <div class="filter-row">
@@ -1574,6 +1635,20 @@ async function copyText(event, btn) {
   event.stopPropagation();
   const value = btn.dataset.copy || "";
   await copyPlainText(value);
+  flashButtonState(btn);
+}
+
+async function copyLeafDetails(event, btn) {
+  event.stopPropagation();
+  const body = btn.closest(".leaf-body");
+  if (!body) return;
+  const rows = Array.from(body.querySelectorAll(".leaf-row-label")).map(labelEl => {
+    const valueEl = labelEl.nextElementSibling;
+    const label = labelEl.textContent.trim();
+    const value = valueEl ? valueEl.textContent.replace(/\s+/g, " ").trim() : "";
+    return value ? `${label}: ${value}` : "";
+  }).filter(Boolean);
+  await copyPlainText(rows.join("\n"));
   flashButtonState(btn);
 }
 
@@ -1920,6 +1995,9 @@ function mkLeaf(node, ctx={ referencePaths: [], shapes: [], rootFocus: null }) {
       <span class="leaf-toggle" id="${id}-toggle">▾</span>
     </div>
     <div class="leaf-body collapsed" id="${id}-body" style="max-height:0">
+      <div class="leaf-detail-actions">
+        <button class="copy-btn" type="button" title="Copy all leaf details" onclick="copyLeafDetails(event, this)">copy details</button>
+      </div>
       ${node.message ? `
         <span class="leaf-row-label">message</span>
         <span class="leaf-message">${esc(node.message)}</span>` : ""}
@@ -2023,6 +2101,117 @@ function mkRef(node, depth=0, ctx={ referencePaths: [], shapes: [], rootFocus: n
   kids.id = `${id}-children`;
   kids.style.maxHeight = "0px";
   childEls.forEach(c => kids.appendChild(c));
+
+  el.appendChild(hdr);
+  el.appendChild(kids);
+  return el;
+}
+
+function buildShapeHierarchy(entries, focusLabel) {
+  const root = { label: focusLabel, children: [], leaves: [], _childMap: new Map() };
+  const seen = new Set();
+
+  function addChain(entry, chain) {
+    const shapeChain = (chain || []).filter(Boolean);
+    const leafKey = [
+      shapeChain.join("->"),
+      entry.node.path || "",
+      entry.node.component || "",
+      entry.node.value || "",
+      entry.node.message || "",
+    ].join("|");
+    if (seen.has(leafKey)) return;
+    seen.add(leafKey);
+
+    if (!shapeChain.length) {
+      root.leaves.push({ ...entry.node, altChains: [] });
+      return;
+    }
+
+    let parent = root;
+    shapeChain.forEach((shape, index) => {
+      const key = shapeChain.slice(0, index + 1).join("->");
+      let child = parent._childMap.get(key);
+      if (!child) {
+        child = {
+          label: shape,
+          depth: index + 1,
+          path: shapeChain.slice(0, index + 1),
+          children: [],
+          leaves: [],
+          _childMap: new Map(),
+        };
+        parent._childMap.set(key, child);
+        parent.children.push(child);
+      }
+      parent = child;
+    });
+    parent.leaves.push({ ...entry.node, refChain: shapeChain, altChains: [] });
+  }
+
+  entries.forEach(entry => {
+    addChain(entry, entry.node.refChain || []);
+    (entry.node.altChains || []).forEach(chain => addChain(entry, chain));
+  });
+
+  function finalize(node) {
+    delete node._childMap;
+    node.children.sort((a, b) => String(a.label).localeCompare(String(b.label)));
+    node.leaves.sort((a, b) => String(a.path || "").localeCompare(String(b.path || "")));
+    node.children.forEach(finalize);
+    return node;
+  }
+
+  return finalize(root);
+}
+
+function countShapeLeaves(node) {
+  return (node.leaves || []).length
+    + (node.children || []).reduce((sum, child) => sum + countShapeLeaves(child), 0);
+}
+
+function mkShapeFold(node, focusLabel) {
+  const id = `ref-${refId++}`;
+  const leafCount = countShapeLeaves(node);
+  const directLeafCount = (node.leaves || []).length;
+  const childShapeCount = (node.children || []).length;
+  const leafLabel = `${leafCount} failure${leafCount === 1 ? "" : "s"}`;
+  const childLabel = `${childShapeCount} child shape${childShapeCount === 1 ? "" : "s"}`;
+  const directLabel = `${directLeafCount} direct ${directLeafCount === 1 ? "leaf" : "leaves"}`;
+  const el = document.createElement("div");
+  el.className = `ref-node shape-fold depth-${Math.min(node.depth, 6)}${node.depth > 6 ? " depth-deep" : ""}`;
+
+  const hdr = document.createElement("div");
+  hdr.className = "ref-header";
+  hdr.setAttribute("role", "button");
+  hdr.setAttribute("tabindex", "0");
+  hdr.setAttribute("aria-expanded", "false");
+  hdr.setAttribute("aria-controls", `${id}-children`);
+  hdr.innerHTML = `
+    <span class="ref-arrow" id="${id}-arrow">▶</span>
+    <span class="ref-icon">⬡</span>
+    <span class="shape-level-pill">L${node.depth}</span>
+    <span class="ref-arrow-label">shape</span>
+    <span class="ref-target">${esc(node.label)}</span>
+    <span class="ref-leaf-pill">${leafLabel}</span>
+    ${childShapeCount ? `<span class="ref-chain-pill">${childLabel}</span>` : ""}
+    ${directLeafCount ? `<span class="ref-chain-pill">${directLabel}</span>` : ""}`;
+  hdr.onclick = () => toggleRef(id);
+  hdr.onkeydown = event => toggleOnKeyboard(event, () => toggleRef(id));
+
+  const kids = document.createElement("div");
+  kids.className = "ref-children collapsed";
+  kids.id = `${id}-children`;
+  kids.style.maxHeight = "0px";
+
+  (node.children || []).forEach(child => kids.appendChild(mkShapeFold(child, focusLabel)));
+  (node.leaves || []).forEach(leaf => {
+    kids.appendChild(mkLeaf(leaf, {
+      referencePaths: [],
+      shapes: node.path || [],
+      rootFocus: focusLabel,
+    }));
+  });
 
   el.appendChild(hdr);
   el.appendChild(kids);
@@ -3090,9 +3279,12 @@ function renderSelectedFocus() {
     return;
   }
 
-  const nodes = REPORT_GROUPS[selectedFocus];
   const totalCount = (FOCUS_ENTRY_INDEX.get(selectedFocus) || []).length;
-  const visibleCount = countMatchingEntries(FOCUS_ENTRY_INDEX.get(selectedFocus) || []);
+  const visibleEntries = (FOCUS_ENTRY_INDEX.get(selectedFocus) || []).filter(entry =>
+    dataLeafMatches(entry.node, entry.ctx)
+  );
+  const visibleCount = visibleEntries.length;
+  const shapeTree = buildShapeHierarchy(visibleEntries, selectedFocus);
 
   const block = document.createElement("div");
   block.className = "focus-block";
@@ -3110,7 +3302,12 @@ function renderSelectedFocus() {
 
   const tree = document.createElement("div");
   tree.className = "tree";
-  nodes.forEach(n => tree.appendChild(n.type==="leaf" ? mkLeaf(n) : mkRef(n,0)));
+  shapeTree.children.forEach(shape => tree.appendChild(mkShapeFold(shape, selectedFocus)));
+  shapeTree.leaves.forEach(leaf => tree.appendChild(mkLeaf(leaf, {
+    referencePaths: [],
+    shapes: [],
+    rootFocus: selectedFocus,
+  })));
 
   block.appendChild(hdr);
   block.appendChild(tree);
