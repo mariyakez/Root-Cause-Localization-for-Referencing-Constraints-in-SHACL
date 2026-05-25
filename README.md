@@ -296,6 +296,7 @@ All fixtures are grouped under `all_test_cases/`.
 | TC50 | `all_test_cases/scale_cases/tc50_100_focus_nodes.ttl` | Synthetic scale case with 100 focus nodes |
 | TC51 | `all_test_cases/scale_cases/tc51_many_values_max_count.ttl` | Many values on one property with `sh:maxCount` |
 | TC52 | `all_test_cases/scale_cases/tc52_large_diamond_dedup.ttl` | Larger diamond deduplication case |
+| TC53 | `all_test_cases/sh_node_cases/tc53_deep_gradient_graph.ttl` | Eight nested `sh:node` levels for graph color cycling and expansion |
 
 External-report helper files:
 
