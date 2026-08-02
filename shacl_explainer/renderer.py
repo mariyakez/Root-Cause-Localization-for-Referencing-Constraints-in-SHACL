@@ -332,8 +332,9 @@ def to_summary(nodes: list, top=None, stats=None) -> str:
 
     reference_paths = Counter(
         f"{short_uri(ref.result_path)} -> {short_uri(ref.source_shape)}"
-        for ref in references
         if ref.result_path
+        else f"sh:node -> {short_uri(ref.source_shape)}"
+        for ref in references
     )
 
     direct   = sum(1 for l in leaves if not l.ref_chain)
