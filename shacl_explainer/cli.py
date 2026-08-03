@@ -6,7 +6,6 @@ import subprocess
 import sys
 import time
 from pathlib import Path
-import pyshacl
 from rdflib import Graph, Namespace, RDF
 from .expander import build_explanation_tree
 from .renderer import (
@@ -21,6 +20,7 @@ from .renderer import (
     to_text_tree,
     write_csv,
 )
+from .validator import DEFAULT_JENA_TIMEOUT, run_validation
 
 SH = Namespace("http://www.w3.org/ns/shacl#")
 
@@ -29,7 +29,8 @@ def run(data_path: str, shapes_path: str, fmt="text",
         top=None, path=None, component=None, reference_path=None,
         hints=False, save_report=None, timing_csv=None, report_path=None,
         data_format="turtle", shapes_format="turtle", report_format="turtle",
-        output=None, color="auto"):
+        output=None, color="auto", engine="jena", jena_command=None,
+        jena_timeout=DEFAULT_JENA_TIMEOUT):
     timings = {}
     output_path = resolve_output_path(fmt, output) if output else None
 
@@ -50,14 +51,20 @@ def run(data_path: str, shapes_path: str, fmt="text",
         conforms = bool(conforms_value.toPython()) if conforms_value is not None else False
     else:
         start = time.perf_counter()
-        conforms, report_graph, _ = pyshacl.validate(
+        conforms, report_graph, validation_timings = run_validation(
             data_graph,
-            shacl_graph=shapes_graph,
-            inference="none",
-            abort_on_first=False,
-            serialize_report_graph=False,
+            shapes_graph,
+            engine=engine,
+            data_format=data_format,
+            shapes_format=shapes_format,
+            report_format=report_format,
+            jena_command=jena_command,
+            data_source=data_path,
+            shapes_source=shapes_path,
+            jena_timeout=jena_timeout,
         )
         timings["validate"] = time.perf_counter() - start
+        timings.update({k: v for k, v in validation_timings.items() if k != "validate"})
     stats = collect_stats(data_graph, shapes_graph, report_graph)
 
     if save_report:
@@ -299,7 +306,23 @@ def parse_args(argv):
     parser.add_argument(
         "--report",
         dest="report_path",
-        help="Use an existing SHACL validation report graph instead of running pySHACL.",
+        help="Use an existing SHACL validation report graph instead of running the validator.",
+    )
+    parser.add_argument(
+        "--engine",
+        choices=["pyshacl", "jena"],
+        default="jena",
+        help="Validation backend to use for live validation (default: jena).",
+    )
+    parser.add_argument(
+        "--jena-command",
+        help="Executable or command template used for the Jena engine. Supports {data}, {shapes}, and {output} placeholders.",
+    )
+    parser.add_argument(
+        "--jena-timeout",
+        type=float,
+        default=DEFAULT_JENA_TIMEOUT,
+        help=f"Seconds to wait for the Jena command before giving up (default: {DEFAULT_JENA_TIMEOUT}).",
     )
     parser.add_argument(
         "--data-format",
@@ -329,30 +352,37 @@ def parse_args(argv):
 
 if __name__ == "__main__":
     args = parse_args(sys.argv[1:])
-    run(
-        args.data_path,
-        args.shapes_path,
-        fmt=args.format or args.legacy_format or "text",
-        summary=args.summary,
-        limit=args.limit,
-        focus=args.focus,
-        csv_path=args.csv_path,
-        timing=args.timing,
-        top=args.top,
-        path=args.path,
-        component=args.component,
-        reference_path=args.reference_path,
-        hints=args.hints,
-        save_report=args.save_report,
-        timing_csv=args.timing_csv,
-        report_path=args.report_path,
-        data_format=args.data_format,
-        shapes_format=args.shapes_format,
-        report_format=args.report_format,
-        output=args.output,
-        color=args.color,
-    )
-    
+    try:
+        run(
+            args.data_path,
+            args.shapes_path,
+            fmt=args.format or args.legacy_format or "text",
+            summary=args.summary,
+            limit=args.limit,
+            focus=args.focus,
+            csv_path=args.csv_path,
+            timing=args.timing,
+            top=args.top,
+            path=args.path,
+            component=args.component,
+            reference_path=args.reference_path,
+            hints=args.hints,
+            save_report=args.save_report,
+            timing_csv=args.timing_csv,
+            report_path=args.report_path,
+            data_format=args.data_format,
+            shapes_format=args.shapes_format,
+            report_format=args.report_format,
+            output=args.output,
+            color=args.color,
+            engine=args.engine,
+            jena_command=args.jena_command,
+            jena_timeout=args.jena_timeout,
+        )
+    except RuntimeError as exc:
+        print(f"Error: {exc}", file=sys.stderr)
+        sys.exit(1)
+
 # Running against TC3 should produce:
 # ↳ via ex:ContractorShape
 #    ↳ via ex:ContractorShape → ex:EmployeeShape

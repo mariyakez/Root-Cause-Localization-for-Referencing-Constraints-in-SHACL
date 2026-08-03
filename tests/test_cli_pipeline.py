@@ -1,3 +1,4 @@
+import os
 import pickle
 import subprocess
 import sys
@@ -32,6 +33,8 @@ class ShaclExplainerCliTests(unittest.TestCase):
                 "shacl_explainer.cli",
                 path,
                 path,
+                "--engine",
+                "pyshacl",
             ],
             cwd=PROJECT_ROOT,
             check=True,
@@ -41,8 +44,13 @@ class ShaclExplainerCliTests(unittest.TestCase):
         return result.stdout
 
     def run_cli(self, *args):
+        # These tests exercise the explainer pipeline (tree building,
+        # rendering, filtering), not the validation backend itself, so they
+        # pin the in-process pyshacl engine rather than requiring a Jena CLI
+        # to be installed wherever the suite runs. The CLI's own default is
+        # still jena.
         result = subprocess.run(
-            [sys.executable, "-m", "shacl_explainer.cli", *args],
+            [sys.executable, "-m", "shacl_explainer.cli", *args, "--engine", "pyshacl"],
             cwd=PROJECT_ROOT,
             check=True,
             text=True,
@@ -151,6 +159,8 @@ class ShaclExplainerCliTests(unittest.TestCase):
                 "shacl_explainer.cli",
                 f"{CASE_DIR}/testdata.ttl",
                 f"{CASE_DIR}/testshapes.ttl",
+                "--engine",
+                "pyshacl",
             ],
             cwd=PROJECT_ROOT,
             check=True,
@@ -159,6 +169,32 @@ class ShaclExplainerCliTests(unittest.TestCase):
         )
 
         self.assertIn("Data is valid.", result.stdout)
+
+    def test_jena_engine_without_configured_command_fails_cleanly(self):
+        # Regression check: a RuntimeError from the validator (here, jena
+        # selected with no --jena-command/JENA_SHACL_COMMAND configured)
+        # should surface as a short "Error: ..." message and exit code 1,
+        # not an uncaught Python traceback.
+        env = {key: value for key, value in os.environ.items() if key != "JENA_SHACL_COMMAND"}
+        result = subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "shacl_explainer.cli",
+                f"{CASE_DIR}/tc1_single_leaf.ttl",
+                f"{CASE_DIR}/tc1_single_leaf.ttl",
+                "--engine",
+                "jena",
+            ],
+            cwd=PROJECT_ROOT,
+            env=env,
+            text=True,
+            capture_output=True,
+        )
+
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("Error: Jena validation requested", result.stderr)
+        self.assertNotIn("Traceback", result.stderr)
 
     def test_pickle_data_graph_input(self):
         ttl_path = PROJECT_ROOT / CASE_DIR / "tc1_single_leaf.ttl"

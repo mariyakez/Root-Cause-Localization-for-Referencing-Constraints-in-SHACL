@@ -1,10 +1,13 @@
+import sys
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 import pyshacl
-from rdflib import Graph, Namespace
+from rdflib import Graph, Namespace, URIRef
 
 from shacl_explainer.expander import build_explanation_tree
+from shacl_explainer.fallback import revalidate_against_shape
 from shacl_explainer.renderer import to_text_tree
 
 
@@ -56,6 +59,21 @@ class FallbackExpansionTests(unittest.TestCase):
         self.assertIn("minCount    ex:hoursPerWeek", output)
         self.assertIn("minCount    ex:contractHours", output)
         self.assertIn("also via ex:StaffShape", output)
+
+    def test_revalidate_against_shape_gives_clear_error_when_pyshacl_missing(self):
+        # fallback.py is the only place pyshacl gets exercised when the
+        # explainer is expanding a report that has no sh:detail (e.g. every
+        # Jena report). If pyshacl isn't installed, that should surface as a
+        # clear, actionable error rather than a bare ModuleNotFoundError deep
+        # in an internal import.
+        with patch.dict(sys.modules, {"pyshacl": None}):
+            with self.assertRaisesRegex(RuntimeError, "pip install -r requirements.txt"):
+                revalidate_against_shape(
+                    URIRef("http://example.com/focus"),
+                    URIRef("http://example.com/Shape"),
+                    Graph(),
+                    Graph(),
+                )
 
 
 if __name__ == "__main__":

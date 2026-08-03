@@ -1,7 +1,11 @@
 # re-validation path for non-pyshacl reports
 # For non-pyshacl engines where sh:detail is absent. This is where re-validation happens.
+#
+# pyshacl is a required dependency of this module regardless of which engine
+# produced the top-level report (see requirements.txt): Jena's report doesn't
+# include sh:detail for nested sh:node/sh:property violations, so this is the
+# only way the explainer can reconstruct that nested breakdown.
 
-import pyshacl
 from rdflib import Graph, Namespace, RDF, URIRef
 
 SH = Namespace("http://www.w3.org/ns/shacl#")
@@ -15,6 +19,15 @@ def revalidate_against_shape(focus_node: URIRef,
     Returns the fresh report_graph and its top-level ValidationResult nodes.
     Used only when sh:detail is absent (non-pyshacl engine output).
     """
+    try:
+        import pyshacl
+    except ImportError as exc:
+        raise RuntimeError(
+            "Expanding this nested violation requires the 'pyshacl' package (used to "
+            "reconstruct sh:detail that the report doesn't include). Install it with: "
+            "pip install -r requirements.txt"
+        ) from exc
+
     # Build a minimal shapes graph: copy just this shape + its dependencies
     targeted = build_targeted_shapes(shape_uri, shapes_graph, focus_node)
 

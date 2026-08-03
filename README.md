@@ -40,9 +40,25 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
+`pyshacl` is a required dependency, even though `jena` is the default engine for live validation: pySHACL's report includes `sh:detail` for nested `sh:node`/`sh:property` violations, which Jena's report does not, so the explainer always falls back to a local pySHACL re-validation to reconstruct that nested detail (see [shacl_explainer/fallback.py](shacl_explainer/fallback.py)). In short, Jena decides top-level `sh:conforms`/`sh:result`; pySHACL powers the explanation tree underneath it, regardless of `--engine`.
+
+To use the `jena` engine you also need a Jena-compatible SHACL CLI installed and reachable — see [Apache Jena](https://jena.apache.org/download/) for install instructions.
+
 ## Basic Usage
 
 Run the explainer with a data graph and a shapes graph:
+
+```bash
+python3 -m shacl_explainer.cli DATA.ttl SHAPES.ttl \
+  --jena-command '/opt/homebrew/opt/jena/bin/shacl validate --data {data} --shapes {shapes}'
+```
+
+`jena` is the default engine. To validate with pySHACL alone instead (top-level validation and explanation both from pySHACL), use the engine switch:
+
+```bash
+python3 -m shacl_explainer.cli DATA.ttl SHAPES.ttl --engine pyshacl
+```
+
 
 ```bash
 python3 -m shacl_explainer.cli DATA.ttl SHAPES.ttl
