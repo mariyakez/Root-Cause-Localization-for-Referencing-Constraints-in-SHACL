@@ -1,37 +1,201 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script>
+(function(){
+  var s=localStorage.getItem('shacl-theme');
+  var p=window.matchMedia('(prefers-color-scheme: light)').matches
+        ?'light':'dark';
+  if((s||p)==='light')
+    document.documentElement.dataset.theme='light';
+})();
+</script>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>SHACL Explanation Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Geist+Mono:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
+/* ═══════════════════════════════════════════════════════════════════
+   SHACL EXPLAINER — token system
+   Dark  = Neon   (server room after dark; pure black, layered surfaces)
+   Light = Monad  (editorial tech journal on warm parchment)
+
+   One idea carries the chromatic budget: the six depth levels.
+   --level-1 … --level-6 encode how many sh:node hops separate the
+   reader from the root cause. Everything else is neutral.
+   ═══════════════════════════════════════════════════════════════════ */
 :root {
-  --bg:          #0f1117;
-  --surface:     #171b26;
-  --surface2:    #1e2333;
-  --surface3:    #252b3d;
-  --border:      #2a3149;
-  --border2:     #363f5c;
-  --text:        #e2e8f5;
-  --text-muted:  #6b7a9e;
-  --text-dim:    #4a5578;
-  --red:         #ff4f6d;
-  --red-bg:      #1f0d12;
-  --red-border:  #4a1523;
-  --orange:      #f97316;
-  --orange-bg:   #1a1008;
-  --yellow:      #fbbf24;
-  --green:       #34d399;
-  --green-bg:    #091a14;
-  --blue:        #60a5fa;
-  --blue-bg:     #0d1829;
-  --purple:      #a78bfa;
-  --purple-bg:   #130e24;
-  --cyan:        #22d3ee;
-  --chain-line:  #2a3149;
-  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  --sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color-scheme: dark;
+
+  /* ── SIGNATURE: depth of the sh:node reference chain ───────────── */
+  --level-1: #34d59a;   /* Neon Glow      — first reference          */
+  --level-2: #ff9f1c;   /* Terminal Amber                            */
+  --level-3: #c084fc;   /* Pulse Violet                              */
+  --level-4: #38bdf8;   /* Ice Blue                                  */
+  --level-5: #f472b6;   /* Neon Pink                                 */
+  --level-6: #fb7185;   /* Signal Coral   — 6 and deeper             */
+
+  --level-1-wash: rgba(52,213,154,.10);
+  --level-2-wash: rgba(255,159,28,.10);
+  --level-3-wash: rgba(192,132,252,.10);
+  --level-4-wash: rgba(56,189,248,.10);
+  --level-5-wash: rgba(244,114,182,.10);
+  --level-6-wash: rgba(251,113,133,.10);
+
+  --level-1-line: rgba(52,213,154,.55);
+  --level-2-line: rgba(255,159,28,.55);
+  --level-3-line: rgba(192,132,252,.55);
+  --level-4-line: rgba(56,189,248,.55);
+  --level-5-line: rgba(244,114,182,.55);
+  --level-6-line: rgba(251,113,133,.55);
+
+  /* ── surfaces: depth by layering, never by shadow ──────────────── */
+  --bg:          #000000;   /* Blackout       */
+  --surface:     #0a0a0b;   /* Depth          */
+  --surface2:    #151617;   /* Graphite Deep  */
+  --surface3:    #242628;   /* Graphite       */
+  --border:      #303236;   /* Graphite Light */
+  --border2:     #4a4d52;   /* derived: Graphite Light → Ash midpoint */
+  --wash:        rgba(255,255,255,.03);
+  --wash2:       rgba(255,255,255,.05);
+  --bg-blur:     rgba(0,0,0,.92);
+  --chain-line:  #303236;
+
+  /* ── text ──────────────────────────────────────────────────────── */
+  --text:        #ffffff;   /* Whiteout */
+  --text-muted:  #94979e;   /* Pewter   */
+  --text-dim:    #797d86;   /* Ash      */
+
+  /* ── violation ─────────────────────────────────────────────────── */
+  --red:         #ff3621;   /* System Warning */
+  --red-bg:      rgba(255,54,33,.12);
+  --red-border:  rgba(255,54,33,.34);
+  --focus-red:   #ff3621;
+  --focus-bg:    rgba(255,54,33,.10);
+  --leaf-fill:   rgba(255,54,33,.12);
+
+  /* ── secondary hues: all borrowed from the level ramp, no new ones */
+  --green:       #34d59a;   --green-bg:  rgba(52,213,154,.10);
+  --blue:        #38bdf8;   --blue-bg:   rgba(56,189,248,.10);
+  --purple:      #c084fc;   --purple-bg: rgba(192,132,252,.10);
+  --orange:      #ff9f1c;   --orange-bg: rgba(255,159,28,.10);
+  --yellow:      #fbbf24;   --yellow-bg: rgba(251,191,36,.10);
+
+  /* ── interactive accent (restrained: state, never surface) ─────── */
+  --cyan:        #34d59a;
+  --accent-wash: rgba(52,213,154,.08);
+  --accent-line: rgba(52,213,154,.30);
+
+  /* ── the single primary action on the page ─────────────────────── */
+  --primary-bg:       #ffffff;
+  --primary-bg-hover: #c9cbcf;
+  --primary-fg:       #000000;
+
+  /* ── constraint component badges ───────────────────────────────── */
+  --badge-mincount-fg: #c084fc; --badge-mincount-bg: rgba(192,132,252,.10); --badge-mincount-bd: #6d28d9;
+  --badge-datatype-fg: #fb923c; --badge-datatype-bg: rgba(251,146,60,.10);  --badge-datatype-bd: #9a3412;
+  --badge-pattern-fg:  #34d59a; --badge-pattern-bg:  rgba(52,213,154,.10);  --badge-pattern-bd:  #065f46;
+  --badge-in-fg:       #38bdf8; --badge-in-bg:       rgba(56,189,248,.10);  --badge-in-bd:       #075985;
+  --badge-maxcount-fg: #fbbf24; --badge-maxcount-bg: rgba(251,191,36,.10);  --badge-maxcount-bd: #92400e;
+  --badge-default-fg:  #797d86; --badge-default-bg:  rgba(121,125,134,.10); --badge-default-bd:  #303236;
+
+  /* ── type ──────────────────────────────────────────────────────── */
+  --sans:    'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --mono:    'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --display: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --mono-tracking:  -.05em;
+  --label-tracking: .1em;
+  --nav-transform:  none;
+
+  /* ── shape: 9999px for pills, 4px for everything else ──────────── */
+  --r-panel:  4px;
+  --r-card:   4px;
+  --r-pill:   9999px;
+  --r-button: 9999px;
+
   --sidebar-width: 220px;
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+
+  --level-1: #0f7a5c;   /* Forest Teal    */
+  --level-2: #c2410c;   /* Burnt Sienna   */
+  --level-3: #6d28d9;   /* Deep Violet    */
+  --level-4: #1d4ed8;   /* Royal Blue     */
+  --level-5: #be185d;   /* Magenta Rose   */
+  --level-6: #0369a1;   /* Ocean Blue     */
+
+  --level-1-wash: rgba(15,122,92,.07);
+  --level-2-wash: rgba(194,65,12,.07);
+  --level-3-wash: rgba(109,40,217,.07);
+  --level-4-wash: rgba(29,78,216,.07);
+  --level-5-wash: rgba(190,24,93,.07);
+  --level-6-wash: rgba(3,105,161,.07);
+
+  --level-1-line: rgba(15,122,92,.45);
+  --level-2-line: rgba(194,65,12,.45);
+  --level-3-line: rgba(109,40,217,.45);
+  --level-4-line: rgba(29,78,216,.45);
+  --level-5-line: rgba(190,24,93,.45);
+  --level-6-line: rgba(3,105,161,.45);
+
+  --bg:          #f6f3f1;              /* Parchment */
+  --surface:     #f6f3f1;
+  --surface2:    rgba(207,218,245,.42);   /* Periwinkle Mist — elevated rows */
+  --surface3:    rgba(207,218,245,.72);
+  --border:      #cecac8;              /* Ash — the structure */
+  --border2:     #b3aeaa;              /* derived: Ash → Smoke midpoint */
+  --wash:        rgba(36,36,36,.025);
+  --wash2:       rgba(36,36,36,.045);
+  --bg-blur:     rgba(246,243,241,.94);
+  --chain-line:  #cecac8;
+
+  --text:        #242424;   /* Off-Black */
+  --text-muted:  #4e4d4d;   /* Graphite  */
+  --text-dim:    #797776;   /* Smoke     */
+
+  --red:         #dc2626;
+  --red-bg:      rgba(220,38,38,.08);
+  --red-border:  rgba(220,38,38,.30);
+  --focus-red:   #dc2626;
+  --focus-bg:    rgba(220,38,38,.06);
+  --leaf-fill:   rgba(220,38,38,.08);
+
+  --green:       #0f7a5c;   --green-bg:  rgba(15,122,92,.08);
+  --blue:        #1d4ed8;   --blue-bg:   rgba(29,78,216,.08);
+  --purple:      #6d28d9;   --purple-bg: rgba(109,40,217,.08);
+  --orange:      #c2410c;   --orange-bg: rgba(194,65,12,.08);
+  --yellow:      #92400e;   --yellow-bg: rgba(146,64,14,.08);
+
+  --cyan:        #242424;
+  --accent-wash: rgba(36,36,36,.05);
+  --accent-line: rgba(36,36,36,.22);
+
+  --primary-bg:       #2b59d1;   /* Lake Blue — the one primary action */
+  --primary-bg-hover: #1f43a3;
+  --primary-fg:       #f6f3f1;
+
+  --badge-mincount-fg: #6d28d9; --badge-mincount-bg: rgba(109,40,217,.08); --badge-mincount-bd: #c4b5fd;
+  --badge-datatype-fg: #c2410c; --badge-datatype-bg: rgba(194,65,12,.08);  --badge-datatype-bd: #fed7aa;
+  --badge-pattern-fg:  #065f46; --badge-pattern-bg:  rgba(6,95,70,.08);    --badge-pattern-bd:  #a7f3d0;
+  --badge-in-fg:       #1d4ed8; --badge-in-bg:       rgba(29,78,216,.08);  --badge-in-bd:       #bfdbfe;
+  --badge-maxcount-fg: #92400e; --badge-maxcount-bg: rgba(146,64,14,.08);  --badge-maxcount-bd: #fde68a;
+  --badge-default-fg:  #4e4d4d; --badge-default-bg:  rgba(78,77,77,.08);   --badge-default-bd:  #cecac8;
+
+  --sans:    Georgia, 'Times New Roman', serif;
+  --mono:    'JetBrains Mono', 'IBM Plex Mono', 'Space Mono', ui-monospace, monospace;
+  --display: Georgia, 'Times New Roman', serif;
+  --mono-tracking:  0;
+  --label-tracking: .12em;
+  --nav-transform:  uppercase;
+
+  --r-panel:  40px;
+  --r-card:   14px;
+  --r-pill:   9999px;
+  --r-button: 100px;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -43,6 +207,7 @@ body {
   font-size: 14px;
   line-height: 1.6;
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* ── top bar ── */
@@ -61,8 +226,8 @@ body {
   font-family: var(--mono);
   font-size: 13px;
   font-weight: 600;
-  color: var(--cyan);
-  letter-spacing: .06em;
+  color: var(--text);
+  letter-spacing: .18em;
 }
 .topbar-sep { color: var(--border2); }
 .topbar-title {
@@ -70,6 +235,7 @@ body {
   font-size: 13px;
   color: var(--text-muted);
 }
+[data-theme="light"] .topbar-title { letter-spacing: -.02em; }
 .topbar-stats {
   margin-left: auto;
   display: flex;
@@ -78,8 +244,44 @@ body {
   font-size: 11px;
 }
 .stat { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; }
-.stat-val { color: var(--text); font-weight: 600; font-size: 13px; }
-.stat-lbl { color: var(--text-dim); font-size: 10px; letter-spacing: .05em; text-transform: uppercase; }
+.stat-val {
+  font-family: var(--display);
+  color: var(--text);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: var(--mono-tracking);
+}
+[data-theme="light"] .stat-val { font-weight: 400; letter-spacing: -.02em; }
+.stat-lbl {
+  color: var(--text-dim);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+}
+
+/* ── theme toggle ── */
+.theme-toggle {
+  appearance: none;
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1;
+  letter-spacing: var(--mono-tracking);
+  padding: 7px 13px;
+  border-radius: var(--r-button);
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color .12s, border-color .12s, background .12s;
+}
+.theme-toggle:hover { color: var(--text); border-color: var(--border2); background: var(--wash); }
+.theme-toggle:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+[data-theme="light"] .theme-toggle { text-transform: var(--nav-transform); letter-spacing: .08em; }
+.theme-toggle-light { display: none; }
+[data-theme="light"] .theme-toggle-dark  { display: none; }
+[data-theme="light"] .theme-toggle-light { display: inline; }
 
 /* ── metadata ── */
 .metadata-panel {
@@ -101,7 +303,7 @@ body {
 .metadata-label {
   color: var(--text-dim);
   text-transform: uppercase;
-  letter-spacing: .05em;
+  letter-spacing: var(--label-tracking);
 }
 .metadata-value {
   color: var(--text);
@@ -160,7 +362,7 @@ body.resizing-sidebar {
   font-size: 10px;
   font-weight: 600;
   color: var(--text-dim);
-  letter-spacing: .1em;
+  letter-spacing: var(--label-tracking);
   text-transform: uppercase;
   padding: 0 16px 8px;
 }
@@ -174,10 +376,11 @@ body.resizing-sidebar {
   border: 1px solid var(--border);
   background: transparent;
   color: var(--text-dim);
-  border-radius: 4px;
+  border-radius: var(--r-button);
   padding: 5px 8px;
   font-family: var(--mono);
   font-size: 11px;
+  letter-spacing: var(--mono-tracking);
   cursor: pointer;
   transition: all .12s;
 }
@@ -188,8 +391,9 @@ body.resizing-sidebar {
 .sidebar-tab.active {
   border-color: var(--cyan);
   color: var(--cyan);
-  background: rgba(34,211,238,.08);
+  background: var(--accent-wash);
 }
+.sidebar-tab:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
 .sidebar-panel[hidden] { display: none; }
 .focus-search-wrap {
   padding: 0 12px 12px;
@@ -198,7 +402,7 @@ body.resizing-sidebar {
   width: 100%;
   box-sizing: border-box;
   border: 1px solid var(--border2);
-  border-radius: 6px;
+  border-radius: var(--r-card);
   background: var(--bg);
   color: var(--text);
   font-family: var(--mono);
@@ -209,7 +413,8 @@ body.resizing-sidebar {
 .focus-search::placeholder { color: var(--text-dim); }
 .focus-search:focus {
   border-color: var(--cyan);
-  box-shadow: 0 0 0 2px rgba(34,211,238,.12);
+  outline: 1px solid var(--cyan);
+  outline-offset: 0;
 }
 .focus-empty {
   display: none;
@@ -225,7 +430,7 @@ body.resizing-sidebar {
   border: 1px solid var(--border);
   background: transparent;
   color: var(--text-dim);
-  border-radius: 4px;
+  border-radius: var(--r-button);
   padding: 5px 8px;
   font-family: var(--mono);
   font-size: 10px;
@@ -235,8 +440,9 @@ body.resizing-sidebar {
 .sidebar-more-btn:hover {
   border-color: var(--border2);
   color: var(--text-muted);
-  background: rgba(255,255,255,.02);
+  background: var(--wash);
 }
+.sidebar-more-btn:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
 .focus-item {
   appearance: none;
   width: 100%;
@@ -254,6 +460,7 @@ body.resizing-sidebar {
   transition: all .12s;
   font-family: var(--mono);
   font-size: 12px;
+  letter-spacing: var(--mono-tracking);
   color: var(--text-muted);
 }
 .focus-name {
@@ -264,9 +471,9 @@ body.resizing-sidebar {
 }
 .focus-item:hover { background: var(--surface2); color: var(--text); }
 .focus-item:focus-visible {
-  outline: none;
-  background: rgba(34,211,238,.06);
-  box-shadow: inset 0 0 0 1px rgba(34,211,238,.22);
+  outline: 2px solid var(--cyan);
+  outline-offset: -2px;
+  background: var(--accent-wash);
 }
 .focus-item.active {
   background: var(--surface2);
@@ -284,8 +491,8 @@ body.resizing-sidebar {
   background: var(--red-bg);
   color: var(--red);
   border: 1px solid var(--red-border);
-  border-radius: 3px;
-  padding: 0 5px;
+  border-radius: var(--r-pill);
+  padding: 0 6px;
   font-size: 10px;
   font-weight: 600;
 }
@@ -295,17 +502,16 @@ body.resizing-sidebar {
 
 /* ── graph view ── */
 .graph-view {
-  background:
-    radial-gradient(circle at top left, rgba(255,255,255,.04), transparent 35%),
-    var(--surface);
+  background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--r-panel);
   padding: 22px 18px 18px;
   overflow: hidden;
 }
+[data-theme="light"] .graph-view { padding: 30px 28px 26px; }
 .graph-empty {
   border: 1px dashed var(--border2);
-  border-radius: 8px;
+  border-radius: var(--r-card);
   padding: 18px;
   color: var(--text-muted);
   font-family: var(--mono);
@@ -324,20 +530,25 @@ body.resizing-sidebar {
   margin-bottom: 16px;
   border-bottom: 1px solid var(--border);
 }
+.graph-legend-break {
+  flex-basis: 100%;
+  height: 0;
+}
 .graph-legend-item {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   font-family: var(--mono);
   font-size: 11px;
+  letter-spacing: var(--mono-tracking);
   color: var(--text-muted);
 }
 .graph-legend-swatch {
   width: 16px;
   height: 16px;
-  border-radius: 6px;
+  border-radius: 4px;
   border: 2px solid currentColor;
-  background: rgba(255,255,255,.04);
+  background: var(--wash2);
 }
 .graph-legend-swatch.leaf {
   border-radius: 999px;
@@ -349,15 +560,16 @@ body.resizing-sidebar {
 }
 .graph-root {
   --graph-scale: 1;
+  position: relative;
+  left: 50%;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 10px;
   width: max-content;
   max-width: none;
-  margin: 0 auto;
   transform-origin: top center;
-  transform: scale(var(--graph-scale));
+  transform: translateX(-50%) scale(var(--graph-scale));
 }
 .graph-branch {
   position: relative;
@@ -372,9 +584,9 @@ body.resizing-sidebar {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background: rgba(255,255,255,.03);
-  border: 2px solid var(--border2);
-  border-radius: 12px;
+  background: var(--node-wash, var(--wash));
+  border: 2px solid var(--node-level, var(--border2));
+  border-radius: var(--r-card);
   padding: clamp(8px, 1vw, 10px) clamp(12px, 1.4vw, 18px);
   min-width: clamp(118px, 12vw, 172px);
   max-width: clamp(160px, 18vw, 280px);
@@ -382,9 +594,10 @@ body.resizing-sidebar {
   font-family: var(--mono);
   font-size: clamp(10px, .85vw, 12px);
   font-weight: 600;
+  letter-spacing: var(--mono-tracking);
   cursor: pointer;
   text-align: center;
-  transition: transform .12s, border-color .12s, box-shadow .12s, background .12s;
+  transition: transform .12s, border-color .12s, background .12s;
 }
 .graph-node:hover {
   transform: translateY(-1px);
@@ -395,37 +608,23 @@ body.resizing-sidebar {
   outline-offset: 2px;
 }
 .graph-node.selected {
-  box-shadow: 0 0 0 3px rgba(255,255,255,.06);
+  background: var(--node-level, var(--border2));
+  color: var(--primary-fg);
 }
+.graph-node.selected .graph-node-badge { color: var(--primary-fg); }
 .graph-node.graph-focus {
-  border-color: #ff7f41;
-  background: rgba(255,127,65,.08);
-  box-shadow: inset 0 0 0 1px rgba(255,127,65,.18);
+  --node-level: var(--focus-red);
+  --node-wash: var(--focus-bg);
+  border-width: 2px;
+  color: var(--text);
 }
-.graph-node.level-1 {
-  border-color: var(--blue);
-  box-shadow: inset 0 0 0 1px rgba(96,165,250,.18);
-}
-.graph-node.level-2 {
-  border-color: var(--purple);
-  box-shadow: inset 0 0 0 1px rgba(167,139,250,.18);
-}
-.graph-node.level-3 {
-  border-color: #8fd14f;
-  box-shadow: inset 0 0 0 1px rgba(143,209,79,.18);
-}
-.graph-node.level-4 {
-  border-color: #4fd1c5;
-  box-shadow: inset 0 0 0 1px rgba(79,209,197,.18);
-}
-.graph-node.level-5 {
-  border-color: #fbbf24;
-  box-shadow: inset 0 0 0 1px rgba(251,191,36,.18);
-}
-.graph-node.level-6 {
-  border-color: #94a3b8;
-  box-shadow: inset 0 0 0 1px rgba(148,163,184,.18);
-}
+.graph-node.graph-focus.selected { color: var(--primary-fg); }
+.graph-node.level-1 { --node-level: var(--level-1); --node-wash: var(--level-1-wash); }
+.graph-node.level-2 { --node-level: var(--level-2); --node-wash: var(--level-2-wash); }
+.graph-node.level-3 { --node-level: var(--level-3); --node-wash: var(--level-3-wash); }
+.graph-node.level-4 { --node-level: var(--level-4); --node-wash: var(--level-4-wash); }
+.graph-node.level-5 { --node-level: var(--level-5); --node-wash: var(--level-5-wash); }
+.graph-node.level-6 { --node-level: var(--level-6); --node-wash: var(--level-6-wash); }
 .graph-node-label {
   min-width: 0;
   overflow: hidden;
@@ -438,36 +637,79 @@ body.resizing-sidebar {
   justify-content: center;
   min-width: 28px;
   padding: 2px 6px;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   border: 1px solid currentColor;
-  background: rgba(255,255,255,.04);
+  background: transparent;
+  color: var(--node-level, var(--text-muted));
   font-size: 10px;
   font-weight: 700;
   letter-spacing: .04em;
 }
 .graph-link {
+  position: relative;
   width: 1px;
-  height: 18px;
+  height: 20px;
   background: var(--chain-line);
+}
+.graph-link::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -1px;
+  transform: translateX(-50%);
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 6px solid var(--chain-line);
 }
 .graph-relation {
   font-family: var(--sans);
   font-size: 12px;
   font-style: italic;
   color: var(--text-muted);
-  background: rgba(255,255,255,.04);
-  border-radius: 6px;
-  padding: 4px 10px;
+  background: var(--wash);
+  border-radius: var(--r-pill);
+  padding: 4px 12px;
 }
+[data-theme="light"] .graph-relation { font-size: 14px; letter-spacing: -.01em; }
 .graph-children {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 10px;
   min-width: 100%;
+  --row-level: var(--level-1);
 }
+.graph-children .graph-children { --row-level: var(--level-2); }
+.graph-children .graph-children .graph-children { --row-level: var(--level-3); }
+.graph-children .graph-children .graph-children .graph-children { --row-level: var(--level-4); }
+.graph-children .graph-children .graph-children .graph-children .graph-children { --row-level: var(--level-5); }
+.graph-children .graph-children .graph-children .graph-children .graph-children .graph-children { --row-level: var(--level-6); }
 .graph-children[hidden] {
   display: none;
+}
+.graph-row-panel {
+  position: relative;
+  width: max-content;
+  max-width: none;
+  padding-right: 52px;
+}
+.graph-level-label {
+  position: absolute;
+  top: 17px;
+  right: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 34px;
+  height: 24px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--row-level);
+  background: transparent;
+  color: var(--row-level);
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
 }
 .graph-row {
   position: relative;
@@ -495,43 +737,59 @@ body.resizing-sidebar {
   flex-direction: column;
   align-items: center;
   gap: 6px;
-  padding-top: 18px;
 }
 .graph-row > .graph-branch::before,
 .graph-row > .graph-leaf-wrap::before {
   content: "";
   position: absolute;
-  top: 0;
+  top: -18px;
   left: 50%;
   height: 18px;
   border-left: 1px solid var(--chain-line);
 }
+.graph-row > .graph-branch::after,
+.graph-row > .graph-leaf-wrap::after {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 6px solid var(--chain-line);
+}
 .graph-leaf {
   appearance: none;
-  background: rgba(255,79,109,.09);
+  background: var(--leaf-fill);
   border: 2px solid var(--red);
   border-radius: 999px;
   padding: clamp(8px, 1vw, 10px) clamp(12px, 1.2vw, 16px);
   min-width: clamp(96px, 10vw, 120px);
   max-width: clamp(150px, 16vw, 240px);
-  color: #ffd7df;
+  color: var(--text);
   font-family: var(--mono);
   font-size: clamp(10px, .85vw, 12px);
   font-weight: 600;
+  letter-spacing: var(--mono-tracking);
   cursor: pointer;
   text-align: center;
-  transition: transform .12s, box-shadow .12s, background .12s;
+  transition: transform .12s, background .12s;
 }
 .graph-leaf:hover {
   transform: translateY(-1px);
 }
 .graph-leaf.selected {
-  box-shadow: 0 0 0 3px rgba(255,79,109,.14);
+  background: var(--red);
+  color: var(--primary-fg);
 }
 .graph-leaf.pass {
   border-color: var(--green);
-  background: rgba(52,211,153,.09);
-  color: #d5fff0;
+  background: var(--green-bg);
+  color: var(--text);
+}
+.graph-leaf.pass.selected {
+  background: var(--green);
+  color: var(--primary-fg);
 }
 .graph-leaf.pass:focus-visible {
   outline-color: var(--green);
@@ -545,26 +803,30 @@ body.resizing-sidebar {
 }
 .graph-detail {
   margin-top: 20px;
-  background: rgba(255,255,255,.03);
+  background: var(--wash);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--r-card);
   padding: 16px 18px;
 }
 .graph-detail-title {
-  font-family: var(--mono);
+  font-family: var(--display);
   font-size: 20px;
   font-weight: 600;
   color: var(--text);
   margin-bottom: 10px;
+  letter-spacing: var(--mono-tracking);
 }
+[data-theme="light"] .graph-detail-title { font-weight: 400; font-size: 26px; letter-spacing: -.02em; }
 .graph-detail-body {
   color: var(--text-muted);
 }
+[data-theme="light"] .graph-detail-body { font-size: 15px; }
 .graph-detail-body p {
   margin-bottom: 10px;
 }
 .graph-detail-body code {
   font-family: var(--mono);
+  font-size: 12px;
   color: var(--text);
 }
 .graph-detail-list {
@@ -591,19 +853,23 @@ body.resizing-sidebar {
   margin-bottom: 16px;
 }
 .focus-node-label {
-  font-family: var(--mono);
+  font-family: var(--display);
   font-size: 18px;
   font-weight: 600;
   color: var(--text);
+  letter-spacing: var(--mono-tracking);
 }
+[data-theme="light"] .focus-node-label { font-weight: 400; font-size: 27px; letter-spacing: -.02em; }
 .focus-badge {
   font-family: var(--mono);
   font-size: 11px;
   color: var(--text-muted);
-  background: var(--surface2);
+  background: transparent;
   border: 1px solid var(--border2);
-  border-radius: 4px;
-  padding: 2px 8px;
+  border-radius: var(--r-pill);
+  padding: 2px 10px;
+  text-transform: var(--nav-transform);
+  letter-spacing: .06em;
 }
 .failure-count {
   margin-left: auto;
@@ -612,12 +878,36 @@ body.resizing-sidebar {
   color: var(--red);
   background: var(--red-bg);
   border: 1px solid var(--red-border);
-  border-radius: 4px;
-  padding: 3px 10px;
+  border-radius: var(--r-pill);
+  padding: 3px 12px;
 }
 
 /* ── tree container ── */
 .tree { display: flex; flex-direction: column; gap: 6px; }
+
+/* ═══ SIGNATURE: sh:node hop depth, resolved by nesting ═══════════════
+   The tree's own DOM nesting is the source of truth for depth, so the
+   level colour needs no class from JavaScript — one hop deeper in the
+   markup is one hop deeper in the reference chain. Level 6 is terminal:
+   any node at 6+ keeps Signal Coral / Ocean Blue.                     */
+.tree {
+  --level: var(--level-1); --level-wash: var(--level-1-wash); --level-line: var(--level-1-line);
+}
+.ref-children {
+  --level: var(--level-2); --level-wash: var(--level-2-wash); --level-line: var(--level-2-line);
+}
+.ref-children .ref-children {
+  --level: var(--level-3); --level-wash: var(--level-3-wash); --level-line: var(--level-3-line);
+}
+.ref-children .ref-children .ref-children {
+  --level: var(--level-4); --level-wash: var(--level-4-wash); --level-line: var(--level-4-line);
+}
+.ref-children .ref-children .ref-children .ref-children {
+  --level: var(--level-5); --level-wash: var(--level-5-wash); --level-line: var(--level-5-line);
+}
+.ref-children .ref-children .ref-children .ref-children .ref-children {
+  --level: var(--level-6); --level-wash: var(--level-6-wash); --level-line: var(--level-6-line);
+}
 
 /* ── reference node ── */
 .ref-node { position: relative; }
@@ -628,12 +918,13 @@ body.resizing-sidebar {
   padding: 10px 14px;
   background: var(--surface2);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-left: 2px solid var(--level);
+  border-radius: var(--r-card);
   cursor: pointer;
   transition: border-color .12s, background .12s;
   user-select: none;
 }
-.ref-header:hover { border-color: var(--border2); background: var(--surface3); }
+.ref-header:hover { border-color: var(--border2); border-left-color: var(--level); background: var(--surface3); }
 .ref-header:focus-visible,
 .leaf-header:focus-visible {
   outline: 2px solid var(--cyan);
@@ -648,14 +939,15 @@ body.resizing-sidebar {
 .ref-arrow.open { transform: rotate(90deg); }
 .ref-icon {
   font-size: 13px;
-  color: var(--cyan);
+  color: var(--text-dim);
   flex-shrink: 0;
 }
 .ref-path {
   font-family: var(--mono);
   font-size: 13px;
   font-weight: 600;
-  color: var(--cyan);
+  color: var(--level);
+  letter-spacing: var(--mono-tracking);
 }
 .ref-arrow-label {
   font-size: 11px;
@@ -665,7 +957,8 @@ body.resizing-sidebar {
 .ref-target {
   font-family: var(--mono);
   font-size: 13px;
-  color: var(--blue);
+  color: var(--text);
+  letter-spacing: var(--mono-tracking);
 }
 .ref-source {
   font-family: var(--mono);
@@ -682,24 +975,25 @@ body.resizing-sidebar {
   color: var(--red);
   background: var(--red-bg);
   border: 1px solid var(--red-border);
-  border-radius: 3px;
-  padding: 1px 7px;
+  border-radius: var(--r-pill);
+  padding: 1px 8px;
   flex-shrink: 0;
 }
 .ref-chain-pill {
   font-family: var(--mono);
   font-size: 10px;
-  color: var(--text-dim);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 3px;
-  padding: 1px 7px;
+  color: var(--level);
+  background: var(--level-wash);
+  border: 1px solid var(--level-line);
+  border-radius: var(--r-pill);
+  padding: 1px 8px;
+  white-space: nowrap;
 }
 .ref-children {
   margin-left: 24px;
   margin-top: 6px;
   padding-left: 16px;
-  border-left: 1px solid var(--chain-line);
+  border-left: 1px solid var(--level-line);
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -711,7 +1005,7 @@ body.resizing-sidebar {
 /* ── leaf node ── */
 .leaf-node {
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--r-card);
   overflow: hidden;
   transition: border-color .12s;
 }
@@ -729,16 +1023,17 @@ body.resizing-sidebar {
   font-family: var(--mono);
   font-size: 11px;
   font-weight: 600;
-  border-radius: 3px;
-  padding: 2px 7px;
+  border-radius: var(--r-pill);
+  padding: 2px 9px;
   flex-shrink: 0;
+  letter-spacing: var(--mono-tracking);
 }
-.comp-mincount  { background: #1a1029; color: #c084fc; border: 1px solid #3b1d6e; }
-.comp-datatype  { background: #1a0e08; color: #fb923c; border: 1px solid #6b2d0d; }
-.comp-pattern   { background: #0d1a18; color: #34d399; border: 1px solid #0e4a37; }
-.comp-in        { background: #0d1629; color: #60a5fa; border: 1px solid #1a3a6e; }
-.comp-maxcount  { background: #1a1a08; color: #facc15; border: 1px solid #6b5a0d; }
-.comp-default   { background: var(--surface2); color: var(--text-muted); border: 1px solid var(--border); }
+.comp-mincount  { background: var(--badge-mincount-bg); color: var(--badge-mincount-fg); border: 1px solid var(--badge-mincount-bd); }
+.comp-datatype  { background: var(--badge-datatype-bg); color: var(--badge-datatype-fg); border: 1px solid var(--badge-datatype-bd); }
+.comp-pattern   { background: var(--badge-pattern-bg);  color: var(--badge-pattern-fg);  border: 1px solid var(--badge-pattern-bd);  }
+.comp-in        { background: var(--badge-in-bg);       color: var(--badge-in-fg);       border: 1px solid var(--badge-in-bd);       }
+.comp-maxcount  { background: var(--badge-maxcount-bg); color: var(--badge-maxcount-fg); border: 1px solid var(--badge-maxcount-bd); }
+.comp-default   { background: var(--badge-default-bg);  color: var(--badge-default-fg);  border: 1px solid var(--badge-default-bd);  }
 
 .leaf-path {
   font-family: var(--mono);
@@ -751,9 +1046,9 @@ body.resizing-sidebar {
   font-family: var(--mono);
   font-size: 12px;
   color: var(--yellow);
-  background: rgba(251,191,36,.08);
-  border-radius: 3px;
-  padding: 1px 6px;
+  background: var(--yellow-bg);
+  border-radius: var(--r-pill);
+  padding: 1px 8px;
 }
 .leaf-missing {
   font-family: var(--mono);
@@ -766,6 +1061,7 @@ body.resizing-sidebar {
   font-size: 13px;
   color: var(--text);
   font-weight: 600;
+  letter-spacing: var(--mono-tracking);
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -806,18 +1102,21 @@ body.resizing-sidebar {
   overflow: hidden;
   transition: max-height .22s ease, opacity .18s ease;
 }
+[data-theme="light"] .leaf-body { background: var(--surface2); }
 .leaf-body.collapsed { max-height: 0 !important; opacity: 0; border-top: none; padding: 0 14px; }
 .leaf-row-label {
   font-family: var(--mono);
   font-size: 11px;
   color: var(--text-dim);
   text-transform: uppercase;
-  letter-spacing: .06em;
+  letter-spacing: var(--label-tracking);
   padding-top: 1px;
 }
 .leaf-row-val { font-family: var(--mono); font-size: 12px; color: var(--text); }
 .leaf-message { color: var(--text-muted); font-family: var(--sans); font-size: 12px; }
+[data-theme="light"] .leaf-message { font-size: 14px; }
 .leaf-hint { color: var(--green); font-family: var(--sans); font-size: 12px; }
+[data-theme="light"] .leaf-hint { font-size: 14px; }
 .leaf-chain { color: var(--blue); }
 .leaf-altchain {
   color: var(--text-dim);
@@ -829,7 +1128,7 @@ body.resizing-sidebar {
   color: var(--purple);
   font-size: 10px;
   text-transform: uppercase;
-  letter-spacing: .06em;
+  letter-spacing: var(--label-tracking);
   font-weight: 600;
 }
 .copy-wrap {
@@ -843,8 +1142,8 @@ body.resizing-sidebar {
   border: 1px solid var(--border);
   background: transparent;
   color: var(--text-dim);
-  border-radius: 3px;
-  padding: 0 5px;
+  border-radius: var(--r-button);
+  padding: 0 7px;
   min-height: 18px;
   font-family: var(--mono);
   font-size: 10px;
@@ -863,9 +1162,10 @@ body.resizing-sidebar {
 .copy-btn:focus {
   color: var(--cyan);
   border-color: var(--cyan);
-  background: rgba(34,211,238,.08);
+  background: var(--accent-wash);
   outline: none;
 }
+.copy-btn:focus-visible { opacity: 1; outline: 2px solid var(--cyan); outline-offset: 1px; }
 .copy-btn.copied {
   opacity: 1;
   color: var(--green);
@@ -873,11 +1173,11 @@ body.resizing-sidebar {
 }
 
 /* leaf node coloring by component */
-.leaf-node.lf-mincount  { border-left: 3px solid #c084fc; }
-.leaf-node.lf-datatype  { border-left: 3px solid #fb923c; }
-.leaf-node.lf-pattern   { border-left: 3px solid #34d399; }
-.leaf-node.lf-in        { border-left: 3px solid #60a5fa; }
-.leaf-node.lf-maxcount  { border-left: 3px solid #facc15; }
+.leaf-node.lf-mincount  { border-left: 3px solid var(--badge-mincount-fg); }
+.leaf-node.lf-datatype  { border-left: 3px solid var(--badge-datatype-fg); }
+.leaf-node.lf-pattern   { border-left: 3px solid var(--badge-pattern-fg); }
+.leaf-node.lf-in        { border-left: 3px solid var(--badge-in-fg); }
+.leaf-node.lf-maxcount  { border-left: 3px solid var(--badge-maxcount-fg); }
 
 /* ── filter bar ── */
 .filter-bar {
@@ -886,23 +1186,24 @@ body.resizing-sidebar {
   z-index: 60;
   margin: -8px -8px 24px;
   padding: 8px;
-  background: rgba(15, 17, 23, .96);
+  background: var(--bg-blur);
   border-bottom: 1px solid var(--border);
   backdrop-filter: blur(8px);
 }
 .filter-panel {
   width: 100%;
-  background: rgba(255,255,255,.02);
+  background: var(--wash);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--r-panel);
   padding: 12px 12px 10px;
 }
+[data-theme="light"] .filter-panel { padding: 20px 24px 16px; }
 .filter-panel-title {
   font-size: 11px;
   color: var(--text-dim);
   font-family: var(--mono);
   text-transform: uppercase;
-  letter-spacing: .08em;
+  letter-spacing: var(--label-tracking);
   margin-bottom: 10px;
 }
 .filter-stack {
@@ -921,7 +1222,7 @@ body.resizing-sidebar {
   color: var(--text-dim);
   font-family: var(--mono);
   text-transform: uppercase;
-  letter-spacing: .05em;
+  letter-spacing: var(--label-tracking);
 }
 .filter-control {
   min-width: 0;
@@ -932,15 +1233,16 @@ body.resizing-sidebar {
   font-family: var(--mono);
   font-size: 11px;
   padding: 6px 9px;
-  border-radius: 6px;
+  border-radius: var(--r-card);
   border: 1px solid var(--border2);
   background: var(--surface2);
   color: var(--text);
 }
+[data-theme="light"] .filter-select { background: var(--bg); }
 .filter-select:focus {
-  outline: none;
+  outline: 2px solid var(--cyan);
+  outline-offset: 1px;
   border-color: var(--cyan);
-  box-shadow: 0 0 0 2px rgba(34,211,238,.12);
 }
 .filter-footer {
   margin-top: 12px;
@@ -962,10 +1264,10 @@ body.resizing-sidebar {
   font-family: var(--mono);
   font-size: 11px;
   color: var(--text-muted);
-  background: rgba(255,255,255,.03);
+  background: var(--wash);
   border: 1px solid var(--border);
-  border-radius: 999px;
-  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  padding: 4px 12px;
 }
 .filter-summary-chip .filter-summary-value {
   color: var(--text);
@@ -984,8 +1286,8 @@ body.resizing-sidebar {
 .expand-all-btn {
   font-family: var(--mono);
   font-size: 10px;
-  padding: 2px 7px;
-  border-radius: 3px;
+  padding: 3px 10px;
+  border-radius: var(--r-button);
   border: 1px solid var(--border);
   background: transparent;
   color: var(--text-dim);
@@ -995,27 +1297,47 @@ body.resizing-sidebar {
 .expand-all-btn:hover {
   border-color: var(--border2);
   color: var(--text-muted);
-  background: rgba(255,255,255,.02);
+  background: var(--wash);
 }
+.expand-all-btn:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
 .export-btn {
   font-family: var(--mono);
   font-size: 10px;
-  padding: 2px 7px;
-  border-radius: 3px;
-  border: 1px solid rgba(34,211,238,.18);
-  background: rgba(34,211,238,.04);
-  color: var(--cyan);
+  padding: 3px 10px;
+  border-radius: var(--r-button);
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
   cursor: pointer;
   transition: all .12s;
 }
 .export-btn:hover {
-  border-color: rgba(34,211,238,.34);
-  background: rgba(34,211,238,.08);
+  border-color: var(--border2);
+  color: var(--text);
+  background: var(--wash);
 }
+.export-btn:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
 .export-btn.copied {
   color: var(--green);
-  border-color: rgba(74,222,128,.3);
-  background: rgba(74,222,128,.08);
+  border-color: var(--green);
+  background: var(--green-bg);
+}
+/* the one primary action on the page: Whiteout in Neon, Lake Blue in Monad */
+.report-action-group .export-btn:first-child {
+  background: var(--primary-bg);
+  border-color: var(--primary-bg);
+  color: var(--primary-fg);
+  padding: 3px 12px;
+}
+.report-action-group .export-btn:first-child:hover {
+  background: var(--primary-bg-hover);
+  border-color: var(--primary-bg-hover);
+  color: var(--primary-fg);
+}
+.report-action-group .export-btn:first-child.copied {
+  background: var(--green);
+  border-color: var(--green);
+  color: var(--primary-fg);
 }
 .filter-actions {
   margin-left: auto;
@@ -1044,25 +1366,35 @@ body.resizing-sidebar {
 .graph-filter-toggle[hidden] {
   display: none;
 }
+.graph-filter-toggle {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin: -4px 0 14px;
+}
 .view-btn {
   font-family: var(--mono);
   font-size: 10px;
-  padding: 3px 9px;
-  border-radius: 4px;
+  padding: 4px 11px;
+  border-radius: var(--r-button);
   border: 1px solid var(--border);
   background: transparent;
   color: var(--text-dim);
   cursor: pointer;
   transition: all .12s;
+  text-transform: var(--nav-transform);
+  letter-spacing: .06em;
 }
 .view-btn:hover {
   border-color: var(--border2);
   color: var(--text-muted);
 }
+.view-btn:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
 .view-btn.active {
   border-color: var(--cyan);
   color: var(--cyan);
-  background: rgba(34,211,238,.08);
+  background: var(--accent-wash);
 }
 
 /* ── summary panel ── */
@@ -1072,16 +1404,17 @@ body.resizing-sidebar {
   gap: 16px;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--r-panel);
   padding: 14px 16px;
   margin-bottom: 24px;
 }
+[data-theme="light"] .summary-panel { padding: 26px 30px; gap: 26px; }
 .summary-title {
   font-family: var(--mono);
   font-size: 11px;
   color: var(--text-dim);
   text-transform: uppercase;
-  letter-spacing: .08em;
+  letter-spacing: var(--label-tracking);
   margin-bottom: 8px;
 }
 .summary-grid {
@@ -1092,53 +1425,57 @@ body.resizing-sidebar {
 .summary-metric {
   background: var(--surface2);
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: var(--r-card);
   padding: 8px 10px;
 }
+[data-theme="light"] .summary-metric { padding: 12px 14px; }
 .summary-metric.focus-metric {
-  background: rgba(34,211,238,.06);
-  border-color: rgba(34,211,238,.18);
+  background: var(--accent-wash);
+  border-color: var(--accent-line);
 }
 .summary-metric.focus-metric .summary-value {
   color: var(--cyan);
 }
 .summary-metric.leaf-metric {
-  background: rgba(248,113,113,.08);
-  border-color: rgba(248,113,113,.22);
+  background: var(--red-bg);
+  border-color: var(--red-border);
 }
 .summary-metric.leaf-metric .summary-value {
   color: var(--red);
 }
 .summary-metric.direct-metric {
-  background: rgba(250,204,21,.06);
-  border-color: rgba(250,204,21,.18);
+  background: var(--yellow-bg);
+  border-color: var(--yellow);
 }
 .summary-metric.direct-metric .summary-value {
-  color: #facc15;
+  color: var(--yellow);
 }
 .summary-metric.nested-metric {
-  background: rgba(96,165,250,.08);
-  border-color: rgba(96,165,250,.22);
+  background: var(--level-4-wash);
+  border-color: var(--level-4-line);
 }
 .summary-metric.nested-metric .summary-value {
-  color: var(--blue);
+  color: var(--level-4);
 }
 .summary-value {
   display: block;
-  font-family: var(--mono);
+  font-family: var(--display);
   font-size: 18px;
   color: var(--text);
   line-height: 1.1;
+  letter-spacing: var(--mono-tracking);
 }
+[data-theme="light"] .summary-value { font-size: 26px; letter-spacing: -.02em; }
 .summary-label {
   display: block;
   font-family: var(--mono);
   font-size: 10px;
   color: var(--text-dim);
   text-transform: uppercase;
-  letter-spacing: .05em;
+  letter-spacing: var(--label-tracking);
   margin-top: 4px;
 }
+[data-theme="light"] .summary-metric .summary-label { color: var(--text-muted); }
 .summary-issues {
   display: flex;
   flex-direction: column;
@@ -1151,7 +1488,9 @@ body.resizing-sidebar {
   font-family: var(--mono);
   font-size: 12px;
   color: var(--text-muted);
+  cursor: pointer;
 }
+.summary-issue:hover { color: var(--text); }
 .summary-issue-name {
   min-width: 0;
   overflow: hidden;
@@ -1163,17 +1502,16 @@ body.resizing-sidebar {
   color: var(--red);
   background: var(--red-bg);
   border: 1px solid var(--red-border);
-  border-radius: 3px;
-  padding: 1px 6px;
+  border-radius: var(--r-pill);
+  padding: 1px 8px;
   font-size: 10px;
 }
 .summary-breakdown {
   margin-top: 14px;
-  background: rgba(255,255,255,.02);
+  background: var(--wash);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--r-card);
   padding: 10px 12px 4px;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.02);
 }
 .summary-table {
   width: 100%;
@@ -1190,7 +1528,7 @@ body.resizing-sidebar {
 .summary-table th {
   color: var(--text-dim);
   text-transform: uppercase;
-  letter-spacing: .05em;
+  letter-spacing: var(--label-tracking);
   font-weight: 500;
   text-align: left;
 }
@@ -1207,24 +1545,56 @@ body.resizing-sidebar {
 .fallback-card {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--r-panel);
   padding: 16px;
   color: var(--text-muted);
   font-family: var(--sans);
 }
+[data-theme="light"] .fallback-card { padding: 28px 32px; font-size: 15px; }
 .fallback-title {
   color: var(--text);
-  font-family: var(--mono);
+  font-family: var(--display);
   font-size: 13px;
   font-weight: 600;
   margin-bottom: 6px;
 }
+[data-theme="light"] .fallback-title { font-size: 20px; font-weight: 400; letter-spacing: -.02em; }
 .fallback-card code {
   font-family: var(--mono);
-  color: var(--cyan);
+  font-size: 12px;
+  color: var(--text);
 }
 @media (max-width: 900px) {
   .summary-panel { grid-template-columns: 1fr; }
+}
+@media (max-width: 760px) {
+  .topbar { padding: 12px 16px; flex-wrap: wrap; }
+  .topbar-stats { gap: 14px; }
+  .metadata-panel { padding: 10px 16px; }
+  .layout { flex-direction: column; }
+  .sidebar {
+    width: auto;
+    max-width: none;
+    position: static;
+    height: auto;
+    max-height: 320px;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .sidebar-resizer { display: none; }
+  .main { padding: 18px 16px; }
+  .filter-bar { top: 0; }
+  .filter-row { grid-template-columns: 1fr; gap: 4px; }
+  [data-theme="light"] .summary-panel,
+  [data-theme="light"] .filter-panel,
+  [data-theme="light"] .fallback-card { border-radius: 24px; padding: 18px 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+  }
 }
 
 /* ── generated line ── */
@@ -1251,24 +1621,28 @@ body.resizing-sidebar {
     <div class="stat"><span class="stat-val" id="stat-depth">—</span><span class="stat-lbl">max depth</span></div>
     <div class="stat"><span class="stat-val" id="stat-direct">—</span><span class="stat-lbl">direct</span></div>
   </div>
+  <button class="theme-toggle" id="theme-toggle" type="button" onclick="toggleTheme()" aria-label="Switch to light mode">
+    <span class="theme-toggle-dark">☀&nbsp; Light mode</span>
+    <span class="theme-toggle-light">☾&nbsp; Dark mode</span>
+  </button>
 </div>
 
 <div class="metadata-panel">
   <div class="metadata-item">
     <span class="metadata-label">Dataset</span>
-    <span class="metadata-value" title="tc50_100_focus_nodes.ttl">tc50_100_focus_nodes.ttl</span>
+    <span class="metadata-value" title="tc14_direct_in.ttl">tc14_direct_in.ttl</span>
   </div>
   <div class="metadata-item">
     <span class="metadata-label">Shapes</span>
-    <span class="metadata-value" title="tc50_100_focus_nodes.ttl">tc50_100_focus_nodes.ttl</span>
+    <span class="metadata-value" title="tc14_direct_in.ttl">tc14_direct_in.ttl</span>
   </div>
   <div class="metadata-item">
     <span class="metadata-label">Generated</span>
-    <span class="metadata-value">2026-05-25 01:43:43</span>
+    <span class="metadata-value">2026-08-25 16:27:47</span>
   </div>
   <div class="metadata-item">
     <span class="metadata-label">Commit</span>
-    <span class="metadata-value">222cc80</span>
+    <span class="metadata-value">f8a2065</span>
   </div>
 </div>
 
@@ -1312,10 +1686,6 @@ body.resizing-sidebar {
       <div class="view-toggle" aria-label="Presentation mode">
         <button class="view-btn active" id="view-list" type="button" onclick="setPresentationMode('list')">Analytical view</button>
         <button class="view-btn" id="view-graph" type="button" onclick="setPresentationMode('graph')">Graph view</button>
-      </div>
-      <div class="graph-filter-toggle" id="graph-filter-toggle" hidden aria-label="Graph leaf visibility">
-        <button class="view-btn active" id="graph-filter-violated" type="button" onclick="setGraphLeafMode('violated')">Violations only</button>
-        <button class="view-btn" id="graph-filter-all" type="button" onclick="setGraphLeafMode('all')">All constraints</button>
       </div>
       <div class="report-action-group">
         <button class="export-btn" type="button" onclick="exportVisibleCsv(event, this)">export visible CSV</button>
@@ -1416,10 +1786,10 @@ body.resizing-sidebar {
           the browser with JavaScript.
         </p>
         <p>
-          Dataset: <code>tc50_100_focus_nodes.ttl</code><br>
-          Shapes: <code>tc50_100_focus_nodes.ttl</code><br>
-          Generated: <code>2026-05-25 01:43:43</code><br>
-          Commit: <code>222cc80</code>
+          Dataset: <code>tc14_direct_in.ttl</code><br>
+          Shapes: <code>tc14_direct_in.ttl</code><br>
+          Generated: <code>2026-08-25 16:27:47</code><br>
+          Commit: <code>f8a2065</code>
         </p>
       </div>
     </noscript>
@@ -1432,7 +1802,7 @@ body.resizing-sidebar {
         </p>
       </div>
     </div>
-    <div class="generated">Generated by shacl_explainer · <span id="gen-time">2026-05-25 01:43:43</span></div>
+    <div class="generated">Generated by shacl_explainer · <span id="gen-time">2026-08-25 16:27:47</span></div>
   </main>
 </div>
 
@@ -1441,1014 +1811,42 @@ body.resizing-sidebar {
 const REPORT_DATA = [
   {
     "type": "leaf",
-    "focusNode": "ex:p022",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p022.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p051",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p051.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p084",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p084.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p055",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p055.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p049",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p049.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p016",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p016.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p073",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p073.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p015",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p015.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p007",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p007.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p060",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p060.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p024",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p024.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p096",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p096.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p071",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p071.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p034",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p034.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p050",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p050.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p085",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p085.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p059",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p059.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p042",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p042.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p029",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p029.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p021",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p021.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p006",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p006.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p054",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p054.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p036",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p036.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p033",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p033.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p083",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p083.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p013",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p013.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p070",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p070.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p100",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p100.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p045",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p045.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p019",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p019.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p089",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p089.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p092",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p092.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p072",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p072.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p043",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p043.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p037",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p037.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p097",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p097.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p095",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p095.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p068",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p068.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p028",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p028.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p002",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p002.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p031",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p031.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p069",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p069.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p065",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p065.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p017",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p017.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p052",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p052.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p061",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p061.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p027",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p027.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p057",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p057.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p025",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p025.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p005",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p005.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p087",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p087.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p064",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p064.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p041",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p041.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p008",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p008.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p026",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p026.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p066",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p066.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p030",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p030.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p090",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p090.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p048",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p048.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p032",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p032.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p076",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p076.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p079",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p079.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p053",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p053.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p093",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p093.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p040",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p040.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p012",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p012.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p099",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p099.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p001",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p001.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p075",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p075.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p014",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p014.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p063",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p063.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p020",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p020.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p056",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p056.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p094",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p094.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p098",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p098.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p058",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p058.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p081",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p081.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p009",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p009.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p039",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p039.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p003",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p003.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p023",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p023.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p011",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p011.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p062",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p062.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p091",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p091.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p077",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p077.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p046",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p046.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p044",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p044.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p082",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p082.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p074",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p074.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p018",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p018.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p088",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p088.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p010",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p010.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p038",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p038.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p080",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p080.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p086",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p086.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p004",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p004.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p047",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p047.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p067",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p067.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p035",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p035.",
-    "refChain": [],
-    "altChains": []
-  },
-  {
-    "type": "leaf",
-    "focusNode": "ex:p078",
-    "path": "ex:name",
-    "component": "sh:MinCountConstraintComponent",
-    "message": "Name is required",
-    "repairHint": "Add at least one ex:name value to ex:p078.",
+    "focusNode": "ex:course3",
+    "path": "ex:level",
+    "component": "sh:InConstraintComponent",
+    "value": "expert",
+    "message": "Course level must be beginner, intermediate, or advanced",
+    "repairHint": "Replace \"expert\" on ex:level with one of the allowed values.",
     "refChain": [],
     "altChains": []
   }
 ];
 const SHAPE_CATALOG = {
-  "ex:PersonShape": [
+  "ex:CourseShape": [
     {
       "type": "leaf",
-      "path": "ex:name"
+      "path": "ex:level"
     }
   ]
 };
 // ── END DATA ──────────────────────────────────────────────────────────────
+
+// ── theme ────────────────────────────────────────────────────────────────
+function applyThemeLabel() {
+  const btn = document.getElementById("theme-toggle");
+  if (!btn) return;
+  const light = document.documentElement.dataset.theme === "light";
+  btn.setAttribute("aria-label", light ? "Switch to dark mode" : "Switch to light mode");
+}
+
+function toggleTheme() {
+  const light = document.documentElement.dataset.theme === "light";
+  if (light) delete document.documentElement.dataset.theme;
+  else document.documentElement.dataset.theme = "light";
+  try { localStorage.setItem("shacl-theme", light ? "dark" : "light"); } catch (_) {}
+  applyThemeLabel();
+  if (typeof scheduleGraphFit === "function") scheduleGraphFit();
+}
 
 const COMP_MAP = {
   "sh:MinCountConstraintComponent":  { short: "minCount",  cls: "mincount"  },
@@ -2724,6 +2122,69 @@ async function copyVisibleJson(event, btn) {
   const rows = visibleEntriesForCurrentView().map(exportRow);
   await copyPlainText(JSON.stringify(rows, null, 2));
   flashButtonState(btn);
+}
+
+function safeFilename(value, fallback="graph") {
+  const cleaned = String(value || fallback)
+    .replace(/[^a-z0-9_-]+/gi, "_")
+    .replace(/^_+|_+$/g, "")
+    .slice(0, 80);
+  return cleaned || fallback;
+}
+
+function exportGraphSvg(event, btn) {
+  event.stopPropagation();
+  const stage = document.querySelector(".graph-stage");
+  const root = stage?.querySelector(".graph-root");
+  if (!stage || !root) return;
+
+  const rootClone = root.cloneNode(true);
+  rootClone.style.setProperty("--graph-scale", "1");
+  rootClone.style.position = "static";
+  rootClone.style.left = "auto";
+  rootClone.style.transform = "none";
+  rootClone.style.margin = "0 auto";
+  rootClone.style.width = `${root.scrollWidth}px`;
+  rootClone.style.maxWidth = "none";
+
+  const padding = 32;
+  const width = Math.ceil(root.scrollWidth + padding * 2);
+  const height = Math.ceil(root.scrollHeight + padding * 2);
+  const css = Array.from(document.querySelectorAll("style"))
+    .map(style => style.textContent || "")
+    .join("\n");
+  const exportCss = `
+    .graph-export-frame {
+      width: ${width}px;
+      min-height: ${height}px;
+      padding: ${padding}px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+    }
+    .graph-export-frame .graph-root {
+      position: static !important;
+      left: auto !important;
+      transform: none !important;
+      margin: 0 auto !important;
+    }
+  `;
+  const html = `
+    <div xmlns="http://www.w3.org/1999/xhtml" class="graph-export-frame" data-theme="${document.documentElement.dataset.theme || "dark"}">
+      <style>${css}\n${exportCss}</style>
+      ${rootClone.outerHTML}
+    </div>`;
+  const svg = `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
+  <foreignObject width="100%" height="100%">${html}</foreignObject>
+</svg>`;
+  const mode = graphLeafMode === "all" ? "all_constraints" : "violations_only";
+  downloadText(
+    `${safeFilename(selectedFocus, "focus_graph")}_${mode}_graph.svg`,
+    svg,
+    "image/svg+xml;charset=utf-8"
+  );
+  flashButtonState(btn, "downloaded");
 }
 
 function rootCauseBreakdownRows() {
@@ -3486,8 +2947,6 @@ function setPresentationMode(mode) {
   presentationMode = mode;
   document.getElementById("view-list")?.classList.toggle("active", mode === "list");
   document.getElementById("view-graph")?.classList.toggle("active", mode === "graph");
-  const graphToggle = document.getElementById("graph-filter-toggle");
-  if (graphToggle) graphToggle.hidden = mode !== "graph";
   renderMainPanel();
 }
 
@@ -3692,7 +3151,8 @@ function makeGraphNodeButton(node, detailEl, focusLabel, childContainer) {
   if (node.type === "focus") {
     btn.className = "graph-node graph-focus";
   } else {
-    btn.className = `graph-node level-${Math.min(node.depth, 6)}`;
+    const levelClass = ((Math.max(node.depth, 1) - 1) % 6) + 1;
+    btn.className = `graph-node level-${levelClass}`;
   }
   const label = esc(displayIri(node.label, "local"));
   const badge = node.type === "shape" && node.depth >= 4
@@ -3754,13 +3214,14 @@ function fitGraphStage() {
   if (!stage || !root) return;
   root.style.setProperty("--graph-scale", "1");
   stage.style.height = "auto";
-  const availableWidth = Math.max(stage.clientWidth - 4, 0);
+  const availableWidth = Math.max(stage.clientWidth - 24, 0);
   const naturalWidth = root.scrollWidth;
   const naturalHeight = root.scrollHeight;
   if (!availableWidth || !naturalWidth || !naturalHeight) return;
   const scale = Math.min(1, availableWidth / naturalWidth);
   root.style.setProperty("--graph-scale", String(scale));
   stage.style.height = `${Math.ceil(naturalHeight * scale)}px`;
+  stage.scrollLeft = 0;
 }
 
 function scheduleGraphFit() {
@@ -3772,6 +3233,14 @@ function scheduleGraphFit() {
 }
 
 window.addEventListener("resize", scheduleGraphFit);
+
+if ("ResizeObserver" in window) {
+  const graphResizeObserver = new ResizeObserver(scheduleGraphFit);
+  document.addEventListener("DOMContentLoaded", () => {
+    const main = document.querySelector(".main");
+    if (main) graphResizeObserver.observe(main);
+  });
+}
 
 function renderGraphBranch(node, detailEl, focusLabel) {
   if (node.type === "leaf") {
@@ -3794,10 +3263,17 @@ function renderGraphBranch(node, detailEl, focusLabel) {
     relation.className = "graph-relation";
     relation.textContent = node.type === "focus" ? "does not conform to" : "is referencing";
     childrenWrap.appendChild(relation);
+    const panel = document.createElement("div");
+    panel.className = "graph-row-panel";
     const row = document.createElement("div");
     row.className = "graph-row";
     children.forEach(child => row.appendChild(renderGraphBranch(child, detailEl, focusLabel)));
-    childrenWrap.appendChild(row);
+    const levelLabel = document.createElement("div");
+    levelLabel.className = "graph-level-label";
+    levelLabel.textContent = `L${node.depth + 1}`;
+    panel.appendChild(row);
+    panel.appendChild(levelLabel);
+    childrenWrap.appendChild(panel);
   }
 
   const btn = makeGraphNodeButton(node, detailEl, focusLabel, children.length ? childrenWrap : null);
@@ -3900,13 +3376,21 @@ function renderGraphView() {
   shell.className = "graph-view";
   shell.innerHTML = `
     <div class="graph-legend">
-      <span class="graph-legend-item" style="color:#ff7f41"><span class="graph-legend-swatch"></span>violated focus node</span>
-      <span class="graph-legend-item" style="color:var(--blue)"><span class="graph-legend-swatch"></span>first-level shape</span>
-      <span class="graph-legend-item" style="color:var(--purple)"><span class="graph-legend-swatch"></span>second-level shape</span>
-      <span class="graph-legend-item" style="color:#8fd14f"><span class="graph-legend-swatch"></span>third-level shape</span>
-      <span class="graph-legend-item" style="color:#4fd1c5"><span class="graph-legend-swatch"></span>deeper shape levels use badges</span>
+      <span class="graph-legend-item" style="color:var(--focus-red)"><span class="graph-legend-swatch"></span>violated focus node</span>
+      <span class="graph-legend-item" style="color:var(--level-1)"><span class="graph-legend-swatch"></span>Level 1</span>
+      <span class="graph-legend-item" style="color:var(--level-2)"><span class="graph-legend-swatch"></span>Level 2</span>
+      <span class="graph-legend-item" style="color:var(--level-3)"><span class="graph-legend-swatch"></span>Level 3</span>
+      <span class="graph-legend-item" style="color:var(--level-4)"><span class="graph-legend-swatch"></span>Level 4</span>
+      <span class="graph-legend-item" style="color:var(--level-5)"><span class="graph-legend-swatch"></span>Level 5</span>
+      <span class="graph-legend-item" style="color:var(--level-6)"><span class="graph-legend-swatch"></span>Level 6 and deeper levels repeat</span>
+      <span class="graph-legend-break"></span>
       <span class="graph-legend-item" style="color:var(--red)"><span class="graph-legend-swatch leaf"></span>violated leaf</span>
       <span class="graph-legend-item" style="color:var(--green)"><span class="graph-legend-swatch leaf" style="border-color:var(--green)"></span>available constraint</span>
+    </div>
+    <div class="graph-filter-toggle" aria-label="Graph leaf visibility">
+      <button class="view-btn ${graphLeafMode === "violated" ? "active" : ""}" id="graph-filter-violated" type="button" onclick="setGraphLeafMode('violated')">Violations only</button>
+      <button class="view-btn ${graphLeafMode === "all" ? "active" : ""}" id="graph-filter-all" type="button" onclick="setGraphLeafMode('all')">All constraints</button>
+      <button class="export-btn" type="button" onclick="exportGraphSvg(event, this)">export graph SVG</button>
     </div>`;
 
   const detail = document.createElement("div");
@@ -4094,12 +3578,13 @@ function render() {
   document.getElementById("tab-focus")?.addEventListener("keydown", event => onSidebarTabKeydown(event, "focus"));
   document.getElementById("tab-issue")?.addEventListener("keydown", event => onSidebarTabKeydown(event, "issue"));
   document.getElementById("tab-all")?.addEventListener("keydown", event => onSidebarTabKeydown(event, "all"));
-  document.getElementById("gen-time").textContent = "2026-05-25 01:43:43";
+  document.getElementById("gen-time").textContent = "2026-08-25 16:27:47";
 
   applyFilter();
 }
 
 render();
+applyThemeLabel();
 </script>
 </body>
 </html>

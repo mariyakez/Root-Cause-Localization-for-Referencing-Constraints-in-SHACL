@@ -1630,11 +1630,11 @@ body.resizing-sidebar {
 <div class="metadata-panel">
   <div class="metadata-item">
     <span class="metadata-label">Dataset</span>
-    <span class="metadata-value" title="tc53_deep_gradient_graph.ttl">tc53_deep_gradient_graph.ttl</span>
+    <span class="metadata-value" title="tc6_complex_org.ttl">tc6_complex_org.ttl</span>
   </div>
   <div class="metadata-item">
     <span class="metadata-label">Shapes</span>
-    <span class="metadata-value" title="tc53_deep_gradient_graph.ttl">tc53_deep_gradient_graph.ttl</span>
+    <span class="metadata-value" title="tc6_complex_org.ttl">tc6_complex_org.ttl</span>
   </div>
   <div class="metadata-item">
     <span class="metadata-label">Generated</span>
@@ -1786,8 +1786,8 @@ body.resizing-sidebar {
           the browser with JavaScript.
         </p>
         <p>
-          Dataset: <code>tc53_deep_gradient_graph.ttl</code><br>
-          Shapes: <code>tc53_deep_gradient_graph.ttl</code><br>
+          Dataset: <code>tc6_complex_org.ttl</code><br>
+          Shapes: <code>tc6_complex_org.ttl</code><br>
           Generated: <code>2026-08-25 16:27:51</code><br>
           Commit: <code>f8a2065</code>
         </p>
@@ -1811,349 +1811,73 @@ body.resizing-sidebar {
 const REPORT_DATA = [
   {
     "type": "reference",
-    "focusNode": "ex:deep-case",
-    "shape": "ex:GradientRootShape",
-    "referencedShape": "ex:Level1Shape",
+    "focusNode": "ex:frank",
+    "shape": "ex:ProjectLeadShape",
+    "referencedShape": "ex:EmploymentShape",
     "refChain": [],
     "children": [
       {
         "type": "reference",
-        "focusNode": "ex:deep-case",
-        "shape": "ex:Level1Shape",
-        "referencedShape": "ex:Level2Shape",
+        "focusNode": "ex:frank",
+        "shape": "ex:EmploymentShape",
+        "referencedShape": "ex:PersonShape",
         "refChain": [
-          "ex:GradientRootShape"
+          "ex:ProjectLeadShape"
         ],
         "children": [
           {
-            "type": "reference",
-            "focusNode": "ex:deep-case",
-            "shape": "ex:Level2Shape",
-            "referencedShape": "ex:Level3Shape",
+            "type": "leaf",
+            "focusNode": "ex:frank",
+            "path": "ex:age",
+            "component": "sh:DatatypeConstraintComponent",
+            "value": "forty",
+            "message": "ex:age must be present and xsd:integer",
+            "repairHint": "Replace \"forty\" on ex:age with a value of the required datatype.",
             "refChain": [
-              "ex:GradientRootShape",
-              "ex:Level1Shape"
+              "ex:ProjectLeadShape",
+              "ex:EmploymentShape",
+              "ex:PersonShape"
             ],
-            "children": [
-              {
-                "type": "reference",
-                "focusNode": "ex:deep-case",
-                "shape": "ex:Level3Shape",
-                "referencedShape": "ex:Level4Shape",
-                "refChain": [
-                  "ex:GradientRootShape",
-                  "ex:Level1Shape",
-                  "ex:Level2Shape"
-                ],
-                "children": [
-                  {
-                    "type": "reference",
-                    "focusNode": "ex:deep-case",
-                    "shape": "ex:Level4Shape",
-                    "referencedShape": "ex:Level5Shape",
-                    "refChain": [
-                      "ex:GradientRootShape",
-                      "ex:Level1Shape",
-                      "ex:Level2Shape",
-                      "ex:Level3Shape"
-                    ],
-                    "children": [
-                      {
-                        "type": "reference",
-                        "focusNode": "ex:deep-case",
-                        "shape": "ex:Level5Shape",
-                        "referencedShape": "ex:Level6Shape",
-                        "refChain": [
-                          "ex:GradientRootShape",
-                          "ex:Level1Shape",
-                          "ex:Level2Shape",
-                          "ex:Level3Shape",
-                          "ex:Level4Shape"
-                        ],
-                        "children": [
-                          {
-                            "type": "reference",
-                            "focusNode": "ex:deep-case",
-                            "shape": "ex:Level6Shape",
-                            "referencedShape": "ex:Level7Shape",
-                            "refChain": [
-                              "ex:GradientRootShape",
-                              "ex:Level1Shape",
-                              "ex:Level2Shape",
-                              "ex:Level3Shape",
-                              "ex:Level4Shape",
-                              "ex:Level5Shape"
-                            ],
-                            "children": [
-                              {
-                                "type": "reference",
-                                "focusNode": "ex:deep-case",
-                                "shape": "ex:Level7Shape",
-                                "referencedShape": "ex:Level8Shape",
-                                "refChain": [
-                                  "ex:GradientRootShape",
-                                  "ex:Level1Shape",
-                                  "ex:Level2Shape",
-                                  "ex:Level3Shape",
-                                  "ex:Level4Shape",
-                                  "ex:Level5Shape",
-                                  "ex:Level6Shape"
-                                ],
-                                "children": [
-                                  {
-                                    "type": "leaf",
-                                    "focusNode": "ex:deep-case",
-                                    "path": "ex:l8Archive",
-                                    "component": "sh:MinCountConstraintComponent",
-                                    "message": "ex:l8Archive is required at level 8",
-                                    "repairHint": "Add at least one ex:l8Archive value to ex:deep-case.",
-                                    "refChain": [
-                                      "ex:GradientRootShape",
-                                      "ex:Level1Shape",
-                                      "ex:Level2Shape",
-                                      "ex:Level3Shape",
-                                      "ex:Level4Shape",
-                                      "ex:Level5Shape",
-                                      "ex:Level6Shape",
-                                      "ex:Level7Shape",
-                                      "ex:Level8Shape"
-                                    ],
-                                    "altChains": []
-                                  },
-                                  {
-                                    "type": "leaf",
-                                    "focusNode": "ex:deep-case",
-                                    "path": "ex:l8Status",
-                                    "component": "sh:InConstraintComponent",
-                                    "value": "waiting",
-                                    "message": "ex:l8Status must be ready, blocked, or done",
-                                    "repairHint": "Replace \"waiting\" on ex:l8Status with one of the allowed values.",
-                                    "refChain": [
-                                      "ex:GradientRootShape",
-                                      "ex:Level1Shape",
-                                      "ex:Level2Shape",
-                                      "ex:Level3Shape",
-                                      "ex:Level4Shape",
-                                      "ex:Level5Shape",
-                                      "ex:Level6Shape",
-                                      "ex:Level7Shape",
-                                      "ex:Level8Shape"
-                                    ],
-                                    "altChains": []
-                                  }
-                                ]
-                              },
-                              {
-                                "type": "leaf",
-                                "focusNode": "ex:deep-case",
-                                "path": "ex:l7Control",
-                                "component": "sh:MinCountConstraintComponent",
-                                "message": "ex:l7Control is required at level 7",
-                                "repairHint": "Add at least one ex:l7Control value to ex:deep-case.",
-                                "refChain": [
-                                  "ex:GradientRootShape",
-                                  "ex:Level1Shape",
-                                  "ex:Level2Shape",
-                                  "ex:Level3Shape",
-                                  "ex:Level4Shape",
-                                  "ex:Level5Shape",
-                                  "ex:Level6Shape",
-                                  "ex:Level7Shape"
-                                ],
-                                "altChains": []
-                              },
-                              {
-                                "type": "leaf",
-                                "focusNode": "ex:deep-case",
-                                "path": "ex:l7Flag",
-                                "component": "sh:DatatypeConstraintComponent",
-                                "value": "maybe",
-                                "message": "ex:l7Flag must be an xsd:boolean",
-                                "repairHint": "Replace \"maybe\" on ex:l7Flag with a value of the required datatype.",
-                                "refChain": [
-                                  "ex:GradientRootShape",
-                                  "ex:Level1Shape",
-                                  "ex:Level2Shape",
-                                  "ex:Level3Shape",
-                                  "ex:Level4Shape",
-                                  "ex:Level5Shape",
-                                  "ex:Level6Shape",
-                                  "ex:Level7Shape"
-                                ],
-                                "altChains": []
-                              }
-                            ]
-                          },
-                          {
-                            "type": "leaf",
-                            "focusNode": "ex:deep-case",
-                            "path": "ex:l6Reference",
-                            "component": "sh:MinCountConstraintComponent",
-                            "message": "ex:l6Reference is required at level 6",
-                            "repairHint": "Add at least one ex:l6Reference value to ex:deep-case.",
-                            "refChain": [
-                              "ex:GradientRootShape",
-                              "ex:Level1Shape",
-                              "ex:Level2Shape",
-                              "ex:Level3Shape",
-                              "ex:Level4Shape",
-                              "ex:Level5Shape",
-                              "ex:Level6Shape"
-                            ],
-                            "altChains": []
-                          },
-                          {
-                            "type": "leaf",
-                            "focusNode": "ex:deep-case",
-                            "path": "ex:l6Date",
-                            "component": "sh:DatatypeConstraintComponent",
-                            "value": "tomorrow",
-                            "message": "ex:l6Date must be an xsd:date",
-                            "repairHint": "Replace \"tomorrow\" on ex:l6Date with a value of the required datatype.",
-                            "refChain": [
-                              "ex:GradientRootShape",
-                              "ex:Level1Shape",
-                              "ex:Level2Shape",
-                              "ex:Level3Shape",
-                              "ex:Level4Shape",
-                              "ex:Level5Shape",
-                              "ex:Level6Shape"
-                            ],
-                            "altChains": []
-                          }
-                        ]
-                      },
-                      {
-                        "type": "leaf",
-                        "focusNode": "ex:deep-case",
-                        "path": "ex:l5Risk",
-                        "component": "sh:InConstraintComponent",
-                        "value": "extreme",
-                        "message": "ex:l5Risk must be low, medium, or high",
-                        "repairHint": "Replace \"extreme\" on ex:l5Risk with one of the allowed values.",
-                        "refChain": [
-                          "ex:GradientRootShape",
-                          "ex:Level1Shape",
-                          "ex:Level2Shape",
-                          "ex:Level3Shape",
-                          "ex:Level4Shape",
-                          "ex:Level5Shape"
-                        ],
-                        "altChains": []
-                      },
-                      {
-                        "type": "leaf",
-                        "focusNode": "ex:deep-case",
-                        "path": "ex:l5Reviewer",
-                        "component": "sh:MinCountConstraintComponent",
-                        "message": "ex:l5Reviewer is required at level 5",
-                        "repairHint": "Add at least one ex:l5Reviewer value to ex:deep-case.",
-                        "refChain": [
-                          "ex:GradientRootShape",
-                          "ex:Level1Shape",
-                          "ex:Level2Shape",
-                          "ex:Level3Shape",
-                          "ex:Level4Shape",
-                          "ex:Level5Shape"
-                        ],
-                        "altChains": []
-                      }
-                    ]
-                  },
-                  {
-                    "type": "leaf",
-                    "focusNode": "ex:deep-case",
-                    "path": "ex:l4Budget",
-                    "component": "sh:DatatypeConstraintComponent",
-                    "value": "many",
-                    "message": "ex:l4Budget must be an xsd:decimal",
-                    "repairHint": "Replace \"many\" on ex:l4Budget with a value of the required datatype.",
-                    "refChain": [
-                      "ex:GradientRootShape",
-                      "ex:Level1Shape",
-                      "ex:Level2Shape",
-                      "ex:Level3Shape",
-                      "ex:Level4Shape"
-                    ],
-                    "altChains": []
-                  },
-                  {
-                    "type": "leaf",
-                    "focusNode": "ex:deep-case",
-                    "path": "ex:l4Checkpoint",
-                    "component": "sh:MinCountConstraintComponent",
-                    "message": "ex:l4Checkpoint is required at level 4",
-                    "repairHint": "Add at least one ex:l4Checkpoint value to ex:deep-case.",
-                    "refChain": [
-                      "ex:GradientRootShape",
-                      "ex:Level1Shape",
-                      "ex:Level2Shape",
-                      "ex:Level3Shape",
-                      "ex:Level4Shape"
-                    ],
-                    "altChains": []
-                  }
-                ]
-              },
-              {
-                "type": "leaf",
-                "focusNode": "ex:deep-case",
-                "path": "ex:l3Region",
-                "component": "sh:InConstraintComponent",
-                "value": "antarctica",
-                "message": "ex:l3Region must be emea, apac, or amer",
-                "repairHint": "Replace \"antarctica\" on ex:l3Region with one of the allowed values.",
-                "refChain": [
-                  "ex:GradientRootShape",
-                  "ex:Level1Shape",
-                  "ex:Level2Shape",
-                  "ex:Level3Shape"
-                ],
-                "altChains": []
-              },
-              {
-                "type": "leaf",
-                "focusNode": "ex:deep-case",
-                "path": "ex:l3Approval",
-                "component": "sh:MinCountConstraintComponent",
-                "message": "ex:l3Approval is required at level 3",
-                "repairHint": "Add at least one ex:l3Approval value to ex:deep-case.",
-                "refChain": [
-                  "ex:GradientRootShape",
-                  "ex:Level1Shape",
-                  "ex:Level2Shape",
-                  "ex:Level3Shape"
-                ],
-                "altChains": []
-              }
+            "altChains": [
+              [
+                "ex:ProjectLeadShape",
+                "ex:SecurityClearanceShape",
+                "ex:PersonShape"
+              ]
             ]
           },
           {
             "type": "leaf",
-            "focusNode": "ex:deep-case",
-            "path": "ex:l2Owner",
+            "focusNode": "ex:frank",
+            "path": "ex:name",
             "component": "sh:MinCountConstraintComponent",
-            "message": "ex:l2Owner is required at level 2",
-            "repairHint": "Add at least one ex:l2Owner value to ex:deep-case.",
+            "message": "ex:name must be present and xsd:string",
+            "repairHint": "Add at least one ex:name value to ex:frank.",
             "refChain": [
-              "ex:GradientRootShape",
-              "ex:Level1Shape",
-              "ex:Level2Shape"
+              "ex:ProjectLeadShape",
+              "ex:EmploymentShape",
+              "ex:PersonShape"
             ],
-            "altChains": []
+            "altChains": [
+              [
+                "ex:ProjectLeadShape",
+                "ex:SecurityClearanceShape",
+                "ex:PersonShape"
+              ]
+            ]
           },
           {
             "type": "leaf",
-            "focusNode": "ex:deep-case",
-            "path": "ex:l2Email",
+            "focusNode": "ex:frank",
+            "path": "ex:email",
             "component": "sh:PatternConstraintComponent",
-            "value": "owner-at-example",
-            "message": "ex:l2Email must match a basic email pattern",
-            "repairHint": "Change \"owner-at-example\" on ex:l2Email so it matches the required pattern.",
+            "value": "frank-at-example",
+            "message": "ex:email must match a basic email pattern",
+            "repairHint": "Change \"frank-at-example\" on ex:email so it matches the required pattern.",
             "refChain": [
-              "ex:GradientRootShape",
-              "ex:Level1Shape",
-              "ex:Level2Shape"
+              "ex:ProjectLeadShape",
+              "ex:EmploymentShape",
+              "ex:ContactShape"
             ],
             "altChains": []
           }
@@ -2161,28 +1885,119 @@ const REPORT_DATA = [
       },
       {
         "type": "leaf",
-        "focusNode": "ex:deep-case",
-        "path": "ex:l1Code",
+        "focusNode": "ex:frank",
+        "path": "ex:employeeId",
         "component": "sh:MinCountConstraintComponent",
-        "message": "ex:l1Code is required at level 1",
-        "repairHint": "Add at least one ex:l1Code value to ex:deep-case.",
+        "message": "ex:employeeId is required",
+        "repairHint": "Add at least one ex:employeeId value to ex:frank.",
         "refChain": [
-          "ex:GradientRootShape",
-          "ex:Level1Shape"
+          "ex:ProjectLeadShape",
+          "ex:EmploymentShape"
         ],
         "altChains": []
       },
       {
         "type": "leaf",
-        "focusNode": "ex:deep-case",
-        "path": "ex:l1Score",
-        "component": "sh:DatatypeConstraintComponent",
-        "value": "not-an-integer",
-        "message": "ex:l1Score must be an xsd:integer",
-        "repairHint": "Replace \"not-an-integer\" on ex:l1Score with a value of the required datatype.",
+        "focusNode": "ex:frank",
+        "path": "ex:clearanceLevel",
+        "component": "sh:InConstraintComponent",
+        "value": "top-secret",
+        "message": "ex:clearanceLevel must be public, internal, or restricted",
+        "repairHint": "Replace \"top-secret\" on ex:clearanceLevel with one of the allowed values.",
         "refChain": [
-          "ex:GradientRootShape",
-          "ex:Level1Shape"
+          "ex:ProjectLeadShape",
+          "ex:SecurityClearanceShape"
+        ],
+        "altChains": []
+      },
+      {
+        "type": "leaf",
+        "focusNode": "ex:frank",
+        "path": "ex:projectCode",
+        "component": "sh:MinCountConstraintComponent",
+        "message": "ex:projectCode is required for project leads",
+        "repairHint": "Add at least one ex:projectCode value to ex:frank.",
+        "refChain": [
+          "ex:ProjectLeadShape",
+          "ex:ProjectAssignmentShape"
+        ],
+        "altChains": []
+      },
+      {
+        "type": "leaf",
+        "focusNode": "ex:frank",
+        "path": "ex:budgetCode",
+        "component": "sh:MinCountConstraintComponent",
+        "message": "ex:budgetCode is required for project leads",
+        "repairHint": "Add at least one ex:budgetCode value to ex:frank.",
+        "refChain": [
+          "ex:ProjectLeadShape",
+          "ex:AdditionalShape1"
+        ],
+        "altChains": []
+      },
+      {
+        "type": "leaf",
+        "focusNode": "ex:frank",
+        "path": "ex:deliveryRegion",
+        "component": "sh:MinCountConstraintComponent",
+        "message": "ex:deliveryRegion is required for project leads",
+        "repairHint": "Add at least one ex:deliveryRegion value to ex:frank.",
+        "refChain": [
+          "ex:ProjectLeadShape",
+          "ex:AdditionalShape1"
+        ],
+        "altChains": []
+      },
+      {
+        "type": "leaf",
+        "focusNode": "ex:frank",
+        "path": "ex:riskOwner",
+        "component": "sh:MinCountConstraintComponent",
+        "message": "ex:riskOwner is required for project leads",
+        "repairHint": "Add at least one ex:riskOwner value to ex:frank.",
+        "refChain": [
+          "ex:ProjectLeadShape",
+          "ex:AdditionalShape2"
+        ],
+        "altChains": []
+      },
+      {
+        "type": "leaf",
+        "focusNode": "ex:frank",
+        "path": "ex:reviewCadence",
+        "component": "sh:MinCountConstraintComponent",
+        "message": "ex:reviewCadence is required for project leads",
+        "repairHint": "Add at least one ex:reviewCadence value to ex:frank.",
+        "refChain": [
+          "ex:ProjectLeadShape",
+          "ex:AdditionalShape2"
+        ],
+        "altChains": []
+      },
+      {
+        "type": "leaf",
+        "focusNode": "ex:frank",
+        "path": "ex:handoffPlan",
+        "component": "sh:MinCountConstraintComponent",
+        "message": "ex:handoffPlan is required for project leads",
+        "repairHint": "Add at least one ex:handoffPlan value to ex:frank.",
+        "refChain": [
+          "ex:ProjectLeadShape",
+          "ex:AdditionalShape3"
+        ],
+        "altChains": []
+      },
+      {
+        "type": "leaf",
+        "focusNode": "ex:frank",
+        "path": "ex:escalationContact",
+        "component": "sh:MinCountConstraintComponent",
+        "message": "ex:escalationContact is required for project leads",
+        "repairHint": "Add at least one ex:escalationContact value to ex:frank.",
+        "refChain": [
+          "ex:ProjectLeadShape",
+          "ex:AdditionalShape3"
         ],
         "altChains": []
       }
@@ -2190,116 +2005,72 @@ const REPORT_DATA = [
   }
 ];
 const SHAPE_CATALOG = {
-  "ex:Level4Shape": [
+  "ex:AdditionalShape2": [
     {
       "type": "leaf",
-      "path": "ex:l4Budget"
+      "path": "ex:reviewCadence"
     },
     {
       "type": "leaf",
-      "path": "ex:l4Checkpoint"
-    },
-    {
-      "type": "leaf",
-      "path": "ex:l4Ready"
+      "path": "ex:riskOwner"
     }
   ],
-  "ex:Level8Shape": [
+  "ex:EmploymentShape": [
     {
       "type": "leaf",
-      "path": "ex:l8Archive"
-    },
-    {
-      "type": "leaf",
-      "path": "ex:l8Checksum"
-    },
-    {
-      "type": "leaf",
-      "path": "ex:l8Status"
+      "path": "ex:employeeId"
     }
   ],
-  "ex:Level7Shape": [
+  "ex:SecurityClearanceShape": [
     {
       "type": "leaf",
-      "path": "ex:l7Control"
-    },
-    {
-      "type": "leaf",
-      "path": "ex:l7Flag"
-    },
-    {
-      "type": "leaf",
-      "path": "ex:l7Mode"
+      "path": "ex:clearanceLevel"
     }
   ],
-  "ex:Level3Shape": [
+  "ex:PersonShape": [
     {
       "type": "leaf",
-      "path": "ex:l3Approval"
+      "path": "ex:age"
     },
     {
       "type": "leaf",
-      "path": "ex:l3Rank"
-    },
-    {
-      "type": "leaf",
-      "path": "ex:l3Region"
+      "path": "ex:name"
     }
   ],
-  "ex:Level6Shape": [
+  "ex:ContactShape": [
     {
       "type": "leaf",
-      "path": "ex:l6Count"
+      "path": "ex:email"
     },
     {
       "type": "leaf",
-      "path": "ex:l6Date"
-    },
-    {
-      "type": "leaf",
-      "path": "ex:l6Reference"
+      "path": "ex:phone"
     }
   ],
-  "ex:Level2Shape": [
+  "ex:ProjectAssignmentShape": [
     {
       "type": "leaf",
-      "path": "ex:l2Email"
-    },
-    {
-      "type": "leaf",
-      "path": "ex:l2Owner"
-    },
-    {
-      "type": "leaf",
-      "path": "ex:l2Status"
+      "path": "ex:projectCode"
     }
   ],
-  "ex:Level1Shape": [
+  "ex:AdditionalShape3": [
     {
       "type": "leaf",
-      "path": "ex:l1Code"
+      "path": "ex:escalationContact"
     },
     {
       "type": "leaf",
-      "path": "ex:l1Score"
-    },
-    {
-      "type": "leaf",
-      "path": "ex:l1Stable"
+      "path": "ex:handoffPlan"
     }
   ],
-  "ex:Level5Shape": [
+  "ex:AdditionalShape1": [
     {
       "type": "leaf",
-      "path": "ex:l5Reviewer"
+      "path": "ex:budgetCode"
     },
     {
       "type": "leaf",
-      "path": "ex:l5Risk"
-    },
-    {
-      "type": "leaf",
-      "path": "ex:l5Window"
+      "path": "ex:deliveryRegion"
     }
   ]
 };
