@@ -1,0 +1,65 @@
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SHACL Explanation Summary
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Focus nodes affected  : 1
+Total leaf failures   : 16  (16 via sh:node,  0 direct)
+Unique paths failing  : 16
+Max reference depth   : 9 levels
+
+Input
+  Data triples        : 165
+  Shape triples       : 167
+  Pyshacl results     : 24  (1 top-level)
+
+Top failing paths
+      1  ex:l8Archive                    minCount
+      1  ex:l8Status                     in
+      1  ex:l7Control                    minCount
+      1  ex:l7Flag                       datatype
+      1  ex:l6Reference                  minCount
+      1  ex:l6Date                       datatype
+      1  ex:l5Risk                       in
+      1  ex:l5Reviewer                   minCount
+      1  ex:l4Budget                     datatype
+      1  ex:l4Checkpoint                 minCount
+      1  ex:l3Region                     in
+      1  ex:l3Approval                   minCount
+      1  ex:l2Owner                      minCount
+      1  ex:l2Email                      pattern
+      1  ex:l1Code                       minCount
+      1  ex:l1Score                      datatype
+
+Top components
+      8  minCount
+      4  datatype
+      3  in
+      1  pattern
+
+Top reference paths
+      1  sh:node -> ex:GradientRootShape
+      1  sh:node -> ex:Level1Shape
+      1  sh:node -> ex:Level2Shape
+      1  sh:node -> ex:Level3Shape
+      1  sh:node -> ex:Level4Shape
+      1  sh:node -> ex:Level5Shape
+      1  sh:node -> ex:Level6Shape
+      1  sh:node -> ex:Level7Shape
+
+Top full leaf reference chains
+      1  ex:GradientRootShape -> ex:Level1Shape -> ex:Level2Shape -> ex:Level3Shape -> ex:Level4Shape -> ex:Level5Shape -> ex:Level6Shape -> ex:Level7Shape -> ex:Level8Shape  → minCount ex:l8Archive
+      1  ex:GradientRootShape -> ex:Level1Shape -> ex:Level2Shape -> ex:Level3Shape -> ex:Level4Shape -> ex:Level5Shape -> ex:Level6Shape -> ex:Level7Shape -> ex:Level8Shape  → in ex:l8Status
+      1  ex:GradientRootShape -> ex:Level1Shape -> ex:Level2Shape -> ex:Level3Shape -> ex:Level4Shape -> ex:Level5Shape -> ex:Level6Shape -> ex:Level7Shape  → minCount ex:l7Control
+      1  ex:GradientRootShape -> ex:Level1Shape -> ex:Level2Shape -> ex:Level3Shape -> ex:Level4Shape -> ex:Level5Shape -> ex:Level6Shape -> ex:Level7Shape  → datatype ex:l7Flag
+      1  ex:GradientRootShape -> ex:Level1Shape -> ex:Level2Shape -> ex:Level3Shape -> ex:Level4Shape -> ex:Level5Shape -> ex:Level6Shape  → minCount ex:l6Reference
+      1  ex:GradientRootShape -> ex:Level1Shape -> ex:Level2Shape -> ex:Level3Shape -> ex:Level4Shape -> ex:Level5Shape -> ex:Level6Shape  → datatype ex:l6Date
+      1  ex:GradientRootShape -> ex:Level1Shape -> ex:Level2Shape -> ex:Level3Shape -> ex:Level4Shape -> ex:Level5Shape  → in ex:l5Risk
+      1  ex:GradientRootShape -> ex:Level1Shape -> ex:Level2Shape -> ex:Level3Shape -> ex:Level4Shape -> ex:Level5Shape  → minCount ex:l5Reviewer
+      1  ex:GradientRootShape -> ex:Level1Shape -> ex:Level2Shape -> ex:Level3Shape -> ex:Level4Shape  → datatype ex:l4Budget
+      1  ex:GradientRootShape -> ex:Level1Shape -> ex:Level2Shape -> ex:Level3Shape -> ex:Level4Shape  → minCount ex:l4Checkpoint
+      1  ex:GradientRootShape -> ex:Level1Shape -> ex:Level2Shape -> ex:Level3Shape  → in ex:l3Region
+      1  ex:GradientRootShape -> ex:Level1Shape -> ex:Level2Shape -> ex:Level3Shape  → minCount ex:l3Approval
+      1  ex:GradientRootShape -> ex:Level1Shape -> ex:Level2Shape  → minCount ex:l2Owner
+      1  ex:GradientRootShape -> ex:Level1Shape -> ex:Level2Shape  → pattern ex:l2Email
+      1  ex:GradientRootShape -> ex:Level1Shape  → minCount ex:l1Code
+      1  ex:GradientRootShape -> ex:Level1Shape  → datatype ex:l1Score
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
