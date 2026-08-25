@@ -64,7 +64,15 @@ def run(data_path: str, shapes_path: str, fmt="text",
         report_graph.serialize(destination=save_report, format="turtle")
 
     if conforms:
-        output_str = "✓ Data is valid."
+        if fmt == "html":
+            output_str = to_html(
+                [],
+                title="SHACL Explanation Report",
+                metadata=html_metadata(data_path, shapes_path),
+                shape_catalog=shape_catalog_data(shapes_graph),
+            )
+        else:
+            output_str = "✓ Data is valid."
         if output_path:
             output_path.parent.mkdir(parents=True, exist_ok=True)
             with open(output_path, "w", encoding="utf-8") as handle:
