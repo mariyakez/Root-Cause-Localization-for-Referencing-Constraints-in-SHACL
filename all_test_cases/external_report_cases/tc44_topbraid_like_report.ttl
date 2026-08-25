@@ -1,0 +1,14 @@
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix ex:  <http://example.org/> .
+
+[] a sh:ValidationReport ;
+    sh:conforms false ;
+    sh:result [
+        a sh:ValidationResult ;
+        sh:focusNode ex:bob ;
+        sh:value ex:acme ;
+        sh:resultPath ex:worksFor ;
+        sh:sourceShape ex:CompanyShape ;
+        sh:sourceConstraintComponent sh:NodeConstraintComponent ;
+        sh:resultMessage "TopBraid-like report naming the referenced shape" ;
+    ] .
