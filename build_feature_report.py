@@ -602,16 +602,6 @@ def build_report():
         ("Honest limitation", "The implementation focuses on sh:node-based SHACL Core references; other logical SHACL Core constructs are future work."),
     ])
 
-    pdf.h1("9. Recommended Presentation Points")
-    for item in [
-        "Start with TC2 or TC3 to show the explanation tree on a simple case.",
-        "Show TC5 or TC6 to demonstrate deduplication and multi-level references.",
-        "Show TC7 to prove property-level sh:node support, which appears in the supervisor schema.",
-        "Use the LUBM summary table to demonstrate practical scale and quantitative evidence.",
-        "Emphasize that the tool does not replace pySHACL; it turns pySHACL's report into actionable root-cause explanations.",
-    ]:
-        pdf.bullet(item)
-
     pdf.build()
 
 
