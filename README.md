@@ -318,42 +318,59 @@ OK
 
 ## Large Dataset Evaluation
 
-The tool was tested on the supervisor-provided LUBM-style dataset:
+The tool was tested on two supervisor-provided LUBM-style data graphs, each checked
+against three progressively larger SHACL shape schemas (six combinations total):
 
-- data file: `/Users/mariyakezdekbayeva/Downloads/lubm_skg_1.ttl`
-- shapes file: `/Users/mariyakezdekbayeva/Downloads/schema1.ttl`
-- data size: approximately 163 MB
+| Dataset | Size | Data triples |
+|---|---|---|
+| `lubm_skg_1.ttl` | 171 MB | 1,001,716 |
+| `lubm_mkg_1.ttl` | 732 MB | 4,258,329 |
 
-Command:
+| Schema | Shape triples |
+|---|---|
+| `schema1.ttl` | 54 |
+| `schema2.ttl` | 110 |
+| `schema3.ttl` | 341 |
+
+Command (one HTML report and one summary+timing run per combination):
 
 ```bash
-python3 -m shacl_explainer.cli \
-  /Users/mariyakezdekbayeva/Downloads/lubm_skg_1.ttl \
-  /Users/mariyakezdekbayeva/Downloads/schema1.ttl \
-  --summary \
-  --timing
+python3 -m shacl_explainer.cli <data> <shapes> --format html --hints --timing --output html_outputs/lubm_<dataset>_<schema>_report.html
+python3 -m shacl_explainer.cli <data> <shapes> --summary --timing
 ```
 
-Observed result:
+Timing summary (seconds):
 
-```text
-Explanation roots: 891
-Reference nodes: 554
-Leaf failures: 992
+| Dataset x Schema | Parse data | Validate | Build tree | Render |
+|---|---:|---:|---:|---:|
+| skg1 x schema1 | 18.9 | 0.8 | 0.1 | 0.01 |
+| skg1 x schema2 | 19.1 | 61.8 | 9.9 | 0.12 |
+| skg1 x schema3 | 19.0 | 91.9 | 16.2 | 0.26 |
+| mkg1 x schema1 | 83.9 | 3.3 | 0.3 | 0.01 |
+| mkg1 x schema2 | 83.2 | 308.1 | 49.7 | 0.47 |
+| mkg1 x schema3 | 93.8 | 469.6 | 70.9 | 1.06 |
 
-By leaf path:
-    992  ub:name
+Explanation output summary:
 
-By leaf component:
-    992  minCount
+| Dataset x Schema | Focus nodes affected | Leaf failures (via sh:node / direct) |
+|---|---:|---|
+| skg1 x schema1 | 890 | 992 (655 / 337) |
+| skg1 x schema2 | 6,281 | 10,099 (8,781 / 1,318) |
+| skg1 x schema3 | 15,950 | 21,170 (17,043 / 4,127) |
+| mkg1 x schema1 | 933 | 968 (958 / 10) |
+| mkg1 x schema2 | 25,058 | 39,736 (35,597 / 4,139) |
+| mkg1 x schema3 | 67,561 | 87,396 (69,729 / 17,667) |
 
-By reference path:
-    307  ub:doctoralDegreeFrom -> ub:UniversityShape
-    161  ub:mastersDegreeFrom -> ub:UniversityShape
-     86  ub:undergraduateDegreeFrom -> ub:UniversityShape
-```
-
-Interpretation: the concrete repair action is consistently missing `ub:name` values, many reached through professor degree properties that reference `ub:UniversityShape`.
+**Interpretation:** parse time scales with data size alone and stays constant across
+schemas on the same dataset. Validate and tree-build time instead scale with schema
+complexity: schema2/schema3 add `ub:takesCourse`/`ub:teachingAssistantOf` constraints
+that apply to a much larger population than schema1's degree-granting-university
+constraints, growing pySHACL's result count (and validate/build time) by roughly two
+orders of magnitude. Across every combination, the dominant repair action remains
+missing `ub:name` values reached through degree properties into `ub:UniversityShape`,
+with schema2/schema3 adding a second dominant story around missing `ub:type` reached
+through course shapes. Full per-combination breakdowns (top failing paths, reference
+paths, and reference chains) are in [`lubm_evaluation_results.md`](lubm_evaluation_results.md).
 
 ## Thesis Report
 
