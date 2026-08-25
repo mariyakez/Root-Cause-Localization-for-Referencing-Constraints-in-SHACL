@@ -9,4 +9,4 @@ __pycache__/
 report.ttl
 *_report.ttl
 !all_test_cases/**/*_report.ttl
-!outputs/**
+!output_mode_examples/**
