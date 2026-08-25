@@ -358,48 +358,68 @@ def build_report():
         ("Raw report export", "Save the raw SHACL validation report graph as Turtle."),
         ("Timing CSV", "Save parse, validation, expansion, rendering, and count metrics."),
         ("Dynamic prefixes", "Display compact names such as ex:age and ub:name instead of full IRIs."),
+        ("HTML output", "Render the explanation tree as a self-contained interactive HTML report."),
+        ("Graph-tree visualization", "Render the reference chain as an explorable node graph, color-coded by reference depth."),
     ], col1=145, col2=355, size=8.5)
+
+    pdf.h2("Interactive HTML report")
+    pdf.para(
+        "In addition to the terminal-oriented formats, --format html renders the explanation tree as a "
+        "self-contained HTML file with a graph-based view of the reference chain, aimed at exploring larger "
+        "or deeper results interactively rather than reading a flat printout."
+    )
+    pdf.kv_table([
+        ("Graph-tree view", "Each sh:node reference level gets its own accent color, cycling across six levels, so the depth of a reference chain is visible at a glance."),
+        ("Dark and light themes", "A theme toggle switches the whole report between dark and light color schemes; the choice persists across reloads via localStorage."),
+        ("Resizable focus-node sidebar", "The sidebar listing focus nodes can be dragged wider or narrower; its width also persists across reloads."),
+        ("Focus-node search", "A search box in the sidebar filters the focus-node list, which matters once a report has dozens or hundreds of focus nodes."),
+        ("Single-file output", "Each report is one HTML file with no external dependencies, so it can be opened directly or attached to an email without a server."),
+    ], col1=155, col2=345, size=8.5)
+    pdf.para(
+        "html_outputs/ contains one generated HTML report per numbered test case (TC1 through TC53), so the "
+        "visualization can be inspected case by case alongside the text-tree and JSON equivalents."
+    )
 
     pdf.h2("Feature calls and output examples")
     pdf.feature_examples_table([
         ("Text tree",
-         "python3 -m shacl_explainer.cli test_cases/tc6_complex_org.ttl test_cases/tc6_complex_org.ttl",
+         "python3 -m shacl_explainer.cli all_test_cases/sh_node_cases/tc6_complex_org.ttl all_test_cases/sh_node_cases/tc6_complex_org.ttl",
          "Terminal output only.",
          "via ex:ProjectLeadShape focus=ex:frank; [datatype] path=ex:age value=\"forty\""),
         ("JSON",
-         "python3 -m shacl_explainer.cli test_cases/tc6_complex_org.ttl test_cases/tc6_complex_org.ttl --format json",
+         "python3 -m shacl_explainer.cli all_test_cases/sh_node_cases/tc6_complex_org.ttl all_test_cases/sh_node_cases/tc6_complex_org.ttl --format json",
          "Terminal output only, unless redirected by the shell.",
          "{type: leaf, focusNode: ex:frank, path: ex:age, component: sh:DatatypeConstraintComponent}"),
         ("CSV export",
-         "python3 -m shacl_explainer.cli test_cases/tc6_complex_org.ttl test_cases/tc6_complex_org.ttl --csv failures.csv",
+         "python3 -m shacl_explainer.cli all_test_cases/sh_node_cases/tc6_complex_org.ttl all_test_cases/sh_node_cases/tc6_complex_org.ttl --csv failures.csv",
          "Creates failures.csv.",
          "focus_node, reference_chain, leaf_path, component, value, message, kind, repair_hint"),
         ("Summary",
-         "python3 -m shacl_explainer.cli test_cases/tc6_complex_org.ttl test_cases/tc6_complex_org.ttl --summary",
+         "python3 -m shacl_explainer.cli all_test_cases/sh_node_cases/tc6_complex_org.ttl all_test_cases/sh_node_cases/tc6_complex_org.ttl --summary",
          "Terminal output only.",
          "Explanation roots: 1; Reference nodes: 2; Leaf failures: 6; Direct leaf failures: 0"),
         ("Filtering",
-         "python3 -m shacl_explainer.cli test_cases/tc6_complex_org.ttl test_cases/tc6_complex_org.ttl --path ex:age",
+         "python3 -m shacl_explainer.cli all_test_cases/sh_node_cases/tc6_complex_org.ttl all_test_cases/sh_node_cases/tc6_complex_org.ttl --path ex:age",
          "Terminal output only.",
          "Only the ex:age leaf failure is shown."),
         ("Output limiting",
-         "python3 -m shacl_explainer.cli test_cases/tc6_complex_org.ttl test_cases/tc6_complex_org.ttl --limit 1",
+         "python3 -m shacl_explainer.cli all_test_cases/sh_node_cases/tc6_complex_org.ttl all_test_cases/sh_node_cases/tc6_complex_org.ttl --limit 1",
          "Terminal output only.",
          "Only the first explanation root from the TC6 explanation tree is rendered."),
         ("Repair hints",
-         "python3 -m shacl_explainer.cli test_cases/tc6_complex_org.ttl test_cases/tc6_complex_org.ttl --hints",
+         "python3 -m shacl_explainer.cli all_test_cases/sh_node_cases/tc6_complex_org.ttl all_test_cases/sh_node_cases/tc6_complex_org.ttl --hints",
          "Terminal output only.",
          "repair: Replace \"forty\" on ex:age with a value of the required datatype."),
         ("Raw report",
-         "python3 -m shacl_explainer.cli test_cases/tc6_complex_org.ttl test_cases/tc6_complex_org.ttl --save-report report.ttl",
+         "python3 -m shacl_explainer.cli all_test_cases/sh_node_cases/tc6_complex_org.ttl all_test_cases/sh_node_cases/tc6_complex_org.ttl --save-report report.ttl",
          "Creates report.ttl.",
          "Turtle file containing sh:ValidationReport and sh:ValidationResult triples."),
         ("Timing CSV",
-         "python3 -m shacl_explainer.cli test_cases/tc6_complex_org.ttl test_cases/tc6_complex_org.ttl --timing-csv timings.csv",
+         "python3 -m shacl_explainer.cli all_test_cases/sh_node_cases/tc6_complex_org.ttl all_test_cases/sh_node_cases/tc6_complex_org.ttl --timing-csv timings.csv",
          "Creates timings.csv.",
          "parse_data_seconds, validate_seconds, build_explanation_tree_seconds, render_seconds"),
         ("Dynamic prefixes",
-         "python3 -m shacl_explainer.cli test_cases/tc6_complex_org.ttl test_cases/tc6_complex_org.ttl",
+         "python3 -m shacl_explainer.cli all_test_cases/sh_node_cases/tc6_complex_org.ttl all_test_cases/sh_node_cases/tc6_complex_org.ttl",
          "Terminal output uses prefixes configured from the RDF graphs.",
          "path=ex:age instead of path=<http://example.org/age>"),
     ])
@@ -411,7 +431,7 @@ def build_report():
         ("Node-shape sourceShape", "Jena-style reports may set sh:sourceShape to the enclosing node shape while sh:resultPath identifies the property constraint. The expander uses the original shapes graph to find the matching property shape and its sh:node target."),
         ("Property-level sh:node", "When a property-level sh:node fails, the referenced shape applies to sh:value, not necessarily to sh:focusNode. The pipeline revalidates the value node so the explanation points to the real broken resource."),
         ("Supported formats", "The report parser accepts RDF formats through --report-format, for example turtle for .ttl reports or xml for RDF/XML reports."),
-        ("Jena fixture", "test_cases/jena_report_tc7_node_source_no_detail.ttl simulates a Jena-style report for the property-level worksFor -> CompanyShape case."),
+        ("Jena fixture", "all_test_cases/sh_node_cases/jena_report_tc7_node_source_no_detail.ttl simulates a Jena-style report for the property-level worksFor -> CompanyShape case."),
     ], col1=145, col2=355, size=8.5)
 
     pdf.h2("Command examples")
@@ -425,14 +445,14 @@ def build_report():
     )
     pdf.h2("Apache Jena calls and output examples")
     jena_call = (
-        "python3 -m shacl_explainer.cli test_cases/tc7_property_node.ttl "
-        "test_cases/tc7_property_node.ttl --report "
-        "test_cases/jena_report_tc7_node_source_no_detail.ttl --report-format turtle"
+        "python3 -m shacl_explainer.cli all_test_cases/sh_node_cases/tc7_property_node.ttl "
+        "all_test_cases/sh_node_cases/tc7_property_node.ttl --report "
+        "all_test_cases/sh_node_cases/jena_report_tc7_node_source_no_detail.ttl --report-format turtle"
     )
     pdf.feature_examples_table([
         ("External report",
          jena_call,
-         "Reads test_cases/jena_report_tc7_node_source_no_detail.ttl instead of running pySHACL first.",
+         "Reads all_test_cases/sh_node_cases/jena_report_tc7_node_source_no_detail.ttl instead of running pySHACL first.",
          "via ex:CompanyShape path=ex:worksFor focus=ex:alice; [minCount] path=ex:legalName"),
         ("No sh:detail",
          jena_call,
@@ -440,7 +460,7 @@ def build_report():
          "Fallback revalidation reconstructs the hidden leaf: ex:legalName minCount."),
         ("sourceShape mapping",
          jena_call,
-         "Uses the original shapes file test_cases/tc7_property_node.ttl to resolve sourceShape plus resultPath.",
+         "Uses the original shapes file all_test_cases/sh_node_cases/tc7_property_node.ttl to resolve sourceShape plus resultPath.",
          "sourceShape ex:EmployeeShape + resultPath ex:worksFor resolves to referenced shape ex:CompanyShape."),
         ("Property sh:node",
          jena_call,
@@ -474,7 +494,14 @@ def build_report():
     )
 
     pdf.h1("5. Test Coverage")
-    pdf.para("The tool is covered by automated unittest tests. At the time of this report, the suite contains 24 tests and passes successfully.")
+    pdf.para(
+        "The tool is covered by automated unittest tests. At the time of this report, the suite contains 33 "
+        "tests and passes successfully, exercising 53 numbered fixture files (TC1-TC53) grouped by category: "
+        "sh:node referencing, direct SHACL Core constraints, mixed direct/referenced failures, multiple focus "
+        "nodes, property-path variants, severities, message metadata, external report compatibility, cyclic "
+        "shapes, and synthetic scale cases. TC1-TC8 below walk through the core sh:node mechanics in detail; "
+        "the remaining categories are documented in README.md's numbered test case inventory."
+    )
     pdf.kv_table([
         ("TC1", "Single sh:node reference with one hidden leaf failure."),
         ("TC2", "Multiple leaf failures under one referenced shape."),
@@ -506,7 +533,7 @@ def build_report():
         ("external_report_tc7_property_no_detail.ttl", "External report fixture for property-level sh:node without sh:detail, testing value-node fallback."),
         ("jena_report_tc7_node_source_no_detail.ttl", "Apache Jena-style report where sourceShape points to the node shape and resultPath identifies the property shape."),
     ], col1=205, col2=295, size=8.5)
-    pdf.code("python3 -m unittest discover -s tests -v\n\nRan 24 tests\nOK")
+    pdf.code("python3 -m unittest discover -s tests -v\n\nRan 33 tests\nOK")
 
     pdf.h1("6. Detailed Stress-Test Rationale")
     pdf.para(
