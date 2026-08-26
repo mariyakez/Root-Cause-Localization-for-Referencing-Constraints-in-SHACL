@@ -1,0 +1,49 @@
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix ex:  <http://example.org/> .
+
+ex:PersonShape
+    a sh:NodeShape ;
+    sh:property [
+        sh:path ex:name ;
+        sh:minCount 1 ;
+        sh:message "Name is required" ;
+    ] ;
+    sh:property [
+        sh:path ex:age ;
+        sh:datatype xsd:integer ;
+        sh:message "Age must be an integer" ;
+    ] .
+
+ex:ContractorShape
+    a sh:NodeShape ;
+    sh:node ex:PersonShape ;
+    sh:property [
+        sh:path ex:contractId ;
+        sh:minCount 1 ;
+        sh:message "Contract ID is required" ;
+    ] .
+
+ex:StaffShape
+    a sh:NodeShape ;
+    sh:node ex:PersonShape ;
+    sh:property [
+        sh:path ex:department ;
+        sh:minCount 1 ;
+        sh:message "Department is directly required" ;
+    ] .
+
+ex:WorkerShape
+    a sh:NodeShape ;
+    sh:targetNode ex:carol ;
+    sh:node ex:ContractorShape ;
+    sh:node ex:StaffShape ;
+    sh:property [
+        sh:path ex:workerCode ;
+        sh:minCount 1 ;
+        sh:message "Worker code is directly required" ;
+    ] .
+
+ex:carol
+    a ex:Worker ;
+    ex:age "not-a-number" .

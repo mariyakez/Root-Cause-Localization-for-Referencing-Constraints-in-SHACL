@@ -1,0 +1,22 @@
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix ex:  <http://example.org/> .
+
+ex:PersonShape
+    a sh:NodeShape ;
+    sh:targetClass ex:Person ;
+    sh:property [
+        sh:path ex:email ;
+        sh:minCount 1 ;
+        sh:message "Email is required" ;
+    ] .
+
+ex:person01 a ex:Person .
+ex:person02 a ex:Person .
+ex:person03 a ex:Person .
+ex:person04 a ex:Person .
+ex:person05 a ex:Person .
+ex:person06 a ex:Person .
+ex:person07 a ex:Person .
+ex:person08 a ex:Person .
+ex:person09 a ex:Person .
+ex:person10 a ex:Person .

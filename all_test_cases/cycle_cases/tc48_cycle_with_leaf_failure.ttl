@@ -1,0 +1,21 @@
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix ex:  <http://example.org/> .
+
+ex:ShapeA
+    a sh:NodeShape ;
+    sh:targetNode ex:item ;
+    sh:node ex:ShapeB .
+
+ex:ShapeB
+    a sh:NodeShape ;
+    sh:node ex:ShapeA ;
+    sh:property [
+        sh:path ex:age ;
+        sh:datatype xsd:integer ;
+        sh:message "Age is invalid inside the recursive cycle" ;
+    ] .
+
+ex:item
+    a ex:Thing ;
+    ex:age "old" .

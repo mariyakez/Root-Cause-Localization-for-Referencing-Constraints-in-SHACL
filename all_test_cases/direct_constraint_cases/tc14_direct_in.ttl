@@ -1,0 +1,15 @@
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix ex:  <http://example.org/> .
+
+ex:CourseShape
+    a sh:NodeShape ;
+    sh:targetNode ex:course3 ;
+    sh:property [
+        sh:path ex:level ;
+        sh:in ("beginner" "intermediate" "advanced") ;
+        sh:message "Course level must be beginner, intermediate, or advanced" ;
+    ] .
+
+ex:course3
+    a ex:Course ;
+    ex:level "expert" .

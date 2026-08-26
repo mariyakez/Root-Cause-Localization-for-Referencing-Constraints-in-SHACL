@@ -1,0 +1,15 @@
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix ex:  <http://example.org/> .
+
+ex:PersonShape
+    a sh:NodeShape ;
+    sh:targetNode ex:bob ;
+    sh:property [
+        sh:path ex:profileUrl ;
+        sh:minCount 1 ;
+        sh:severity sh:Info ;
+        sh:message "Profile URL is useful metadata" ;
+    ] .
+
+ex:bob
+    a ex:Person .

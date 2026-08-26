@@ -1,0 +1,29 @@
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix ex:  <http://example.org/> .
+
+ex:LogicalCourseShape
+    a sh:NodeShape ;
+    sh:targetNode ex:course7 ;
+    sh:or (
+        [ sh:property [ sh:path ex:format ; sh:hasValue "online" ] ]
+        [ sh:property [ sh:path ex:room ; sh:minCount 1 ] ]
+    ) ;
+    sh:xone (
+        [ sh:property [ sh:path ex:graduateOnly ; sh:hasValue true ] ]
+        [ sh:property [ sh:path ex:undergraduateOnly ; sh:hasValue true ] ]
+    ) ;
+    sh:not [
+        sh:property [
+            sh:path ex:cancelled ;
+            sh:hasValue true ;
+        ]
+    ] ;
+    sh:message "Course must satisfy the logical delivery rules" .
+
+ex:course7
+    a ex:Course ;
+    ex:format "hybrid" ;
+    ex:graduateOnly true ;
+    ex:undergraduateOnly true ;
+    ex:cancelled true .

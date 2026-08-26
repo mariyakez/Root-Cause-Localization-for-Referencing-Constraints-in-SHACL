@@ -1,0 +1,28 @@
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix ex:  <http://example.org/> .
+
+ex:CompanyShape
+    a sh:NodeShape ;
+    sh:property [
+        sh:path ex:legalName ;
+        sh:minCount 1 ;
+        sh:message "ex:legalName is required" ;
+    ] .
+
+ex:EmployeeShape
+    a sh:NodeShape ;
+    sh:targetClass ex:Employee ;
+    sh:property [
+        sh:path ex:worksFor ;
+        sh:minCount 1 ;
+        sh:node ex:CompanyShape ;
+        sh:message "ex:worksFor must point to a valid company" ;
+    ] .
+
+ex:alice
+    a ex:Employee ;
+    ex:worksFor ex:acme .
+
+ex:acme
+    a ex:Company .

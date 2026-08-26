@@ -1,0 +1,12 @@
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix ex:  <http://example.org/> .
+
+[] a sh:ValidationReport ;
+    sh:conforms false ;
+    sh:result [
+        a sh:ValidationResult ;
+        sh:focusNode ex:alice ;
+        sh:resultPath ex:name ;
+        sh:sourceConstraintComponent sh:MinCountConstraintComponent ;
+        sh:resultMessage "External report omitted sh:sourceShape" ;
+    ] .

@@ -1,0 +1,16 @@
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix ex:  <http://example.org/> .
+
+ex:CourseShape
+    a sh:NodeShape ;
+    sh:targetNode ex:course1 ;
+    sh:property [
+        sh:path ex:credits ;
+        sh:datatype xsd:integer ;
+        sh:message "Course credits must be an integer" ;
+    ] .
+
+ex:course1
+    a ex:Course ;
+    ex:credits "three" .

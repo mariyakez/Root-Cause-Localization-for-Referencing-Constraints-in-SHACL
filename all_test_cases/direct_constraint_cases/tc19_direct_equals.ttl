@@ -1,0 +1,16 @@
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix ex:  <http://example.org/> .
+
+ex:PersonShape
+    a sh:NodeShape ;
+    sh:targetNode ex:dana ;
+    sh:property [
+        sh:path ex:preferredEmail ;
+        sh:equals ex:email ;
+        sh:message "Preferred email and email must have the same values" ;
+    ] .
+
+ex:dana
+    a ex:Person ;
+    ex:preferredEmail "dana.work@example.org" ;
+    ex:email "dana.home@example.org" .

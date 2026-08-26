@@ -1,0 +1,15 @@
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix ex:  <http://example.org/> .
+
+ex:CourseShape
+    a sh:NodeShape ;
+    sh:targetNode ex:course2 ;
+    sh:property [
+        sh:path ex:courseCode ;
+        sh:pattern "^CS-[0-9]{3}$" ;
+        sh:message "Course code must look like CS-101" ;
+    ] .
+
+ex:course2
+    a ex:Course ;
+    ex:courseCode "cs101" .

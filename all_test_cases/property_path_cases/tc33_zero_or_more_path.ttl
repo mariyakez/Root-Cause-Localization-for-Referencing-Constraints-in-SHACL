@@ -1,0 +1,22 @@
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix ex:  <http://example.org/> .
+
+ex:OrganizationShape
+    a sh:NodeShape ;
+    sh:targetNode ex:department ;
+    sh:property [
+        sh:path [ sh:zeroOrMorePath ex:parentOrganization ] ;
+        sh:class ex:Organization ;
+        sh:message "Every node in the parent organization chain must be an Organization" ;
+    ] .
+
+ex:department
+    a ex:Organization ;
+    ex:parentOrganization ex:faculty .
+
+ex:faculty
+    a ex:Unit ;
+    ex:parentOrganization ex:university .
+
+ex:university
+    a ex:Organization .

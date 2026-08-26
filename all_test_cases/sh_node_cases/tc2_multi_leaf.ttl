@@ -1,0 +1,63 @@
+###############################################################################
+# TEST CASE 2 — sh:node failure with MULTIPLE leaf violations
+#
+# Shape hierarchy:
+#   :EmployeeShape  --sh:node-->  :PersonShape
+#
+# :PersonShape requires:
+#   - ex:age    xsd:integer          (violated: missing entirely)
+#   - ex:name   xsd:string, minCount 1  (violated: missing entirely)
+#   - ex:email  sh:pattern "^\\S+@\\S+$"  (violated: "not-an-email")
+#
+# Key question to investigate:
+#   Does pyshacl report ALL three leaf failures inside :PersonShape,
+#   or does it stop at the first one?
+#   The answer determines how "complete" the engine's output already is.
+###############################################################################
+
+@prefix sh:   <http://www.w3.org/ns/shacl#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix ex:   <http://example.org/> .
+
+# ── Shapes ───────────────────────────────────────────────────────────────────
+
+ex:PersonShape
+    a sh:NodeShape ;
+    sh:property [
+        sh:path     ex:age ;
+        sh:datatype xsd:integer ;
+        sh:minCount 1 ;
+        sh:message  "ex:age must be present and xsd:integer" ;
+    ] ;
+    sh:property [
+        sh:path     ex:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:message  "ex:name must be present and xsd:string" ;
+    ] ;
+    sh:property [
+        sh:path    ex:email ;
+        sh:pattern "^\\S+@\\S+$" ;
+        sh:message "ex:email must match a basic email pattern" ;
+    ] .
+
+ex:EmployeeShape
+    a sh:NodeShape ;
+    sh:targetClass ex:Employee ;
+    sh:node ex:PersonShape ;        # ← referencing constraint
+    sh:property [
+        sh:path    ex:employeeId ;
+        sh:minCount 1 ;
+        sh:message "An employee must have an employeeId" ;
+    ] .
+
+# ── Data ─────────────────────────────────────────────────────────────────────
+
+ex:bob
+    a ex:Employee ;
+    ex:employeeId "E002" ;
+    # ex:age   missing entirely
+    # ex:name  missing entirely
+    ex:email  "not-an-email" .

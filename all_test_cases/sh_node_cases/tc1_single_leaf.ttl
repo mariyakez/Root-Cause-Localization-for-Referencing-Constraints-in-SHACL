@@ -1,0 +1,49 @@
+###############################################################################
+# TEST CASE 1 — Simple sh:node failure with ONE leaf violation
+#
+# Shape hierarchy:
+#   :EmployeeShape  --sh:node-->  :PersonShape
+#
+# :PersonShape requires:
+#   - sh:path :age   sh:datatype xsd:integer   (violated: "twenty" is a string)
+#
+# What a naive engine reports:
+#   NodeConstraintComponent on :EmployeeShape  (no detail)
+#
+# What we WANT to reconstruct:
+#   NodeConstraintComponent  → :PersonShape
+#       └── DatatypeConstraintComponent  path=:age  value="twenty"
+###############################################################################
+
+@prefix sh:   <http://www.w3.org/ns/shacl#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix ex:   <http://example.org/> .
+
+# ── Shapes ───────────────────────────────────────────────────────────────────
+
+ex:PersonShape
+    a sh:NodeShape ;
+    sh:property [
+        sh:path    ex:age ;
+        sh:datatype xsd:integer ;
+        sh:message "ex:age must be an xsd:integer" ;
+    ] .
+
+ex:EmployeeShape
+    a sh:NodeShape ;
+    sh:targetClass ex:Employee ;
+    sh:node ex:PersonShape ;        # ← the referencing constraint under study
+    sh:property [
+        sh:path    ex:employeeId ;
+        sh:minCount 1 ;
+        sh:message "An employee must have an employeeId" ;
+    ] .
+
+# ── Data ─────────────────────────────────────────────────────────────────────
+
+ex:alice
+    a ex:Employee ;
+    ex:employeeId "E001" ;
+    ex:age        "twenty" .        # ← wrong datatype — triggers the leaf failure

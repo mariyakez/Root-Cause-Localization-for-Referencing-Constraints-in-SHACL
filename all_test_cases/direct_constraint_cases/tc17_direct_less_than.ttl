@@ -1,0 +1,17 @@
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix ex:  <http://example.org/> .
+
+ex:EventShape
+    a sh:NodeShape ;
+    sh:targetNode ex:event1 ;
+    sh:property [
+        sh:path ex:startDate ;
+        sh:lessThan ex:endDate ;
+        sh:message "Start date must be earlier than end date" ;
+    ] .
+
+ex:event1
+    a ex:Event ;
+    ex:startDate "2026-05-20"^^xsd:date ;
+    ex:endDate "2026-05-10"^^xsd:date .

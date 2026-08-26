@@ -1,0 +1,33 @@
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix ex:  <http://example.org/> .
+
+ex:CourseShape
+    a sh:NodeShape ;
+    sh:targetNode ex:badCourse ;
+    sh:property [
+        sh:path ex:title ;
+        sh:minCount 1 ;
+        sh:message "A course must have a title" ;
+    ] ;
+    sh:property [
+        sh:path ex:credits ;
+        sh:datatype xsd:integer ;
+        sh:message "Credits must be an integer" ;
+    ] ;
+    sh:property [
+        sh:path ex:level ;
+        sh:in ("beginner" "intermediate" "advanced") ;
+        sh:message "Level must be one of the allowed values" ;
+    ] ;
+    sh:property [
+        sh:path ex:courseCode ;
+        sh:pattern "^CS-[0-9]{3}$" ;
+        sh:message "Course code must look like CS-101" ;
+    ] .
+
+ex:badCourse
+    a ex:Course ;
+    ex:credits "three" ;
+    ex:level "expert" ;
+    ex:courseCode "abc123" .

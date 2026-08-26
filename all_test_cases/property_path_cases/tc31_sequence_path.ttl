@@ -1,0 +1,18 @@
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix ex:  <http://example.org/> .
+
+ex:PersonShape
+    a sh:NodeShape ;
+    sh:targetNode ex:bob ;
+    sh:property [
+        sh:path (ex:address ex:postalCode) ;
+        sh:minCount 1 ;
+        sh:message "A person's address must have a postal code" ;
+    ] .
+
+ex:bob
+    a ex:Person ;
+    ex:address ex:bobAddress .
+
+ex:bobAddress
+    a ex:Address .

@@ -1,0 +1,2 @@
+data_path,shapes_path,data_triples,shape_triples,top_results,all_results,parse_data_seconds,parse_shapes_seconds,validate_seconds,build_explanation_tree_seconds,render_seconds
+all_test_cases/scale_cases/tc50_100_focus_nodes.ttl,all_test_cases/scale_cases/tc50_100_focus_nodes.ttl,106,108,100,100,0.003263,0.001632,0.007251,0.003091,0.000792

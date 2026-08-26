@@ -1,0 +1,66 @@
+###############################################################################
+# TEST CASE 3 — Two-level nested reference:  A  →  B  →  C
+#
+# Shape hierarchy:
+#   :ContractorShape  --sh:node-->  :EmployeeShape
+#                                        --sh:node-->  :PersonShape
+#
+# The actual leaf violation lives inside :PersonShape (level C).
+# A naive engine surfaces only the top-level NodeConstraintComponent on A.
+#
+# This is the core "depth problem" the thesis tool must solve.
+#
+# Expected explanation tree:
+#   ❌ NodeConstraintComponent  focusNode=:carol  shape=:ContractorShape
+#       └── ❌ NodeConstraintComponent  shape=:EmployeeShape
+#               └── ❌ DatatypeConstraintComponent
+#                       path=ex:age  value="thirty-one"
+#                       refChain=[ContractorShape → EmployeeShape → PersonShape]
+###############################################################################
+
+@prefix sh:   <http://www.w3.org/ns/shacl#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix ex:   <http://example.org/> .
+
+# ── Shapes ───────────────────────────────────────────────────────────────────
+
+# Level C — innermost shape, contains the real constraint
+ex:PersonShape
+    a sh:NodeShape ;
+    sh:property [
+        sh:path     ex:age ;
+        sh:datatype xsd:integer ;
+        sh:minCount 1 ;
+        sh:message  "ex:age must be an xsd:integer" ;
+    ] .
+
+# Level B — middle shape, references C
+ex:EmployeeShape
+    a sh:NodeShape ;
+    sh:node ex:PersonShape ;        # ← reference to C
+    sh:property [
+        sh:path    ex:employeeId ;
+        sh:minCount 1 ;
+        sh:message "An employee must have an employeeId" ;
+    ] .
+
+# Level A — outermost shape (has sh:targetClass), references B
+ex:ContractorShape
+    a sh:NodeShape ;
+    sh:targetClass ex:Contractor ;
+    sh:node ex:EmployeeShape ;      # ← reference to B
+    sh:property [
+        sh:path    ex:contractId ;
+        sh:minCount 1 ;
+        sh:message "A contractor must have a contractId" ;
+    ] .
+
+# ── Data ─────────────────────────────────────────────────────────────────────
+
+ex:carol
+    a ex:Contractor ;
+    ex:employeeId "E003" ;
+    ex:contractId "C001" ;
+    ex:age        "thirty-one" .    # ← wrong datatype, 2 levels deep

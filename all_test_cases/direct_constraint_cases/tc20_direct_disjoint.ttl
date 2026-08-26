@@ -1,0 +1,16 @@
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix ex:  <http://example.org/> .
+
+ex:PersonShape
+    a sh:NodeShape ;
+    sh:targetNode ex:erin ;
+    sh:property [
+        sh:path ex:primaryRole ;
+        sh:disjoint ex:secondaryRole ;
+        sh:message "Primary and secondary roles must not overlap" ;
+    ] .
+
+ex:erin
+    a ex:Person ;
+    ex:primaryRole ex:Reviewer ;
+    ex:secondaryRole ex:Reviewer .

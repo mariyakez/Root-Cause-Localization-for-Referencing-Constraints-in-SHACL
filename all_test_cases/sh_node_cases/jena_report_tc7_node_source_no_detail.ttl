@@ -1,0 +1,20 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix ex: <http://example.org/> .
+
+# Jena-style compatibility fixture:
+# the report identifies the enclosing node shape as sh:sourceShape and gives
+# sh:resultPath/sh:value, but does not embed sh:detail or the anonymous
+# property shape. The explainer must recover:
+#   ex:EmployeeShape sh:property [ sh:path ex:worksFor ; sh:node ex:CompanyShape ]
+# from the original shapes graph.
+[] a sh:ValidationReport ;
+    sh:conforms false ;
+    sh:result [
+        a sh:ValidationResult ;
+        sh:focusNode ex:alice ;
+        sh:value ex:acme ;
+        sh:resultPath ex:worksFor ;
+        sh:sourceConstraintComponent sh:NodeConstraintComponent ;
+        sh:sourceShape ex:EmployeeShape ;
+        sh:resultMessage "Value does not conform to shape ex:CompanyShape." ;
+    ] .

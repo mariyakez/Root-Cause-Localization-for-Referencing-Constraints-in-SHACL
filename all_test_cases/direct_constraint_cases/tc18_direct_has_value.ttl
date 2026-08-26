@@ -1,0 +1,15 @@
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix ex:  <http://example.org/> .
+
+ex:CourseShape
+    a sh:NodeShape ;
+    sh:targetNode ex:course6 ;
+    sh:property [
+        sh:path ex:status ;
+        sh:hasValue "active" ;
+        sh:message "Course status must include active" ;
+    ] .
+
+ex:course6
+    a ex:Course ;
+    ex:status "archived" .

@@ -1,0 +1,15 @@
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix ex:  <http://example.org/> .
+
+ex:CourseShape
+    a sh:NodeShape ;
+    sh:targetNode ex:course4 ;
+    sh:property [
+        sh:path ex:teacher ;
+        sh:nodeKind sh:IRI ;
+        sh:message "Teacher must be identified by an IRI" ;
+    ] .
+
+ex:course4
+    a ex:Course ;
+    ex:teacher "Dr Smith" .

@@ -1,0 +1,3599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+(function(){
+  var s=localStorage.getItem('shacl-theme');
+  var p=window.matchMedia('(prefers-color-scheme: light)').matches
+        ?'light':'dark';
+  if((s||p)==='light')
+    document.documentElement.dataset.theme='light';
+})();
+</script>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SHACL Explanation Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Geist+Mono:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════════════════
+   SHACL EXPLAINER — token system
+   Dark  = Neon   (server room after dark; pure black, layered surfaces)
+   Light = Monad  (editorial tech journal on warm parchment)
+
+   One idea carries the chromatic budget: the six depth levels.
+   --level-1 … --level-6 encode how many sh:node hops separate the
+   reader from the root cause. Everything else is neutral.
+   ═══════════════════════════════════════════════════════════════════ */
+:root {
+  color-scheme: dark;
+
+  /* ── SIGNATURE: depth of the sh:node reference chain ───────────── */
+  --level-1: #2bb7b0;   /* Teal           — first reference          */
+  --level-2: #ff9f1c;   /* Terminal Amber                            */
+  --level-3: #c084fc;   /* Pulse Violet                              */
+  --level-4: #38bdf8;   /* Ice Blue                                  */
+  --level-5: #f472b6;   /* Neon Pink                                 */
+  --level-6: #fb7185;   /* Signal Coral   — 6 and deeper             */
+
+  --level-1-wash: rgba(43,183,176,.10);
+  --level-2-wash: rgba(255,159,28,.10);
+  --level-3-wash: rgba(192,132,252,.10);
+  --level-4-wash: rgba(56,189,248,.10);
+  --level-5-wash: rgba(244,114,182,.10);
+  --level-6-wash: rgba(251,113,133,.10);
+
+  --level-1-line: rgba(43,183,176,.55);
+  --level-2-line: rgba(255,159,28,.55);
+  --level-3-line: rgba(192,132,252,.55);
+  --level-4-line: rgba(56,189,248,.55);
+  --level-5-line: rgba(244,114,182,.55);
+  --level-6-line: rgba(251,113,133,.55);
+
+  /* ── surfaces: depth by layering, never by shadow ──────────────── */
+  --bg:          #000000;   /* Blackout       */
+  --surface:     #0a0a0b;   /* Depth          */
+  --surface2:    #151617;   /* Graphite Deep  */
+  --surface3:    #242628;   /* Graphite       */
+  --border:      #303236;   /* Graphite Light */
+  --border2:     #4a4d52;   /* derived: Graphite Light → Ash midpoint */
+  --wash:        rgba(255,255,255,.03);
+  --wash2:       rgba(255,255,255,.05);
+  --bg-blur:     rgba(0,0,0,.92);
+  --chain-line:  #303236;
+
+  /* ── text ──────────────────────────────────────────────────────── */
+  --text:        #ffffff;   /* Whiteout */
+  --text-muted:  #94979e;   /* Pewter   */
+  --text-dim:    #797d86;   /* Ash      */
+
+  /* ── violation ─────────────────────────────────────────────────── */
+  --red:         #ff3621;   /* System Warning */
+  --red-bg:      rgba(255,54,33,.12);
+  --red-border:  rgba(255,54,33,.34);
+  --focus-red:   #ff3621;
+  --focus-bg:    rgba(255,54,33,.10);
+  --leaf-fill:   rgba(255,54,33,.12);
+
+  /* ── secondary hues: all borrowed from the level ramp, no new ones */
+  --green:       #34d59a;   --green-bg:  rgba(52,213,154,.10);
+  --blue:        #38bdf8;   --blue-bg:   rgba(56,189,248,.10);
+  --purple:      #c084fc;   --purple-bg: rgba(192,132,252,.10);
+  --orange:      #ff9f1c;   --orange-bg: rgba(255,159,28,.10);
+  --yellow:      #fbbf24;   --yellow-bg: rgba(251,191,36,.10);
+
+  /* ── interactive accent (restrained: state, never surface) ─────── */
+  --cyan:        #34d59a;
+  --accent-wash: rgba(52,213,154,.08);
+  --accent-line: rgba(52,213,154,.30);
+
+  /* ── the single primary action on the page ─────────────────────── */
+  --primary-bg:       #ffffff;
+  --primary-bg-hover: #c9cbcf;
+  --primary-fg:       #000000;
+
+  /* ── constraint component badges ───────────────────────────────── */
+  --badge-mincount-fg: #c084fc; --badge-mincount-bg: rgba(192,132,252,.10); --badge-mincount-bd: #6d28d9;
+  --badge-datatype-fg: #fb923c; --badge-datatype-bg: rgba(251,146,60,.10);  --badge-datatype-bd: #9a3412;
+  --badge-pattern-fg:  #34d59a; --badge-pattern-bg:  rgba(52,213,154,.10);  --badge-pattern-bd:  #065f46;
+  --badge-in-fg:       #38bdf8; --badge-in-bg:       rgba(56,189,248,.10);  --badge-in-bd:       #075985;
+  --badge-maxcount-fg: #fbbf24; --badge-maxcount-bg: rgba(251,191,36,.10);  --badge-maxcount-bd: #92400e;
+  --badge-default-fg:  #797d86; --badge-default-bg:  rgba(121,125,134,.10); --badge-default-bd:  #303236;
+
+  /* ── type ──────────────────────────────────────────────────────── */
+  --sans:    'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --mono:    'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --display: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --mono-tracking:  -.05em;
+  --label-tracking: .1em;
+  --nav-transform:  none;
+
+  /* ── shape: 9999px for pills, 4px for everything else ──────────── */
+  --r-panel:  4px;
+  --r-card:   4px;
+  --r-pill:   9999px;
+  --r-button: 9999px;
+
+  --sidebar-width: 220px;
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+
+  --level-1: #0f6fd6;   /* Bright Cyan-Blue */
+  --level-2: #a16207;   /* Warm Amber     */
+  --level-3: #6d28d9;   /* Deep Violet    */
+  --level-4: #1d4ed8;   /* Royal Blue     */
+  --level-5: #be185d;   /* Magenta Rose   */
+  --level-6: #0369a1;   /* Ocean Blue     */
+
+  --level-1-wash: rgba(15,111,214,.07);
+  --level-2-wash: rgba(161,98,7,.07);
+  --level-3-wash: rgba(109,40,217,.07);
+  --level-4-wash: rgba(29,78,216,.07);
+  --level-5-wash: rgba(190,24,93,.07);
+  --level-6-wash: rgba(3,105,161,.07);
+
+  --level-1-line: rgba(15,111,214,.45);
+  --level-2-line: rgba(161,98,7,.45);
+  --level-3-line: rgba(109,40,217,.45);
+  --level-4-line: rgba(29,78,216,.45);
+  --level-5-line: rgba(190,24,93,.45);
+  --level-6-line: rgba(3,105,161,.45);
+
+  --bg:          #f6f3f1;              /* Parchment */
+  --surface:     #f6f3f1;
+  --surface2:    rgba(207,218,245,.42);   /* Periwinkle Mist — elevated rows */
+  --surface3:    rgba(207,218,245,.72);
+  --border:      #cecac8;              /* Ash — the structure */
+  --border2:     #b3aeaa;              /* derived: Ash → Smoke midpoint */
+  --wash:        rgba(36,36,36,.025);
+  --wash2:       rgba(36,36,36,.045);
+  --bg-blur:     rgba(246,243,241,.94);
+  --chain-line:  #cecac8;
+
+  --text:        #242424;   /* Off-Black */
+  --text-muted:  #4e4d4d;   /* Graphite  */
+  --text-dim:    #797776;   /* Smoke     */
+
+  --red:         #dc2626;
+  --red-bg:      rgba(220,38,38,.08);
+  --red-border:  rgba(220,38,38,.30);
+  --focus-red:   #dc2626;
+  --focus-bg:    rgba(220,38,38,.06);
+  --leaf-fill:   rgba(220,38,38,.08);
+
+  --green:       #0f7a5c;   --green-bg:  rgba(15,122,92,.08);
+  --blue:        #1d4ed8;   --blue-bg:   rgba(29,78,216,.08);
+  --purple:      #6d28d9;   --purple-bg: rgba(109,40,217,.08);
+  --orange:      #c2410c;   --orange-bg: rgba(194,65,12,.08);
+  --yellow:      #92400e;   --yellow-bg: rgba(146,64,14,.08);
+
+  --cyan:        #242424;
+  --accent-wash: rgba(36,36,36,.05);
+  --accent-line: rgba(36,36,36,.22);
+
+  --primary-bg:       #2b59d1;   /* Lake Blue — the one primary action */
+  --primary-bg-hover: #1f43a3;
+  --primary-fg:       #f6f3f1;
+
+  --badge-mincount-fg: #6d28d9; --badge-mincount-bg: rgba(109,40,217,.08); --badge-mincount-bd: #c4b5fd;
+  --badge-datatype-fg: #c2410c; --badge-datatype-bg: rgba(194,65,12,.08);  --badge-datatype-bd: #fed7aa;
+  --badge-pattern-fg:  #065f46; --badge-pattern-bg:  rgba(6,95,70,.08);    --badge-pattern-bd:  #a7f3d0;
+  --badge-in-fg:       #1d4ed8; --badge-in-bg:       rgba(29,78,216,.08);  --badge-in-bd:       #bfdbfe;
+  --badge-maxcount-fg: #92400e; --badge-maxcount-bg: rgba(146,64,14,.08);  --badge-maxcount-bd: #fde68a;
+  --badge-default-fg:  #4e4d4d; --badge-default-bg:  rgba(78,77,77,.08);   --badge-default-bd:  #cecac8;
+
+  --sans:    Georgia, 'Times New Roman', serif;
+  --mono:    'JetBrains Mono', 'IBM Plex Mono', 'Space Mono', ui-monospace, monospace;
+  --display: Georgia, 'Times New Roman', serif;
+  --mono-tracking:  0;
+  --label-tracking: .12em;
+  --nav-transform:  uppercase;
+
+  --r-panel:  40px;
+  --r-card:   14px;
+  --r-pill:   9999px;
+  --r-button: 100px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── top bar ── */
+.topbar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 32px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.topbar-logo {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: .18em;
+}
+.topbar-sep { color: var(--border2); }
+.topbar-title {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--text-muted);
+}
+[data-theme="light"] .topbar-title { letter-spacing: -.02em; }
+.topbar-stats {
+  margin-left: auto;
+  display: flex;
+  gap: 20px;
+  font-family: var(--mono);
+  font-size: 11px;
+}
+.stat { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; }
+.stat-val {
+  font-family: var(--display);
+  color: var(--text);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: var(--mono-tracking);
+}
+[data-theme="light"] .stat-val { font-weight: 400; letter-spacing: -.02em; }
+.stat-lbl {
+  color: var(--text-dim);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+}
+
+/* ── theme toggle ── */
+.theme-toggle {
+  appearance: none;
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1;
+  letter-spacing: var(--mono-tracking);
+  padding: 7px 13px;
+  border-radius: var(--r-button);
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color .12s, border-color .12s, background .12s;
+}
+.theme-toggle:hover { color: var(--text); border-color: var(--border2); background: var(--wash); }
+.theme-toggle:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+[data-theme="light"] .theme-toggle { text-transform: var(--nav-transform); letter-spacing: .08em; }
+.theme-toggle-light { display: none; }
+[data-theme="light"] .theme-toggle-dark  { display: none; }
+[data-theme="light"] .theme-toggle-light { display: inline; }
+
+/* ── metadata ── */
+.metadata-panel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  padding: 10px 32px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+.metadata-item {
+  display: flex;
+  gap: 6px;
+  min-width: 0;
+}
+.metadata-label {
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: var(--label-tracking);
+}
+.metadata-value {
+  color: var(--text);
+  max-width: 320px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── layout ── */
+.layout { display: flex; min-height: calc(100vh - 88px); }
+
+/* ── sidebar ── */
+.sidebar {
+  width: var(--sidebar-width);
+  min-width: 180px;
+  max-width: 520px;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  padding: 20px 0;
+  position: sticky;
+  top: 88px;
+  height: calc(100vh - 88px);
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+.sidebar-resizer {
+  position: absolute;
+  top: 0;
+  right: -4px;
+  width: 8px;
+  height: 100%;
+  cursor: col-resize;
+  z-index: 20;
+}
+.sidebar-resizer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 3px;
+  width: 1px;
+  height: 100%;
+  background: transparent;
+  transition: background .12s;
+}
+.sidebar-resizer:hover::after,
+.sidebar.resizing .sidebar-resizer::after {
+  background: var(--cyan);
+}
+body.resizing-sidebar {
+  cursor: col-resize;
+  user-select: none;
+}
+.sidebar-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-dim);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  padding: 0 16px 8px;
+}
+.sidebar-tabs {
+  display: flex;
+  gap: 6px;
+  padding: 0 12px 14px;
+}
+.sidebar-tab {
+  flex: 1;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-dim);
+  border-radius: var(--r-button);
+  padding: 5px 8px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: var(--mono-tracking);
+  cursor: pointer;
+  transition: all .12s;
+}
+.sidebar-tab:hover {
+  border-color: var(--border2);
+  color: var(--text-muted);
+}
+.sidebar-tab.active {
+  border-color: var(--cyan);
+  color: var(--cyan);
+  background: var(--accent-wash);
+}
+.sidebar-tab:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+.sidebar-panel[hidden] { display: none; }
+.focus-search-wrap {
+  padding: 0 12px 12px;
+}
+.focus-search {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--border2);
+  border-radius: var(--r-card);
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 12px;
+  padding: 8px 10px;
+  outline: none;
+}
+.focus-search::placeholder { color: var(--text-dim); }
+.focus-search:focus {
+  border-color: var(--cyan);
+  outline: 1px solid var(--cyan);
+  outline-offset: 0;
+}
+.focus-empty {
+  display: none;
+  padding: 8px 16px;
+  color: var(--text-dim);
+  font-family: var(--mono);
+  font-size: 11px;
+}
+.sidebar-more-btn {
+  display: none;
+  margin: 10px 16px 4px;
+  width: calc(100% - 32px);
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-dim);
+  border-radius: var(--r-button);
+  padding: 5px 8px;
+  font-family: var(--mono);
+  font-size: 10px;
+  cursor: pointer;
+  transition: all .12s;
+}
+.sidebar-more-btn:hover {
+  border-color: var(--border2);
+  color: var(--text-muted);
+  background: var(--wash);
+}
+.sidebar-more-btn:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+.focus-item {
+  appearance: none;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 16px;
+  cursor: pointer;
+  border-left: 2px solid transparent;
+  border-top: none;
+  border-right: none;
+  border-bottom: none;
+  background: transparent;
+  text-align: left;
+  transition: all .12s;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: var(--mono-tracking);
+  color: var(--text-muted);
+}
+.focus-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.focus-item:hover { background: var(--surface2); color: var(--text); }
+.focus-item:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: -2px;
+  background: var(--accent-wash);
+}
+.focus-item.active {
+  background: var(--surface2);
+  border-left-color: var(--cyan);
+  color: var(--cyan);
+}
+.focus-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--red);
+  flex-shrink: 0;
+}
+.focus-count {
+  margin-left: auto;
+  background: var(--red-bg);
+  color: var(--red);
+  border: 1px solid var(--red-border);
+  border-radius: var(--r-pill);
+  padding: 0 6px;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+/* ── main ── */
+.main { flex: 1; padding: 32px; overflow-x: auto; }
+
+/* ── graph view ── */
+.graph-view {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  padding: 22px 18px 18px;
+  overflow: hidden;
+}
+[data-theme="light"] .graph-view { padding: 30px 28px 26px; }
+.graph-empty {
+  border: 1px dashed var(--border2);
+  border-radius: var(--r-card);
+  padding: 18px;
+  color: var(--text-muted);
+  font-family: var(--mono);
+  font-size: 12px;
+  text-align: center;
+}
+.graph-empty button {
+  margin-top: 10px;
+}
+.graph-legend {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+  padding-bottom: 14px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.graph-legend-break {
+  flex-basis: 100%;
+  height: 0;
+}
+.graph-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: var(--mono-tracking);
+  color: var(--text-muted);
+}
+.graph-legend-swatch {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  border: 2px solid currentColor;
+  background: var(--wash2);
+}
+.graph-legend-swatch.leaf {
+  border-radius: 999px;
+}
+.graph-stage {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+.graph-root {
+  --graph-scale: 1;
+  position: relative;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: max-content;
+  max-width: none;
+  transform-origin: top center;
+  transform: translateX(-50%) scale(var(--graph-scale));
+}
+.graph-branch {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.graph-node {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--node-wash, var(--wash));
+  border: 2px solid var(--node-level, var(--border2));
+  border-radius: var(--r-card);
+  padding: clamp(8px, 1vw, 10px) clamp(12px, 1.4vw, 18px);
+  min-width: clamp(118px, 12vw, 172px);
+  max-width: clamp(160px, 18vw, 280px);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: clamp(10px, .85vw, 12px);
+  font-weight: 600;
+  letter-spacing: var(--mono-tracking);
+  cursor: pointer;
+  text-align: center;
+  transition: transform .12s, border-color .12s, background .12s;
+}
+.graph-node:hover {
+  transform: translateY(-1px);
+}
+.graph-node:focus-visible,
+.graph-leaf:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+}
+.graph-node.selected {
+  background: var(--node-level, var(--border2));
+  color: var(--primary-fg);
+}
+.graph-node.selected .graph-node-badge { color: var(--primary-fg); }
+.graph-node.graph-focus {
+  --node-level: var(--focus-red);
+  --node-wash: var(--focus-bg);
+  border-width: 2px;
+  color: var(--text);
+}
+.graph-node.graph-focus.selected { color: var(--primary-fg); }
+.graph-node.level-1 { --node-level: var(--level-1); --node-wash: var(--level-1-wash); }
+.graph-node.level-2 { --node-level: var(--level-2); --node-wash: var(--level-2-wash); }
+.graph-node.level-3 { --node-level: var(--level-3); --node-wash: var(--level-3-wash); }
+.graph-node.level-4 { --node-level: var(--level-4); --node-wash: var(--level-4-wash); }
+.graph-node.level-5 { --node-level: var(--level-5); --node-wash: var(--level-5-wash); }
+.graph-node.level-6 { --node-level: var(--level-6); --node-wash: var(--level-6-wash); }
+.graph-node-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.graph-node-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  padding: 2px 6px;
+  border-radius: var(--r-pill);
+  border: 1px solid currentColor;
+  background: transparent;
+  color: var(--node-level, var(--text-muted));
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .04em;
+}
+.graph-link {
+  position: relative;
+  width: 1px;
+  height: 20px;
+  background: var(--chain-line);
+}
+.graph-link::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -1px;
+  transform: translateX(-50%);
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 6px solid var(--chain-line);
+}
+.graph-relation {
+  font-family: var(--sans);
+  font-size: 12px;
+  font-style: italic;
+  color: var(--text-muted);
+  background: var(--wash);
+  border-radius: var(--r-pill);
+  padding: 4px 12px;
+}
+[data-theme="light"] .graph-relation { font-size: 14px; letter-spacing: -.01em; }
+.graph-children {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  min-width: 100%;
+  --row-level: var(--level-1);
+}
+.graph-children .graph-children { --row-level: var(--level-2); }
+.graph-children .graph-children .graph-children { --row-level: var(--level-3); }
+.graph-children .graph-children .graph-children .graph-children { --row-level: var(--level-4); }
+.graph-children .graph-children .graph-children .graph-children .graph-children { --row-level: var(--level-5); }
+.graph-children .graph-children .graph-children .graph-children .graph-children .graph-children { --row-level: var(--level-6); }
+.graph-children[hidden] {
+  display: none;
+}
+.graph-row-panel {
+  position: relative;
+  width: max-content;
+  max-width: none;
+  padding-right: 52px;
+}
+.graph-level-label {
+  position: absolute;
+  top: 17px;
+  right: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 34px;
+  height: 24px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--row-level);
+  background: transparent;
+  color: var(--row-level);
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.graph-row {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  gap: clamp(10px, 1.8vw, 18px);
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  width: 100%;
+  min-width: 0;
+  padding-top: 18px;
+  margin: 0 auto;
+}
+.graph-row::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 24px;
+  right: 24px;
+  border-top: 1px solid var(--chain-line);
+}
+.graph-leaf-wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.graph-row > .graph-branch::before,
+.graph-row > .graph-leaf-wrap::before {
+  content: "";
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  height: 18px;
+  border-left: 1px solid var(--chain-line);
+}
+.graph-row > .graph-branch::after,
+.graph-row > .graph-leaf-wrap::after {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 6px solid var(--chain-line);
+}
+.graph-leaf {
+  appearance: none;
+  background: var(--leaf-fill);
+  border: 2px solid var(--red);
+  border-radius: 999px;
+  padding: clamp(8px, 1vw, 10px) clamp(12px, 1.2vw, 16px);
+  min-width: clamp(96px, 10vw, 120px);
+  max-width: clamp(150px, 16vw, 240px);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: clamp(10px, .85vw, 12px);
+  font-weight: 600;
+  letter-spacing: var(--mono-tracking);
+  cursor: pointer;
+  text-align: center;
+  transition: transform .12s, background .12s;
+}
+.graph-leaf:hover {
+  transform: translateY(-1px);
+}
+.graph-leaf.selected {
+  background: var(--red);
+  color: var(--primary-fg);
+}
+.graph-leaf.pass {
+  border-color: var(--green);
+  background: var(--green-bg);
+  color: var(--text);
+}
+.graph-leaf.pass.selected {
+  background: var(--green);
+  color: var(--primary-fg);
+}
+.graph-leaf.pass:focus-visible {
+  outline-color: var(--green);
+}
+.graph-leaf-value {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  max-width: 220px;
+  text-align: center;
+}
+.graph-detail {
+  margin-top: 20px;
+  background: var(--wash);
+  border: 1px solid var(--border);
+  border-radius: var(--r-card);
+  padding: 16px 18px;
+}
+.graph-detail-title {
+  font-family: var(--display);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 10px;
+  letter-spacing: var(--mono-tracking);
+}
+[data-theme="light"] .graph-detail-title { font-weight: 400; font-size: 26px; letter-spacing: -.02em; }
+.graph-detail-body {
+  color: var(--text-muted);
+}
+[data-theme="light"] .graph-detail-body { font-size: 15px; }
+.graph-detail-body p {
+  margin-bottom: 10px;
+}
+.graph-detail-body code {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text);
+}
+.graph-detail-list {
+  margin-top: 8px;
+  padding-left: 16px;
+}
+.graph-detail-list li {
+  margin-bottom: 6px;
+}
+
+/* ── focus block ── */
+.focus-block {
+  margin-bottom: 40px;
+  animation: fadeUp .3s ease both;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.focus-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.focus-node-label {
+  font-family: var(--display);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: var(--mono-tracking);
+}
+[data-theme="light"] .focus-node-label { font-weight: 400; font-size: 27px; letter-spacing: -.02em; }
+.focus-badge {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  background: transparent;
+  border: 1px solid var(--border2);
+  border-radius: var(--r-pill);
+  padding: 2px 10px;
+  text-transform: var(--nav-transform);
+  letter-spacing: .06em;
+}
+.failure-count {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--red);
+  background: var(--red-bg);
+  border: 1px solid var(--red-border);
+  border-radius: var(--r-pill);
+  padding: 3px 12px;
+}
+
+/* ── tree container ── */
+.tree { display: flex; flex-direction: column; gap: 6px; }
+
+/* ═══ SIGNATURE: sh:node hop depth, resolved by nesting ═══════════════
+   The tree's own DOM nesting is the source of truth for depth, so the
+   level colour needs no class from JavaScript — one hop deeper in the
+   markup is one hop deeper in the reference chain. Level 6 is terminal:
+   any node at 6+ keeps Signal Coral / Ocean Blue.                     */
+.tree {
+  --level: var(--level-1); --level-wash: var(--level-1-wash); --level-line: var(--level-1-line);
+}
+.ref-children {
+  --level: var(--level-2); --level-wash: var(--level-2-wash); --level-line: var(--level-2-line);
+}
+.ref-children .ref-children {
+  --level: var(--level-3); --level-wash: var(--level-3-wash); --level-line: var(--level-3-line);
+}
+.ref-children .ref-children .ref-children {
+  --level: var(--level-4); --level-wash: var(--level-4-wash); --level-line: var(--level-4-line);
+}
+.ref-children .ref-children .ref-children .ref-children {
+  --level: var(--level-5); --level-wash: var(--level-5-wash); --level-line: var(--level-5-line);
+}
+.ref-children .ref-children .ref-children .ref-children .ref-children {
+  --level: var(--level-6); --level-wash: var(--level-6-wash); --level-line: var(--level-6-line);
+}
+
+/* ── reference node ── */
+.ref-node { position: relative; }
+.ref-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--level);
+  border-radius: var(--r-card);
+  cursor: pointer;
+  transition: border-color .12s, background .12s;
+  user-select: none;
+}
+.ref-header:hover { border-color: var(--border2); border-left-color: var(--level); background: var(--surface3); }
+.ref-header:focus-visible,
+.leaf-header:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+}
+.ref-arrow {
+  font-size: 11px;
+  color: var(--text-dim);
+  transition: transform .2s;
+  flex-shrink: 0;
+}
+.ref-arrow.open { transform: rotate(90deg); }
+.ref-icon {
+  font-size: 13px;
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+.ref-path {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--level);
+  letter-spacing: var(--mono-tracking);
+}
+.ref-arrow-label {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-family: var(--mono);
+}
+.ref-target {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--text);
+  letter-spacing: var(--mono-tracking);
+}
+.ref-source {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ref-leaf-pill {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--red);
+  background: var(--red-bg);
+  border: 1px solid var(--red-border);
+  border-radius: var(--r-pill);
+  padding: 1px 8px;
+  flex-shrink: 0;
+}
+.ref-chain-pill {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--level);
+  background: var(--level-wash);
+  border: 1px solid var(--level-line);
+  border-radius: var(--r-pill);
+  padding: 1px 8px;
+  white-space: nowrap;
+}
+.ref-children {
+  margin-left: 24px;
+  margin-top: 6px;
+  padding-left: 16px;
+  border-left: 1px solid var(--level-line);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow: hidden;
+  transition: max-height .25s ease, opacity .2s ease;
+}
+.ref-children.collapsed { max-height: 0 !important; opacity: 0; }
+
+/* ── leaf node ── */
+.leaf-node {
+  border: 1px solid var(--border);
+  border-radius: var(--r-card);
+  overflow: hidden;
+  transition: border-color .12s;
+}
+.leaf-node:hover { border-color: var(--border2); }
+
+.leaf-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  cursor: pointer;
+}
+.leaf-icon { font-size: 14px; flex-shrink: 0; }
+.leaf-comp {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: var(--r-pill);
+  padding: 2px 9px;
+  flex-shrink: 0;
+  letter-spacing: var(--mono-tracking);
+}
+.comp-mincount  { background: var(--badge-mincount-bg); color: var(--badge-mincount-fg); border: 1px solid var(--badge-mincount-bd); }
+.comp-datatype  { background: var(--badge-datatype-bg); color: var(--badge-datatype-fg); border: 1px solid var(--badge-datatype-bd); }
+.comp-pattern   { background: var(--badge-pattern-bg);  color: var(--badge-pattern-fg);  border: 1px solid var(--badge-pattern-bd);  }
+.comp-in        { background: var(--badge-in-bg);       color: var(--badge-in-fg);       border: 1px solid var(--badge-in-bd);       }
+.comp-maxcount  { background: var(--badge-maxcount-bg); color: var(--badge-maxcount-fg); border: 1px solid var(--badge-maxcount-bd); }
+.comp-default   { background: var(--badge-default-bg);  color: var(--badge-default-fg);  border: 1px solid var(--badge-default-bd);  }
+
+.leaf-path {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--text);
+  font-weight: 500;
+}
+.leaf-eq { color: var(--text-dim); font-family: var(--mono); }
+.leaf-value {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--yellow);
+  background: var(--yellow-bg);
+  border-radius: var(--r-pill);
+  padding: 1px 8px;
+}
+.leaf-missing {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text-dim);
+  font-style: italic;
+}
+.leaf-focus {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--text);
+  font-weight: 600;
+  letter-spacing: var(--mono-tracking);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.leaf-desc {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--text-muted);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.leaf-dot {
+  color: var(--text-dim);
+  font-family: var(--mono);
+  flex-shrink: 0;
+}
+.leaf-toggle {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--text-dim);
+  transition: transform .2s;
+  flex-shrink: 0;
+}
+.leaf-toggle.open { transform: rotate(180deg); }
+
+/* leaf body */
+.leaf-body {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding: 12px 14px;
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: 8px 12px;
+  font-size: 12px;
+  overflow: hidden;
+  transition: max-height .22s ease, opacity .18s ease;
+}
+[data-theme="light"] .leaf-body { background: var(--surface2); }
+.leaf-body.collapsed { max-height: 0 !important; opacity: 0; border-top: none; padding: 0 14px; }
+.leaf-row-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: var(--label-tracking);
+  padding-top: 1px;
+}
+.leaf-row-val { font-family: var(--mono); font-size: 12px; color: var(--text); }
+.leaf-message { color: var(--text-muted); font-family: var(--sans); font-size: 12px; }
+[data-theme="light"] .leaf-message { font-size: 14px; }
+.leaf-hint { color: var(--green); font-family: var(--sans); font-size: 12px; }
+[data-theme="light"] .leaf-hint { font-size: 14px; }
+.leaf-chain { color: var(--blue); }
+.leaf-altchain {
+  color: var(--text-dim);
+  font-size: 11px;
+  font-family: var(--mono);
+  margin-top: 2px;
+}
+.alt-label {
+  color: var(--purple);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: var(--label-tracking);
+  font-weight: 600;
+}
+.copy-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+}
+.copy-btn {
+  opacity: 0;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-dim);
+  border-radius: var(--r-button);
+  padding: 0 7px;
+  min-height: 18px;
+  font-family: var(--mono);
+  font-size: 10px;
+  line-height: 16px;
+  cursor: pointer;
+  transition: opacity .12s, color .12s, border-color .12s, background .12s;
+  flex-shrink: 0;
+}
+.copy-wrap:hover .copy-btn,
+.focus-header:hover .copy-btn,
+.leaf-header:hover .copy-btn,
+.leaf-body .copy-btn:focus {
+  opacity: 1;
+}
+.copy-btn:hover,
+.copy-btn:focus {
+  color: var(--cyan);
+  border-color: var(--cyan);
+  background: var(--accent-wash);
+  outline: none;
+}
+.copy-btn:focus-visible { opacity: 1; outline: 2px solid var(--cyan); outline-offset: 1px; }
+.copy-btn.copied {
+  opacity: 1;
+  color: var(--green);
+  border-color: var(--green);
+}
+
+/* leaf node coloring by component */
+.leaf-node.lf-mincount  { border-left: 3px solid var(--badge-mincount-fg); }
+.leaf-node.lf-datatype  { border-left: 3px solid var(--badge-datatype-fg); }
+.leaf-node.lf-pattern   { border-left: 3px solid var(--badge-pattern-fg); }
+.leaf-node.lf-in        { border-left: 3px solid var(--badge-in-fg); }
+.leaf-node.lf-maxcount  { border-left: 3px solid var(--badge-maxcount-fg); }
+
+/* ── filter bar ── */
+.filter-bar {
+  position: sticky;
+  top: 88px;
+  z-index: 60;
+  margin: -8px -8px 24px;
+  padding: 8px;
+  background: var(--bg-blur);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(8px);
+}
+.filter-panel {
+  width: 100%;
+  background: var(--wash);
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  padding: 12px 12px 10px;
+}
+[data-theme="light"] .filter-panel { padding: 20px 24px 16px; }
+.filter-panel-title {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-family: var(--mono);
+  text-transform: uppercase;
+  letter-spacing: var(--label-tracking);
+  margin-bottom: 10px;
+}
+.filter-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.filter-row {
+  display: grid;
+  grid-template-columns: 132px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+}
+.filter-row-label {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-family: var(--mono);
+  text-transform: uppercase;
+  letter-spacing: var(--label-tracking);
+}
+.filter-control {
+  min-width: 0;
+}
+.filter-select {
+  width: 100%;
+  min-width: 0;
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 6px 9px;
+  border-radius: var(--r-card);
+  border: 1px solid var(--border2);
+  background: var(--surface2);
+  color: var(--text);
+}
+[data-theme="light"] .filter-select { background: var(--bg); }
+.filter-select:focus {
+  outline: 2px solid var(--cyan);
+  outline-offset: 1px;
+  border-color: var(--cyan);
+}
+.filter-footer {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.filter-count {
+  color: var(--text-dim);
+  margin-left: 4px;
+}
+.filter-summary-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  background: var(--wash);
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  padding: 4px 12px;
+}
+.filter-summary-chip .filter-summary-value {
+  color: var(--text);
+}
+.showing-count {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-dim);
+  background: transparent;
+  border: none;
+  padding: 2px 4px;
+  white-space: nowrap;
+}
+
+/* ── view controls ── */
+.expand-all-btn {
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 3px 10px;
+  border-radius: var(--r-button);
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all .12s;
+}
+.expand-all-btn:hover {
+  border-color: var(--border2);
+  color: var(--text-muted);
+  background: var(--wash);
+}
+.expand-all-btn:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+.export-btn {
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 3px 10px;
+  border-radius: var(--r-button);
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all .12s;
+}
+.export-btn:hover {
+  border-color: var(--border2);
+  color: var(--text);
+  background: var(--wash);
+}
+.export-btn:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+.export-btn.copied {
+  color: var(--green);
+  border-color: var(--green);
+  background: var(--green-bg);
+}
+/* the one primary action on the page: Whiteout in Neon, Lake Blue in Monad */
+.report-action-group .export-btn:first-child {
+  background: var(--primary-bg);
+  border-color: var(--primary-bg);
+  color: var(--primary-fg);
+  padding: 3px 12px;
+}
+.report-action-group .export-btn:first-child:hover {
+  background: var(--primary-bg-hover);
+  border-color: var(--primary-bg-hover);
+  color: var(--primary-fg);
+}
+.report-action-group .export-btn:first-child.copied {
+  background: var(--green);
+  border-color: var(--green);
+  color: var(--primary-fg);
+}
+.filter-actions {
+  margin-left: auto;
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* ── report-level actions ── */
+.report-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.report-action-group,
+.view-toggle {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.graph-filter-toggle[hidden] {
+  display: none;
+}
+.graph-filter-toggle {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin: -4px 0 14px;
+}
+.view-btn {
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 4px 11px;
+  border-radius: var(--r-button);
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all .12s;
+  text-transform: var(--nav-transform);
+  letter-spacing: .06em;
+}
+.view-btn:hover {
+  border-color: var(--border2);
+  color: var(--text-muted);
+}
+.view-btn:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+.view-btn.active {
+  border-color: var(--cyan);
+  color: var(--cyan);
+  background: var(--accent-wash);
+}
+
+/* ── summary panel ── */
+.summary-panel {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) minmax(260px, 2fr);
+  gap: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  padding: 14px 16px;
+  margin-bottom: 24px;
+}
+[data-theme="light"] .summary-panel { padding: 26px 30px; gap: 26px; }
+.summary-title {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: var(--label-tracking);
+  margin-bottom: 8px;
+}
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(100px, 1fr));
+  gap: 8px;
+}
+.summary-metric {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-card);
+  padding: 8px 10px;
+}
+[data-theme="light"] .summary-metric { padding: 12px 14px; }
+.summary-metric.focus-metric {
+  background: var(--accent-wash);
+  border-color: var(--accent-line);
+}
+.summary-metric.focus-metric .summary-value {
+  color: var(--cyan);
+}
+.summary-metric.leaf-metric {
+  background: var(--red-bg);
+  border-color: var(--red-border);
+}
+.summary-metric.leaf-metric .summary-value {
+  color: var(--red);
+}
+.summary-metric.direct-metric {
+  background: var(--yellow-bg);
+  border-color: var(--yellow);
+}
+.summary-metric.direct-metric .summary-value {
+  color: var(--yellow);
+}
+.summary-metric.nested-metric {
+  background: var(--level-4-wash);
+  border-color: var(--level-4-line);
+}
+.summary-metric.nested-metric .summary-value {
+  color: var(--level-4);
+}
+.summary-value {
+  display: block;
+  font-family: var(--display);
+  font-size: 18px;
+  color: var(--text);
+  line-height: 1.1;
+  letter-spacing: var(--mono-tracking);
+}
+[data-theme="light"] .summary-value { font-size: 26px; letter-spacing: -.02em; }
+.summary-label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: var(--label-tracking);
+  margin-top: 4px;
+}
+[data-theme="light"] .summary-metric .summary-label { color: var(--text-muted); }
+.summary-issues {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.summary-issue {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+.summary-issue:hover { color: var(--text); }
+.summary-issue-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.summary-issue-count {
+  margin-left: auto;
+  color: var(--red);
+  background: var(--red-bg);
+  border: 1px solid var(--red-border);
+  border-radius: var(--r-pill);
+  padding: 1px 8px;
+  font-size: 10px;
+}
+.summary-breakdown {
+  margin-top: 14px;
+  background: var(--wash);
+  border: 1px solid var(--border);
+  border-radius: var(--r-card);
+  padding: 10px 12px 4px;
+}
+.summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 11px;
+}
+.summary-table th,
+.summary-table td {
+  padding: 7px 8px;
+  border-top: 1px solid var(--border);
+  vertical-align: top;
+}
+.summary-table th {
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: var(--label-tracking);
+  font-weight: 500;
+  text-align: left;
+}
+.summary-table td {
+  color: var(--text-muted);
+}
+.summary-table td:last-child,
+.summary-table th:last-child {
+  text-align: right;
+}
+.summary-path {
+  color: var(--blue);
+}
+.fallback-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  padding: 16px;
+  color: var(--text-muted);
+  font-family: var(--sans);
+}
+[data-theme="light"] .fallback-card { padding: 28px 32px; font-size: 15px; }
+.fallback-title {
+  color: var(--text);
+  font-family: var(--display);
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+[data-theme="light"] .fallback-title { font-size: 20px; font-weight: 400; letter-spacing: -.02em; }
+.fallback-card code {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text);
+}
+@media (max-width: 900px) {
+  .summary-panel { grid-template-columns: 1fr; }
+}
+@media (max-width: 760px) {
+  .topbar { padding: 12px 16px; flex-wrap: wrap; }
+  .topbar-stats { gap: 14px; }
+  .metadata-panel { padding: 10px 16px; }
+  .layout { flex-direction: column; }
+  .sidebar {
+    width: auto;
+    max-width: none;
+    position: static;
+    height: auto;
+    max-height: 320px;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .sidebar-resizer { display: none; }
+  .main { padding: 18px 16px; }
+  .filter-bar { top: 0; }
+  .filter-row { grid-template-columns: 1fr; gap: 4px; }
+  [data-theme="light"] .summary-panel,
+  [data-theme="light"] .filter-panel,
+  [data-theme="light"] .fallback-card { border-radius: 24px; padding: 18px 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+  }
+}
+
+/* ── generated line ── */
+.generated {
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-dim);
+  padding: 32px 0 16px;
+  border-top: 1px solid var(--border);
+  margin-top: 40px;
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="topbar-logo">SHACL</span>
+  <span class="topbar-sep">/</span>
+  <span class="topbar-title">SHACL Explanation Report</span>
+  <div class="topbar-stats">
+    <div class="stat"><span class="stat-val" id="stat-focus">—</span><span class="stat-lbl">focus nodes</span></div>
+    <div class="stat"><span class="stat-val" id="stat-leaves">—</span><span class="stat-lbl">leaf failures</span></div>
+    <div class="stat"><span class="stat-val" id="stat-depth">—</span><span class="stat-lbl">max depth</span></div>
+    <div class="stat"><span class="stat-val" id="stat-direct">—</span><span class="stat-lbl">direct</span></div>
+  </div>
+  <button class="theme-toggle" id="theme-toggle" type="button" onclick="toggleTheme()" aria-label="Switch to light mode">
+    <span class="theme-toggle-dark">☀&nbsp; Light mode</span>
+    <span class="theme-toggle-light">☾&nbsp; Dark mode</span>
+  </button>
+</div>
+
+<div class="metadata-panel">
+  <div class="metadata-item">
+    <span class="metadata-label">Dataset</span>
+    <span class="metadata-value" title="tc16_direct_min_max_inclusive.ttl">tc16_direct_min_max_inclusive.ttl</span>
+  </div>
+  <div class="metadata-item">
+    <span class="metadata-label">Shapes</span>
+    <span class="metadata-value" title="tc16_direct_min_max_inclusive.ttl">tc16_direct_min_max_inclusive.ttl</span>
+  </div>
+  <div class="metadata-item">
+    <span class="metadata-label">Generated</span>
+    <span class="metadata-value">2026-08-25 22:15:31</span>
+  </div>
+  <div class="metadata-item">
+    <span class="metadata-label">Commit</span>
+    <span class="metadata-value">1290238</span>
+  </div>
+</div>
+
+<div class="layout">
+  <nav class="sidebar">
+    <div class="sidebar-tabs" role="tablist" aria-label="Sidebar navigation">
+      <button class="sidebar-tab active" id="tab-focus" role="tab" aria-selected="true" aria-controls="focus-panel" tabindex="0" onclick="setSidebarMode('focus')">By focus</button>
+      <button class="sidebar-tab" id="tab-issue" role="tab" aria-selected="false" aria-controls="issue-panel" tabindex="-1" onclick="setSidebarMode('issue')">By issue</button>
+      <button class="sidebar-tab" id="tab-all" role="tab" aria-selected="false" aria-controls="all-panel" tabindex="-1" onclick="setSidebarMode('all')">All</button>
+    </div>
+    <div class="focus-search-wrap">
+      <input
+        id="focus-search"
+        class="focus-search"
+        type="search"
+        aria-label="Search focus nodes or issue clusters"
+        placeholder="Search focus node"
+        autocomplete="off"
+      >
+    </div>
+    <div id="focus-panel" class="sidebar-panel" role="tabpanel" aria-labelledby="tab-focus">
+      <div class="sidebar-label">Focus nodes</div>
+      <div id="sidebar-items"></div>
+      <button id="focus-show-toggle" class="sidebar-more-btn" type="button" onclick="toggleFocusShowAll()">show all focus nodes</button>
+      <div id="focus-empty" class="focus-empty">No matching focus nodes</div>
+    </div>
+    <div id="issue-panel" class="sidebar-panel" role="tabpanel" aria-labelledby="tab-issue" hidden>
+      <div class="sidebar-label">Issue clusters</div>
+      <div id="issue-items"></div>
+      <div id="issue-empty" class="focus-empty">No matching issues</div>
+    </div>
+    <div id="all-panel" class="sidebar-panel" role="tabpanel" aria-labelledby="tab-all" hidden>
+      <div class="sidebar-label">All visible violations</div>
+      <div class="focus-empty" style="display:block">Shows every currently visible failure without grouping by focus node or issue cluster.</div>
+    </div>
+    <div id="sidebar-resizer" class="sidebar-resizer" title="Drag to resize focus panel"></div>
+  </nav>
+
+  <main class="main">
+    <div class="report-actions" aria-label="Report actions">
+      <div class="view-toggle" aria-label="Presentation mode">
+        <button class="view-btn active" id="view-list" type="button" onclick="setPresentationMode('list')">Analytical view</button>
+        <button class="view-btn" id="view-graph" type="button" onclick="setPresentationMode('graph')">Graph view</button>
+      </div>
+      <div class="report-action-group">
+        <button class="export-btn" type="button" onclick="exportVisibleCsv(event, this)">export visible CSV</button>
+        <button class="export-btn" type="button" onclick="copyVisibleJson(event, this)">copy visible JSON</button>
+        <button class="export-btn" type="button" onclick="copyRootCauseSummary(event, this)">copy root-cause summary</button>
+      </div>
+    </div>
+    <section class="summary-panel" aria-label="Report summary">
+      <div>
+        <div class="summary-title">Report summary</div>
+        <div class="summary-grid">
+          <div class="summary-metric focus-metric">
+            <span class="summary-value" id="summary-focus">—</span>
+            <span class="summary-label">focus nodes</span>
+          </div>
+          <div class="summary-metric leaf-metric">
+            <span class="summary-value" id="summary-leaves">—</span>
+            <span class="summary-label">leaf failures</span>
+          </div>
+          <div class="summary-metric direct-metric">
+            <span class="summary-value" id="summary-direct">—</span>
+            <span class="summary-label">direct</span>
+          </div>
+          <div class="summary-metric nested-metric">
+            <span class="summary-value" id="summary-nested">—</span>
+            <span class="summary-label">via sh:node</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="summary-title">Top issue clusters</div>
+        <div class="summary-issues" id="summary-issues">
+          <div class="summary-issue">
+            <span class="summary-issue-name">JavaScript will populate issue clusters.</span>
+          </div>
+        </div>
+        <div class="summary-breakdown">
+          <div class="summary-title">Root cause breakdown</div>
+          <table class="summary-table" aria-label="Root cause breakdown">
+            <thead>
+              <tr>
+                <th>Root cause</th>
+                <th>How reached</th>
+                <th>Count</th>
+              </tr>
+            </thead>
+            <tbody id="summary-breakdown-body">
+              <tr>
+                <td colspan="3">JavaScript will populate the breakdown.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+    <div class="filter-bar">
+      <div class="filter-panel">
+        <div class="filter-panel-title">Filters</div>
+        <div class="filter-stack">
+          <div class="filter-row">
+            <div class="filter-row-label">component</div>
+            <div class="filter-control" id="component-filters"></div>
+          </div>
+          <div class="filter-row">
+            <div class="filter-row-label">path</div>
+            <div class="filter-control" id="path-filters"></div>
+          </div>
+          <div class="filter-row">
+            <div class="filter-row-label">reference path</div>
+            <div class="filter-control" id="reference-path-filters"></div>
+          </div>
+          <div class="filter-row">
+            <div class="filter-row-label">shape</div>
+            <div class="filter-control" id="shape-filters"></div>
+          </div>
+          <div class="filter-row">
+            <div class="filter-row-label">kind</div>
+            <div class="filter-control" id="kind-filters"></div>
+          </div>
+        </div>
+        <div class="filter-footer">
+          <span class="showing-count" id="showing-count">Showing — of — failures</span>
+          <div class="filter-actions">
+            <button class="expand-all-btn" onclick="resetFilters()">reset filters</button>
+            <button class="expand-all-btn" onclick="expandVisible()">expand visible only</button>
+            <button class="expand-all-btn" onclick="expandAll()">expand all</button>
+            <button class="expand-all-btn" onclick="collapseAll()">collapse all</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <noscript>
+      <div class="fallback-card">
+        <div class="fallback-title">Interactive report requires JavaScript</div>
+        <p>
+          This self-contained report stores the validation data in the HTML file,
+          but the explanation tree, filters, and issue clusters are rendered in
+          the browser with JavaScript.
+        </p>
+        <p>
+          Dataset: <code>tc16_direct_min_max_inclusive.ttl</code><br>
+          Shapes: <code>tc16_direct_min_max_inclusive.ttl</code><br>
+          Generated: <code>2026-08-25 22:15:31</code><br>
+          Commit: <code>1290238</code>
+        </p>
+      </div>
+    </noscript>
+    <div id="report">
+      <div class="fallback-card">
+        <div class="fallback-title">Preparing interactive report</div>
+        <p>
+          The embedded validation data is loading. If this message remains,
+          enable JavaScript to view the explanation tree.
+        </p>
+      </div>
+    </div>
+    <div class="generated">Generated by shacl_explainer · <span id="gen-time">2026-08-25 22:15:31</span></div>
+  </main>
+</div>
+
+<script>
+// ── DATA (this block is replaced by renderer.py's to_html()) ──────────────
+const REPORT_DATA = [
+  {
+    "type": "leaf",
+    "focusNode": "ex:course5Low",
+    "path": "ex:score",
+    "component": "sh:MinInclusiveConstraintComponent",
+    "value": "-5",
+    "message": "Score must be between 0 and 100",
+    "refChain": [],
+    "altChains": []
+  },
+  {
+    "type": "leaf",
+    "focusNode": "ex:course5High",
+    "path": "ex:score",
+    "component": "sh:MaxInclusiveConstraintComponent",
+    "value": "150",
+    "message": "Score must be between 0 and 100",
+    "refChain": [],
+    "altChains": []
+  }
+];
+const SHAPE_CATALOG = {
+  "ex:CourseShape": [
+    {
+      "type": "leaf",
+      "path": "ex:score"
+    }
+  ]
+};
+// ── END DATA ──────────────────────────────────────────────────────────────
+
+// ── theme ────────────────────────────────────────────────────────────────
+function applyThemeLabel() {
+  const btn = document.getElementById("theme-toggle");
+  if (!btn) return;
+  const light = document.documentElement.dataset.theme === "light";
+  btn.setAttribute("aria-label", light ? "Switch to dark mode" : "Switch to light mode");
+}
+
+function toggleTheme() {
+  const light = document.documentElement.dataset.theme === "light";
+  if (light) delete document.documentElement.dataset.theme;
+  else document.documentElement.dataset.theme = "light";
+  try { localStorage.setItem("shacl-theme", light ? "dark" : "light"); } catch (_) {}
+  applyThemeLabel();
+  if (typeof scheduleGraphFit === "function") scheduleGraphFit();
+}
+
+const COMP_MAP = {
+  "sh:MinCountConstraintComponent":  { short: "minCount",  cls: "mincount"  },
+  "sh:MaxCountConstraintComponent":  { short: "maxCount",  cls: "maxcount"  },
+  "sh:DatatypeConstraintComponent":  { short: "datatype",  cls: "datatype"  },
+  "sh:PatternConstraintComponent":   { short: "pattern",   cls: "pattern"   },
+  "sh:InConstraintComponent":        { short: "in",        cls: "in"        },
+  "sh:ClassConstraintComponent":     { short: "class",     cls: "default"   },
+};
+
+function compInfo(uri) {
+  return COMP_MAP[uri] || { short: uri.split(":").pop().replace("ConstraintComponent",""), cls: "default" };
+}
+
+function attrSafe(value) {
+  return String(value || "").replace(/[^a-zA-Z0-9_-]/g, "_");
+}
+
+function displayIri(value, mode="tail") {
+  if (!value) return "";
+  let s = String(value);
+  if (s.startsWith("<") && s.endsWith(">")) s = s.slice(1, -1);
+
+  if (/^https?:\/\//.test(s)) {
+    const withoutProtocol = s.replace(/^https?:\/\//, "");
+    const hashTail = withoutProtocol.includes("#")
+      ? withoutProtocol.split("#").pop()
+      : null;
+    const slashTail = withoutProtocol.split("/").filter(Boolean).pop();
+
+    if (mode === "local") return hashTail || slashTail || withoutProtocol;
+    return withoutProtocol;
+  }
+
+  if (mode === "local" && s.includes(":")) return s.split(":").pop();
+  return s;
+}
+
+function copyButton(value, label="copy") {
+  if (!value) return "";
+  return `<button class="copy-btn" type="button" title="Copy ${esc(label)}" data-copy="${esc(value)}" onclick="copyText(event, this)">copy</button>`;
+}
+
+async function copyPlainText(value) {
+  try {
+    await navigator.clipboard.writeText(value);
+  } catch (_) {
+    const area = document.createElement("textarea");
+    area.value = value;
+    area.setAttribute("readonly", "");
+    area.style.position = "fixed";
+    area.style.opacity = "0";
+    document.body.appendChild(area);
+    area.select();
+    document.execCommand("copy");
+    document.body.removeChild(area);
+  }
+}
+
+function flashButtonState(btn, label="copied") {
+  const old = btn.textContent;
+  btn.textContent = label;
+  btn.classList.add("copied");
+  setTimeout(() => {
+    btn.textContent = old;
+    btn.classList.remove("copied");
+  }, 900);
+}
+
+async function copyText(event, btn) {
+  event.stopPropagation();
+  const value = btn.dataset.copy || "";
+  await copyPlainText(value);
+  flashButtonState(btn);
+}
+
+function countLeaves(nodes) {
+  let n = 0;
+  for (const node of nodes) {
+    if (node.type === "leaf") n++;
+    else if (node.children) n += countLeaves(node.children);
+  }
+  return n;
+}
+
+function maxDepth(nodes, d=0) {
+  let m = d;
+  for (const node of nodes) {
+    if (node.type === "reference" && node.children)
+      m = Math.max(m, maxDepth(node.children, d+1));
+  }
+  return m;
+}
+
+function allLeaves(nodes) {
+  const out = [];
+  function walk(ns) {
+    for (const n of ns) {
+      if (n.type === "leaf") out.push(n);
+      else if (n.children) walk(n.children);
+    }
+  }
+  walk(nodes);
+  return out;
+}
+
+function collectLeafEntries(nodes, ctx={ referencePaths: [], shapes: [], rootFocus: null }) {
+  const out = [];
+  function walk(ns, currentCtx) {
+    for (const n of ns || []) {
+      if (n.type === "leaf") {
+        const info = compInfo(n.component);
+        out.push({
+          issue: leafHeaderText(n, info),
+          node: n,
+          ctx: currentCtx,
+        });
+      } else if (n.children) {
+        const next = {
+          referencePaths: n.path
+            ? [...(currentCtx.referencePaths || []), n.path]
+            : [...(currentCtx.referencePaths || [])],
+          shapes: (n.referencedShape || n.shape)
+            ? [...(currentCtx.shapes || []), n.referencedShape || n.shape]
+            : [...(currentCtx.shapes || [])],
+          rootFocus: currentCtx.rootFocus || n.focusNode || null,
+        };
+        walk(n.children, next);
+      }
+    }
+  }
+  walk(nodes, ctx);
+  return out;
+}
+
+function countMapEntries(map) {
+  return Array.from(map.entries()).sort((a, b) => {
+    if (b[1] !== a[1]) return b[1] - a[1];
+    return a[0].localeCompare(b[0]);
+  });
+}
+
+function addCount(map, key) {
+  if (!key) return;
+  map.set(key, (map.get(key) || 0) + 1);
+}
+
+function collectFilterStats(nodes) {
+  const stats = {
+    component: new Map(),
+    path: new Map(),
+    referencePath: new Map(),
+    shape: new Map(),
+    kind: new Map(),
+  };
+
+  function walk(ns, ctx={ referencePaths: [], shapes: [], rootFocus: null }) {
+    for (const n of ns) {
+      if (n.type === "leaf") {
+        const info = compInfo(n.component);
+        const kind = (n.refChain || []).length === 0 ? "direct" : "nested";
+        addCount(stats.component, info.short);
+        addCount(stats.path, n.path || "(no path)");
+        addCount(stats.kind, kind);
+        ctx.referencePaths.forEach(p => addCount(stats.referencePath, p));
+        ctx.shapes.forEach(s => addCount(stats.shape, s));
+      } else if (n.children) {
+        const next = {
+          referencePaths: n.path
+            ? [...ctx.referencePaths, n.path]
+            : [...ctx.referencePaths],
+          shapes: (n.referencedShape || n.shape)
+            ? [...ctx.shapes, n.referencedShape || n.shape]
+            : [...ctx.shapes],
+          rootFocus: ctx.rootFocus || n.focusNode || null,
+        };
+        walk(n.children, next);
+      }
+    }
+  }
+
+  walk(nodes);
+  return stats;
+}
+
+function formatHowReached(referencePaths=[], shapeChain=[]) {
+  return referencePaths.length
+    ? `via ${referencePaths.map((path, index) => {
+        const shape = shapeChain[index];
+        return shape ? `${path} -> ${shape}` : path;
+      }).join(" -> ")}`
+    : "direct";
+}
+
+function visibleEntriesForCurrentView() {
+  if (sidebarMode === "all") {
+    return ALL_LEAF_ENTRIES.filter(entry =>
+      dataLeafMatches(entry.node, entry.ctx)
+    );
+  }
+  if (sidebarMode === "issue") {
+    return (ISSUE_INDEX.get(selectedIssue) || []).filter(entry =>
+      dataLeafMatches(entry.node, entry.ctx)
+    );
+  }
+
+  if (!selectedFocus || !FOCUS_ENTRY_INDEX.has(selectedFocus)) return [];
+  return (FOCUS_ENTRY_INDEX.get(selectedFocus) || []).filter(entry =>
+    dataLeafMatches(entry.node, entry.ctx)
+  );
+}
+
+function exportRow(entry) {
+  return {
+    issue: entry.issue,
+    focus_node: entry.node.focusNode || "",
+    root_focus_node: entry.ctx?.rootFocus || "",
+    path: entry.node.path || "",
+    component: entry.node.component || "",
+    value_node: entry.node.value || "",
+    message: entry.node.message || "",
+    repair_hint: entry.node.repairHint || "",
+    reference_path: (entry.ctx?.referencePaths || []).join(" -> "),
+    referenced_shape: (entry.ctx?.shapes || []).join(" -> "),
+    leaf_shape_chain: (entry.node.refChain || []).join(" -> "),
+    how_reached: formatHowReached(entry.ctx?.referencePaths || [], entry.ctx?.shapes || []),
+  };
+}
+
+function csvEscape(value) {
+  const text = String(value ?? "");
+  if (/[",\n]/.test(text)) return `"${text.replace(/"/g, "\"\"")}"`;
+  return text;
+}
+
+function toCsv(rows) {
+  if (!rows.length) {
+    return "issue,focus_node,root_focus_node,path,component,value_node,message,repair_hint,reference_path,referenced_shape,leaf_shape_chain,how_reached\n";
+  }
+  const headers = Object.keys(rows[0]);
+  return [
+    headers.join(","),
+    ...rows.map(row => headers.map(header => csvEscape(row[header])).join(",")),
+  ].join("\n");
+}
+
+function downloadText(filename, text, type="text/plain;charset=utf-8") {
+  const blob = new Blob([text], { type });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  setTimeout(() => URL.revokeObjectURL(url), 0);
+}
+
+async function exportVisibleCsv(event, btn) {
+  event.stopPropagation();
+  const rows = visibleEntriesForCurrentView().map(exportRow);
+  const prefix = sidebarMode === "issue"
+    ? "visible_issue_cluster"
+    : sidebarMode === "all"
+      ? "visible_all"
+      : "visible_focus";
+  downloadText(`${prefix}_failures.csv`, toCsv(rows), "text/csv;charset=utf-8");
+  flashButtonState(btn, "downloaded");
+}
+
+async function copyVisibleJson(event, btn) {
+  event.stopPropagation();
+  const rows = visibleEntriesForCurrentView().map(exportRow);
+  await copyPlainText(JSON.stringify(rows, null, 2));
+  flashButtonState(btn);
+}
+
+function safeFilename(value, fallback="graph") {
+  const cleaned = String(value || fallback)
+    .replace(/[^a-z0-9_-]+/gi, "_")
+    .replace(/^_+|_+$/g, "")
+    .slice(0, 80);
+  return cleaned || fallback;
+}
+
+function exportGraphSvg(event, btn) {
+  event.stopPropagation();
+  const stage = document.querySelector(".graph-stage");
+  const root = stage?.querySelector(".graph-root");
+  if (!stage || !root) return;
+
+  const rootClone = root.cloneNode(true);
+  rootClone.style.setProperty("--graph-scale", "1");
+  rootClone.style.position = "static";
+  rootClone.style.left = "auto";
+  rootClone.style.transform = "none";
+  rootClone.style.margin = "0 auto";
+  rootClone.style.width = `${root.scrollWidth}px`;
+  rootClone.style.maxWidth = "none";
+
+  const padding = 32;
+  const width = Math.ceil(root.scrollWidth + padding * 2);
+  const height = Math.ceil(root.scrollHeight + padding * 2);
+  const css = Array.from(document.querySelectorAll("style"))
+    .map(style => style.textContent || "")
+    .join("\n");
+  const exportCss = `
+    .graph-export-frame {
+      width: ${width}px;
+      min-height: ${height}px;
+      padding: ${padding}px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+    }
+    .graph-export-frame .graph-root {
+      position: static !important;
+      left: auto !important;
+      transform: none !important;
+      margin: 0 auto !important;
+    }
+  `;
+  const html = `
+    <div xmlns="http://www.w3.org/1999/xhtml" class="graph-export-frame" data-theme="${document.documentElement.dataset.theme || "dark"}">
+      <style>${css}\n${exportCss}</style>
+      ${rootClone.outerHTML}
+    </div>`;
+  const svg = `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
+  <foreignObject width="100%" height="100%">${html}</foreignObject>
+</svg>`;
+  const mode = graphLeafMode === "all" ? "all_constraints" : "violations_only";
+  downloadText(
+    `${safeFilename(selectedFocus, "focus_graph")}_${mode}_graph.svg`,
+    svg,
+    "image/svg+xml;charset=utf-8"
+  );
+  flashButtonState(btn, "downloaded");
+}
+
+function rootCauseBreakdownRows() {
+  const breakdown = new Map();
+  ISSUE_ENTRIES.forEach(entry => {
+    if (!dataLeafMatches(entry.node, entry.ctx)) return;
+    const howReached = formatHowReached(entry.ctx?.referencePaths || [], entry.ctx?.shapes || []);
+    const key = `${entry.issue}|||${howReached}`;
+    breakdown.set(key, (breakdown.get(key) || 0) + 1);
+  });
+
+  return countMapEntries(breakdown).map(([key, count]) => {
+    const [issue, howReached] = key.split("|||");
+    return { issue, how_reached: howReached, count };
+  });
+}
+
+async function copyRootCauseSummary(event, btn) {
+  event.stopPropagation();
+  const rows = rootCauseBreakdownRows();
+  const text = [
+    "Root cause\tHow reached\tCount",
+    ...rows.map(row => `${row.issue}\t${row.how_reached}\t${row.count}`),
+  ].join("\n");
+  await copyPlainText(text);
+  flashButtonState(btn);
+}
+
+// ── leaf DOM ─────────────────────────────────────────────────────────────
+let leafId = 0;
+function leafHeaderText(node, info) {
+  const path = node.path || "path";
+  if (info.cls === "mincount") return `missing ${path}`;
+  if (info.cls === "maxcount") return `too many ${path}`;
+  if (info.cls === "datatype") return `invalid datatype on ${path}`;
+  if (info.cls === "pattern") return `pattern mismatch on ${path}`;
+  if (info.cls === "in") return `invalid choice on ${path}`;
+  if (node.value) return `${info.short} failed on ${path}`;
+  return `${info.short} ${path}`;
+}
+
+function mkLeaf(node, ctx={ referencePaths: [], shapes: [], rootFocus: null }) {
+  const info  = compInfo(node.component);
+  const compCls = attrSafe(info.cls);
+  const id    = `leaf-${leafId++}`;
+  const chain = node.refChain || [];
+  const depth = chain.length;
+  const kind  = depth === 0 ? "direct" : "nested";
+  const headerText = leafHeaderText(node, info);
+  const rootFocus = ctx.rootFocus || null;
+  const referencePaths = ctx.referencePaths || [];
+  const referenceShapes = ctx.shapes || [];
+  const lastReferencePath = referencePaths.length ? referencePaths[referencePaths.length - 1] : null;
+  const lastReferencedShape = referenceShapes.length ? referenceShapes[referenceShapes.length - 1] : null;
+  const reachedFrom = rootFocus && rootFocus !== node.focusNode ? rootFocus : null;
+
+  const el = document.createElement("div");
+  el.className = `leaf-node lf-${compCls}`;
+  el.dataset.component = info.short;
+  el.dataset.path = node.path || "(no path)";
+  el.dataset.kind = kind;
+  el.dataset.referencePaths = JSON.stringify(ctx.referencePaths || []);
+  el.dataset.shapes = JSON.stringify(ctx.shapes || []);
+
+  el.innerHTML = `
+    <div class="leaf-header" role="button" tabindex="0" aria-expanded="false" aria-controls="${id}-body" onclick="toggleLeaf('${id}')" onkeydown="toggleOnKeyboard(event, () => toggleLeaf('${id}'))">
+      <span class="leaf-icon">❌</span>
+      <span class="leaf-comp comp-${compCls}">${esc(info.short)}</span>
+      <span class="copy-wrap">
+        <span class="leaf-focus" title="${esc(node.focusNode || "")}">${esc(displayIri(node.focusNode, "local"))}</span>
+        ${copyButton(node.focusNode, "focus node IRI")}
+      </span>
+      <span class="leaf-dot">·</span>
+      <span class="copy-wrap">
+        <span class="leaf-desc">${esc(headerText)}</span>
+        ${copyButton(node.path, "path")}
+      </span>
+      ${node.value ? `<span class="leaf-value">${esc(node.value)}</span>` : ""}
+      <span class="leaf-toggle" id="${id}-toggle">▾</span>
+    </div>
+    <div class="leaf-body collapsed" id="${id}-body" style="max-height:0">
+      ${node.message ? `
+        <span class="leaf-row-label">message</span>
+        <span class="leaf-message">${esc(node.message)}</span>` : ""}
+      ${node.repairHint ? `
+        <span class="leaf-row-label">fix</span>
+        <span class="copy-wrap">
+          <span class="leaf-hint">→ ${esc(node.repairHint)}</span>
+          ${copyButton(node.repairHint, "repair hint")}
+        </span>` : ""}
+      ${reachedFrom ? `
+        <span class="leaf-row-label">reached from</span>
+        <span class="copy-wrap">
+          <span class="leaf-row-val">${esc(reachedFrom)}</span>
+          ${copyButton(reachedFrom, "original focus node IRI")}
+        </span>` : ""}
+      ${referencePaths.length ? `
+        <span class="leaf-row-label">reference path</span>
+        <span class="copy-wrap">
+          <span class="leaf-row-val leaf-chain">${referencePaths.map(esc).join(" → ")}</span>
+          ${copyButton(lastReferencePath, "reference path")}
+        </span>` : ""}
+      ${depth > 0 ? `
+        <span class="leaf-row-label">target/value node</span>
+        <span class="copy-wrap">
+          <span class="leaf-row-val">${esc(node.focusNode)}</span>
+          ${copyButton(node.focusNode, "target/value node IRI")}
+        </span>` : ""}
+      ${lastReferencedShape ? `
+        <span class="leaf-row-label">referenced shape</span>
+        <span class="copy-wrap">
+          <span class="leaf-row-val">${esc(lastReferencedShape)}</span>
+          ${copyButton(lastReferencedShape, "referenced shape")}
+        </span>` : ""}
+      <span class="leaf-row-label">focus</span>
+      <span class="copy-wrap">
+        <span class="leaf-row-val">${esc(node.focusNode)}</span>
+        ${copyButton(node.focusNode, "focus node IRI")}
+      </span>
+      <span class="leaf-row-label">component</span>
+      <span class="leaf-row-val">${esc(node.component)}</span>
+      ${depth > 0 ? `
+        <span class="leaf-row-label">via</span>
+        <span class="leaf-row-val leaf-chain">${chain.map(esc).join(" → ")}</span>` : `
+        <span class="leaf-row-label">kind</span>
+        <span class="leaf-row-val" style="color:var(--text-dim)">direct violation</span>`}
+      ${(node.altChains||[]).filter(c=>c.length).map(c => `
+        <span class="leaf-row-label"><span class="alt-label">alt</span></span>
+        <span class="leaf-row-val leaf-altchain">⎇ also via ${c.map(esc).join(" → ")}</span>
+      `).join("")}
+    </div>`;
+  return el;
+}
+
+// ── reference DOM ─────────────────────────────────────────────────────────
+let refId = 0;
+function mkRef(node, depth=0, ctx={ referencePaths: [], shapes: [], rootFocus: null }) {
+  const id = `ref-${refId++}`;
+  const depthLabel = depth === 0 ? "1st reference" : `${depth + 1} levels deep`;
+  const leafCount = countLeaves(node.children || []);
+  const leafLabel = `${leafCount} leaf failure${leafCount === 1 ? "" : "s"}`;
+  const pathLabel = node.path || "sh:node";
+  const nextCtx = {
+    referencePaths: node.path
+      ? [...(ctx.referencePaths || []), node.path]
+      : [...(ctx.referencePaths || [])],
+    shapes: (node.referencedShape || node.shape)
+      ? [...(ctx.shapes || []), node.referencedShape || node.shape]
+      : [...(ctx.shapes || [])],
+    rootFocus: ctx.rootFocus || node.focusNode || null,
+  };
+
+  const el = document.createElement("div");
+  el.className = "ref-node";
+
+  const childEls = (node.children || []).map(c =>
+    c.type === "leaf" ? mkLeaf(c, nextCtx) : mkRef(c, depth+1, nextCtx)
+  );
+
+  const hdr = document.createElement("div");
+  hdr.className = "ref-header";
+  hdr.setAttribute("role", "button");
+  hdr.setAttribute("tabindex", "0");
+  hdr.setAttribute("aria-expanded", "false");
+  hdr.setAttribute("aria-controls", `${id}-children`);
+  hdr.innerHTML = `
+    <span class="ref-arrow" id="${id}-arrow">▶</span>
+    <span class="ref-icon">↳</span>
+    <span class="ref-path">${esc(pathLabel)}</span>
+    ${node.referencedShape ? `
+      <span class="ref-arrow-label">→</span>
+      <span class="ref-target">${esc(node.referencedShape)}</span>` : ""}
+    <span class="ref-arrow-label">via</span>
+    <span class="ref-source">${esc(node.shape)}</span>
+    <span class="ref-leaf-pill">${leafLabel}</span>
+    <span class="ref-chain-pill">${depthLabel}</span>`;
+  hdr.onclick = () => toggleRef(id);
+  hdr.onkeydown = event => toggleOnKeyboard(event, () => toggleRef(id));
+
+  const kids = document.createElement("div");
+  kids.className = "ref-children collapsed";
+  kids.id = `${id}-children`;
+  kids.style.maxHeight = "0px";
+  childEls.forEach(c => kids.appendChild(c));
+
+  el.appendChild(hdr);
+  el.appendChild(kids);
+  return el;
+}
+
+function toggleRef(id) {
+  const kids  = document.getElementById(`${id}-children`);
+  const arrow = document.getElementById(`${id}-arrow`);
+  const header = arrow?.closest(".ref-header");
+  const open  = !kids.classList.contains("collapsed");
+  if (open) {
+    kids.style.maxHeight = kids.scrollHeight + "px";
+    requestAnimationFrame(() => {
+      kids.style.maxHeight = "0px";
+      kids.classList.add("collapsed");
+      arrow.classList.remove("open");
+      header?.setAttribute("aria-expanded", "false");
+    });
+  } else {
+    kids.classList.remove("collapsed");
+    kids.style.maxHeight = kids.scrollHeight + "px";
+    arrow.classList.add("open");
+    header?.setAttribute("aria-expanded", "true");
+    setTimeout(() => { kids.style.maxHeight = "9999px"; }, 250);
+  }
+}
+
+function toggleLeaf(id) {
+  const body   = document.getElementById(`${id}-body`);
+  const toggle = document.getElementById(`${id}-toggle`);
+  const header = toggle?.closest(".leaf-header");
+  const open   = !body.classList.contains("collapsed");
+  if (open) {
+    body.style.maxHeight = body.scrollHeight + "px";
+    requestAnimationFrame(() => {
+      body.style.maxHeight = "0px";
+      body.classList.add("collapsed");
+      toggle.classList.remove("open");
+      header?.setAttribute("aria-expanded", "false");
+    });
+  } else {
+    body.classList.remove("collapsed");
+    body.style.maxHeight = body.scrollHeight + "px";
+    toggle.classList.add("open");
+    header?.setAttribute("aria-expanded", "true");
+    setTimeout(() => { body.style.maxHeight = "400px"; }, 220);
+  }
+}
+
+function toggleOnKeyboard(event, action) {
+  if (event.key !== "Enter" && event.key !== " ") return;
+  event.preventDefault();
+  action();
+}
+
+function expandAll() {
+  document.querySelectorAll(".ref-children.collapsed").forEach(el => {
+    el.classList.remove("collapsed");
+    el.style.maxHeight = "9999px";
+  });
+  document.querySelectorAll(".ref-arrow").forEach(el => el.classList.add("open"));
+  document.querySelectorAll(".ref-header").forEach(el => el.setAttribute("aria-expanded", "true"));
+  document.querySelectorAll(".leaf-body.collapsed").forEach(el => {
+    el.classList.remove("collapsed");
+    el.style.maxHeight = "400px";
+  });
+  document.querySelectorAll(".leaf-toggle").forEach(el => el.classList.add("open"));
+  document.querySelectorAll(".leaf-header").forEach(el => el.setAttribute("aria-expanded", "true"));
+}
+
+function expandVisible() {
+  document.querySelectorAll(".ref-node").forEach(node => {
+    if (node.style.display === "none") return;
+    const kids = node.querySelector(":scope > .ref-children");
+    const arrow = node.querySelector(":scope > .ref-header .ref-arrow");
+    if (kids) {
+      kids.classList.remove("collapsed");
+      kids.style.maxHeight = "9999px";
+    }
+    if (arrow) arrow.classList.add("open");
+    const header = node.querySelector(":scope > .ref-header");
+    if (header) header.setAttribute("aria-expanded", "true");
+  });
+  document.querySelectorAll(".leaf-node").forEach(node => {
+    if (node.style.display === "none") return;
+    const body = node.querySelector(".leaf-body");
+    const toggle = node.querySelector(".leaf-toggle");
+    if (body) {
+      body.classList.remove("collapsed");
+      body.style.maxHeight = "400px";
+    }
+    if (toggle) toggle.classList.add("open");
+    const header = node.querySelector(".leaf-header");
+    if (header) header.setAttribute("aria-expanded", "true");
+  });
+}
+
+function collapseAll() {
+  document.querySelectorAll(".ref-children").forEach(el => {
+    el.style.maxHeight = "0px";
+    el.classList.add("collapsed");
+  });
+  document.querySelectorAll(".ref-arrow").forEach(el => el.classList.remove("open"));
+  document.querySelectorAll(".ref-header").forEach(el => el.setAttribute("aria-expanded", "false"));
+  document.querySelectorAll(".leaf-body").forEach(el => {
+    el.style.maxHeight = "0px";
+    el.classList.add("collapsed");
+  });
+  document.querySelectorAll(".leaf-toggle").forEach(el => el.classList.remove("open"));
+  document.querySelectorAll(".leaf-header").forEach(el => el.setAttribute("aria-expanded", "false"));
+}
+
+// ── filter ────────────────────────────────────────────────────────────────
+let REPORT_GROUPS = {};
+let ISSUE_ENTRIES = [];
+let ALL_LEAF_ENTRIES = [];
+let FOCUS_ENTRY_INDEX = new Map();
+let ISSUE_INDEX = new Map();
+let selectedFocus = null;
+let selectedIssue = null;
+let sidebarMode = "focus";
+let presentationMode = "list";
+let graphLeafMode = "violated";
+let focusShowAll = false;
+const FOCUS_PREVIEW_LIMIT = 20;
+
+let activeFilters = {
+  component: "all",
+  path: "all",
+  referencePath: "all",
+  shape: "all",
+  kind: "all",
+};
+
+function parseListDataset(value) {
+  if (!value) return [];
+  try { return JSON.parse(value); }
+  catch (_) { return []; }
+}
+
+function filterMatches(el, type, value) {
+  if (value === "all") return true;
+  if (type === "referencePath")
+    return parseListDataset(el.dataset.referencePaths).includes(value);
+  if (type === "shape")
+    return parseListDataset(el.dataset.shapes).includes(value);
+  return el.dataset[type] === value;
+}
+
+function dataLeafMatches(node, ctx={ referencePaths: [], shapes: [] }) {
+  const info = compInfo(node.component);
+  const kind = (node.refChain || []).length === 0 ? "direct" : "nested";
+  const values = {
+    component: info.short,
+    path: node.path || "(no path)",
+    kind,
+  };
+
+  for (const [type, value] of Object.entries(activeFilters)) {
+    if (value === "all") continue;
+    if (type === "referencePath" && !(ctx.referencePaths || []).includes(value))
+      return false;
+    if (type === "shape" && !(ctx.shapes || []).includes(value))
+      return false;
+    if (!["referencePath", "shape"].includes(type) && values[type] !== value)
+      return false;
+  }
+
+  return true;
+}
+
+function countMatchingEntries(entries=[]) {
+  let count = 0;
+  for (const entry of entries) {
+    if (dataLeafMatches(entry.node, entry.ctx)) count += 1;
+  }
+  return count;
+}
+
+function updateShowingCount() {
+  const total = ALL_LEAF_ENTRIES.length;
+  const visible = sidebarMode === "focus" && selectedFocus
+    ? countMatchingEntries(FOCUS_ENTRY_INDEX.get(selectedFocus) || [])
+    : sidebarMode === "issue" && selectedIssue
+      ? countMatchingEntries(ISSUE_INDEX.get(selectedIssue) || [])
+      : countMatchingEntries(ALL_LEAF_ENTRIES);
+  const el = document.getElementById("showing-count");
+  if (el) el.textContent = `Showing ${visible} of ${total} failures`;
+}
+
+function firstVisibleFocus() {
+  for (const fn of Object.keys(REPORT_GROUPS)) {
+    if (countMatchingEntries(FOCUS_ENTRY_INDEX.get(fn) || []) > 0) return fn;
+  }
+  return Object.keys(REPORT_GROUPS)[0] || null;
+}
+
+function firstVisibleIssue() {
+  const counts = new Map();
+  ISSUE_INDEX.forEach((entries, issue) => {
+    const count = countMatchingEntries(entries);
+    if (count > 0) counts.set(issue, count);
+  });
+  return countMapEntries(counts)[0]?.[0] || null;
+}
+
+function toggleFocusShowAll() {
+  focusShowAll = !focusShowAll;
+  updateSidebarVisibility();
+}
+
+function updateSidebarVisibility() {
+  const search = document.getElementById("focus-search");
+  const q = (search?.value || "").trim().toLowerCase();
+  let visibleFocus = 0;
+  const matchingFocusItems = [];
+
+  document.querySelectorAll("#sidebar-items .focus-item").forEach(item => {
+    const visibleCount = countMatchingEntries(FOCUS_ENTRY_INDEX.get(item.dataset.focusKey) || []);
+    const hasVisibleLeaves = visibleCount > 0;
+    const searchMatch = !q || item.dataset.focus.includes(q);
+    const countEl = item.querySelector(".focus-count");
+    if (countEl) countEl.textContent = visibleCount;
+    if (hasVisibleLeaves && searchMatch) matchingFocusItems.push(item);
+    item.style.display = "none";
+  });
+
+  matchingFocusItems.forEach((item, index) => {
+    const show = focusShowAll
+      || q
+      || index < FOCUS_PREVIEW_LIMIT
+      || item.dataset.focusKey === selectedFocus;
+    item.style.display = show ? "" : "none";
+    if (show) visibleFocus += 1;
+  });
+
+  const focusToggle = document.getElementById("focus-show-toggle");
+  if (focusToggle) {
+    const shouldOfferToggle = !q && matchingFocusItems.length > FOCUS_PREVIEW_LIMIT;
+    focusToggle.style.display = shouldOfferToggle ? "block" : "none";
+    focusToggle.textContent = focusShowAll
+      ? `show first ${FOCUS_PREVIEW_LIMIT} focus nodes`
+      : `show all ${matchingFocusItems.length} focus nodes`;
+  }
+
+  const issueCounts = new Map();
+  ISSUE_INDEX.forEach((entries, issue) => {
+    const count = countMatchingEntries(entries);
+    if (count > 0) issueCounts.set(issue, count);
+  });
+
+  let visibleIssues = 0;
+  document.querySelectorAll("#issue-items .issue-item").forEach(item => {
+    const count = issueCounts.get(item.dataset.issueKey) || 0;
+    const searchMatch = !q || item.dataset.issue.includes(q);
+    const show = count > 0 && searchMatch;
+    item.style.display = show ? "" : "none";
+    const countEl = item.querySelector(".focus-count");
+    if (countEl) countEl.textContent = count;
+    if (show) visibleIssues += 1;
+  });
+
+  const focusEmpty = document.getElementById("focus-empty");
+  const issueEmpty = document.getElementById("issue-empty");
+  if (focusEmpty) focusEmpty.style.display = visibleFocus ? "none" : "block";
+  if (issueEmpty) issueEmpty.style.display = visibleIssues ? "none" : "block";
+}
+
+function onSidebarTabKeydown(event, mode) {
+  if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+  event.preventDefault();
+  const tabs = ["focus", "issue", "all"];
+  let index = tabs.indexOf(mode);
+  if (event.key === "ArrowRight") index = Math.min(tabs.length - 1, index + 1);
+  if (event.key === "ArrowLeft") index = Math.max(0, index - 1);
+  if (event.key === "Home") index = 0;
+  if (event.key === "End") index = tabs.length - 1;
+  const nextMode = tabs[index];
+  setSidebarMode(nextMode);
+  const nextId = nextMode === "focus" ? "tab-focus" : nextMode === "issue" ? "tab-issue" : "tab-all";
+  document.getElementById(nextId)?.focus();
+}
+
+function applyFilter() {
+  if (sidebarMode === "focus" && selectedFocus && countMatchingEntries(FOCUS_ENTRY_INDEX.get(selectedFocus) || []) === 0) {
+    selectedFocus = firstVisibleFocus();
+  }
+  if (sidebarMode === "issue" && selectedIssue && countMatchingEntries(ISSUE_INDEX.get(selectedIssue) || []) === 0) {
+    selectedIssue = firstVisibleIssue();
+  }
+
+  renderMainPanel();
+  updateShowingCount();
+  updateSidebarVisibility();
+}
+
+function applyDomFilter() {
+  document.querySelectorAll(".leaf-node").forEach(el => {
+    const visible = Object.entries(activeFilters).every(([type, value]) =>
+      filterMatches(el, type, value)
+    );
+    el.style.display = visible ? "" : "none";
+  });
+
+  document.querySelectorAll(".ref-node").forEach(el => {
+    const hasVisibleLeaf = Array.from(el.querySelectorAll(".leaf-node"))
+      .some(leaf => leaf.style.display !== "none");
+    el.style.display = hasVisibleLeaf ? "" : "none";
+  });
+
+  document.querySelectorAll(".ref-children").forEach(el => {
+    const hasVisibleChild = Array.from(el.children)
+      .some(child => child.style.display !== "none");
+    el.style.display = hasVisibleChild ? "" : "none";
+  });
+
+  document.querySelectorAll(".focus-block").forEach(el => {
+    const hasVisibleLeaf = Array.from(el.querySelectorAll(".leaf-node"))
+      .some(leaf => leaf.style.display !== "none");
+    el.style.display = hasVisibleLeaf ? "" : "none";
+  });
+}
+
+function setFilter(type, value) {
+  activeFilters[type] = value;
+  applyFilter();
+}
+
+function buildFilterGroup(id, type, label, rows, allLabel="all", options={}) {
+  const container = document.getElementById(id);
+  if (!container) return;
+  container.innerHTML = "";
+  const { collapseSingle=false } = options;
+
+  if (collapseSingle && rows.length === 1) {
+    const [value, count] = rows[0];
+    activeFilters[type] = "all";
+    const chip = document.createElement("span");
+    chip.className = "filter-summary-chip";
+    chip.innerHTML = `<span class="filter-summary-value">${esc(value)}</span><span class="filter-count">${count}</span>`;
+    chip.title = `${label}: ${value}`;
+    container.appendChild(chip);
+    return;
+  }
+
+  const total = rows.reduce((sum, [, count]) => sum + count, 0);
+  const select = document.createElement("select");
+  select.className = "filter-select";
+  select.setAttribute("aria-label", `${label} filter`);
+
+  const allOption = document.createElement("option");
+  allOption.value = "all";
+  allOption.textContent = `${allLabel} (${total})`;
+  select.appendChild(allOption);
+
+  rows.forEach(([value, count]) => {
+    const option = document.createElement("option");
+    option.value = value;
+    option.textContent = `${value} (${count})`;
+    select.appendChild(option);
+  });
+  select.value = activeFilters[type] || "all";
+  select.onchange = () => setFilter(type, select.value);
+  container.appendChild(select);
+}
+
+function buildFilters(nodes) {
+  const stats = collectFilterStats(nodes);
+  buildFilterGroup(
+    "component-filters",
+    "component",
+    "component",
+    countMapEntries(stats.component),
+    "all",
+    { collapseSingle: true },
+  );
+  buildFilterGroup(
+    "path-filters",
+    "path",
+    "path",
+    countMapEntries(stats.path),
+    "all",
+    { collapseSingle: true },
+  );
+  buildFilterGroup(
+    "reference-path-filters",
+    "referencePath",
+    "reference path",
+    countMapEntries(stats.referencePath),
+  );
+  buildFilterGroup(
+    "shape-filters",
+    "shape",
+    "shape",
+    countMapEntries(stats.shape),
+    "all",
+    { collapseSingle: true },
+  );
+  buildFilterGroup(
+    "kind-filters",
+    "kind",
+    "kind",
+    countMapEntries(stats.kind),
+    "all kinds",
+  );
+}
+
+function resetFilters() {
+  activeFilters = {
+    component: "all",
+    path: "all",
+    referencePath: "all",
+    shape: "all",
+    kind: "all",
+  };
+  buildFilters(REPORT_DATA);
+  applyFilter();
+}
+
+// ── sidebar ───────────────────────────────────────────────────────────────
+function buildSidebar(groups) {
+  const container = document.getElementById("sidebar-items");
+  const search = document.getElementById("focus-search");
+  container.innerHTML = "";
+
+  Object.entries(groups).forEach(([fn, nodes], i) => {
+    const lc = (FOCUS_ENTRY_INDEX.get(fn) || []).length;
+    const targetId = `focus-${fn.replace(/[^a-z0-9]/gi,"_")}`;
+    const item = document.createElement("button");
+    item.type = "button";
+    item.className = "focus-item" + (i === 0 ? " active" : "");
+    item.dataset.focus = fn.toLowerCase();
+    item.dataset.focusKey = fn;
+    item.dataset.target = targetId;
+    item.setAttribute("aria-label", `Focus node ${fn}, ${lc} failures`);
+    item.innerHTML = `
+      <span class="focus-dot"></span>
+      <span class="focus-name" title="${esc(fn)}">${esc(displayIri(fn, "local"))}</span>
+      <span class="focus-count">${lc}</span>`;
+    item.onclick = () => {
+      selectFocus(fn);
+    };
+    container.appendChild(item);
+  });
+
+  if (search) {
+    search.oninput = updateSidebarVisibility;
+  }
+}
+
+function buildIssueSidebar() {
+  const container = document.getElementById("issue-items");
+  if (!container) return;
+  container.innerHTML = "";
+
+  countMapEntries(new Map(Array.from(ISSUE_INDEX.entries()).map(([issue, entries]) => [issue, entries.length]))).forEach(([issue, count], i) => {
+    const item = document.createElement("button");
+    item.type = "button";
+    item.className = "focus-item issue-item" + (i === 0 ? " active" : "");
+    item.dataset.issue = issue.toLowerCase();
+    item.dataset.issueKey = issue;
+    item.setAttribute("aria-label", `Issue cluster ${issue}, ${count} affected nodes`);
+    item.innerHTML = `
+      <span class="focus-dot"></span>
+      <span class="focus-name" title="${esc(issue)}">${esc(issue)}</span>
+      <span class="focus-count">${count}</span>`;
+    item.onclick = () => {
+      selectIssue(issue);
+    };
+    container.appendChild(item);
+  });
+}
+
+// ── stats ─────────────────────────────────────────────────────────────────
+function updateStats(groups) {
+  document.getElementById("stat-focus").textContent  = Object.keys(groups).length;
+  document.getElementById("stat-leaves").textContent = ALL_LEAF_ENTRIES.length;
+  document.getElementById("stat-depth").textContent  =
+    maxDepth(Object.values(groups).flat());
+  document.getElementById("stat-direct").textContent =
+    ALL_LEAF_ENTRIES.filter(entry => (entry.node.refChain || []).length === 0).length;
+}
+
+function updateSummaryPanel(groups) {
+  const direct = ALL_LEAF_ENTRIES.filter(entry => (entry.node.refChain || []).length === 0).length;
+  const nested = ALL_LEAF_ENTRIES.length - direct;
+  const focusEl = document.getElementById("summary-focus");
+  const leavesEl = document.getElementById("summary-leaves");
+  const directEl = document.getElementById("summary-direct");
+  const nestedEl = document.getElementById("summary-nested");
+  if (focusEl) focusEl.textContent = Object.keys(groups).length;
+  if (leavesEl) leavesEl.textContent = ALL_LEAF_ENTRIES.length;
+  if (directEl) directEl.textContent = direct;
+  if (nestedEl) nestedEl.textContent = nested;
+
+  const issueBox = document.getElementById("summary-issues");
+  if (!issueBox) return;
+  issueBox.innerHTML = "";
+  countMapEntries(new Map(Array.from(ISSUE_INDEX.entries()).map(([issue, entries]) => [issue, entries.length]))).slice(0, 5).forEach(([issue, count]) => {
+    const row = document.createElement("div");
+    row.className = "summary-issue";
+    row.innerHTML = `
+      <span class="summary-issue-name" title="${esc(issue)}">${esc(issue)}</span>
+      <span class="summary-issue-count">${count}</span>`;
+    row.onclick = () => {
+      setSidebarMode("issue");
+      selectIssue(issue);
+    };
+    issueBox.appendChild(row);
+  });
+
+  const breakdownBody = document.getElementById("summary-breakdown-body");
+  if (!breakdownBody) return;
+  breakdownBody.innerHTML = "";
+  rootCauseBreakdownRows().slice(0, 8).forEach(row => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${esc(row.issue)}</td>
+      <td class="summary-path">${esc(row.how_reached)}</td>
+      <td>${row.count}</td>`;
+    breakdownBody.appendChild(tr);
+  });
+}
+
+// ── resizable sidebar ─────────────────────────────────────────────────────
+function initSidebarResize() {
+  const sidebar = document.querySelector(".sidebar");
+  const resizer = document.getElementById("sidebar-resizer");
+  if (!sidebar || !resizer) return;
+
+  const savedWidth = localStorage.getItem("shacl-sidebar-width");
+  if (savedWidth) {
+    document.documentElement.style.setProperty("--sidebar-width", savedWidth);
+  }
+
+  resizer.addEventListener("pointerdown", event => {
+    event.preventDefault();
+    sidebar.classList.add("resizing");
+    document.body.classList.add("resizing-sidebar");
+    resizer.setPointerCapture(event.pointerId);
+  });
+
+  resizer.addEventListener("pointermove", event => {
+    if (!sidebar.classList.contains("resizing")) return;
+    const left = sidebar.getBoundingClientRect().left;
+    const width = Math.min(520, Math.max(180, event.clientX - left));
+    const value = `${Math.round(width)}px`;
+    document.documentElement.style.setProperty("--sidebar-width", value);
+    localStorage.setItem("shacl-sidebar-width", value);
+  });
+
+  function stopResize(event) {
+    sidebar.classList.remove("resizing");
+    document.body.classList.remove("resizing-sidebar");
+    if (event?.pointerId !== undefined && resizer.hasPointerCapture(event.pointerId)) {
+      resizer.releasePointerCapture(event.pointerId);
+    }
+  }
+
+  resizer.addEventListener("pointerup", stopResize);
+  resizer.addEventListener("pointercancel", stopResize);
+}
+
+// ── render ────────────────────────────────────────────────────────────────
+function esc(s) {
+  return String(s)
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+function setPresentationMode(mode) {
+  if (mode === "graph" && sidebarMode !== "focus") {
+    setSidebarMode("focus");
+  }
+  presentationMode = mode;
+  document.getElementById("view-list")?.classList.toggle("active", mode === "list");
+  document.getElementById("view-graph")?.classList.toggle("active", mode === "graph");
+  renderMainPanel();
+}
+
+function setGraphLeafMode(mode) {
+  graphLeafMode = mode;
+  document.getElementById("graph-filter-violated")?.classList.toggle("active", mode === "violated");
+  document.getElementById("graph-filter-all")?.classList.toggle("active", mode === "all");
+  if (presentationMode === "graph") renderMainPanel();
+}
+
+function ordinal(n) {
+  if (n % 100 >= 11 && n % 100 <= 13) return `${n}th`;
+  if (n % 10 === 1) return `${n}st`;
+  if (n % 10 === 2) return `${n}nd`;
+  if (n % 10 === 3) return `${n}rd`;
+  return `${n}th`;
+}
+
+function graphLeafId(entry, index) {
+  return `leaf|${entry.node.focusNode}|${entry.node.path || ""}|${entry.node.component || ""}|${entry.node.value || ""}|${index}`;
+}
+
+function buildFocusGraph(entries, focusLabel) {
+  const root = {
+    id: `focus|${focusLabel}`,
+    type: "focus",
+    label: focusLabel,
+    raw: focusLabel,
+    depth: 0,
+    children: [],
+    _childMap: new Map(),
+  };
+
+  entries.forEach((entry, index) => {
+    const chain = entry.node.refChain || [];
+    let parent = root;
+
+    chain.forEach((shape, shapeIndex) => {
+      const key = `shape|${chain.slice(0, shapeIndex + 1).join("->")}`;
+      let next = parent._childMap.get(key);
+      if (!next) {
+        next = {
+          id: key,
+          type: "shape",
+          label: shape,
+          raw: shape,
+          depth: shapeIndex + 1,
+          entryCount: 0,
+          children: [],
+          _childMap: new Map(),
+        };
+        parent._childMap.set(key, next);
+        parent.children.push(next);
+      }
+      next.entryCount += 1;
+      parent = next;
+    });
+
+    const leafNode = {
+      id: graphLeafId(entry, index),
+      type: "leaf",
+      label: entry.node.path || entry.issue,
+      issue: entry.issue,
+      raw: entry.node.path || entry.issue,
+      entry,
+      depth: chain.length + 1,
+      value: entry.node.value || "",
+      message: entry.node.message || "",
+      repairHint: entry.node.repairHint || "",
+      fullChain: chain,
+    };
+    parent.children.push(leafNode);
+  });
+
+  function finalize(node) {
+    if (node._childMap) delete node._childMap;
+    node.children = (node.children || []).sort((a, b) => {
+      if (a.type !== b.type) return a.type === "shape" ? -1 : 1;
+      return String(a.label).localeCompare(String(b.label));
+    });
+    node.children.forEach(finalize);
+    return node;
+  }
+
+  return finalize(root);
+}
+
+function enrichGraphWithCatalog(node) {
+  if (graphLeafMode !== "all") return node;
+  if (!node || (node.type !== "shape" && node.type !== "focus")) return node;
+  if (node.type === "shape") {
+    const catalog = SHAPE_CATALOG[node.label] || [];
+    const shapeKeys = new Set((node.children || []).filter(child => child.type === "shape").map(child => child.label));
+    const leafKeys = new Set((node.children || []).filter(child => child.type === "leaf").map(child => child.label));
+
+    catalog.forEach(item => {
+      if (item.type === "shape" && !shapeKeys.has(item.shape)) {
+        node.children.push({
+          id: `catalog-shape|${node.label}|${item.shape}`,
+          type: "shape",
+          label: item.shape,
+          raw: item.shape,
+          depth: node.depth + 1,
+          entryCount: 0,
+          children: [],
+          status: "pass",
+          isCatalogOnly: true,
+        });
+      }
+      if (item.type === "leaf" && !leafKeys.has(item.path)) {
+        node.children.push({
+          id: `catalog-leaf|${node.label}|${item.path}`,
+          type: "leaf",
+          label: item.path,
+          issue: `conforms ${item.path}`,
+          raw: item.path,
+          entry: null,
+          depth: node.depth + 1,
+          value: "",
+          message: `No violation was reported for ${item.path} under ${node.label}.`,
+          repairHint: "",
+          fullChain: [],
+          status: "pass",
+          isCatalogOnly: true,
+        });
+      }
+    });
+
+    node.children.sort((a, b) => {
+      if (a.type !== b.type) return a.type === "shape" ? -1 : 1;
+      return String(a.label).localeCompare(String(b.label));
+    });
+  }
+  (node.children || []).forEach(enrichGraphWithCatalog);
+  return node;
+}
+
+function graphDetailHtml(node, focusLabel) {
+  if (node.type === "focus") {
+    return {
+      title: displayIri(node.label, "local"),
+      body: `
+        <p><code>${esc(node.label)}</code> is the violated focus node for this explanation tree.</p>
+        <p>Click the shape cards below to expand or collapse the referenced failure chain.</p>
+      `,
+    };
+  }
+
+  if (node.type === "shape") {
+    const shapeLabel = displayIri(node.label, "local");
+    const intro = node.depth === 1
+      ? `<p><code>${esc(focusLabel)}</code> does not conform to <code>${esc(node.label)}</code>.</p>`
+      : `<p>This is the ${ordinal(node.depth)} referenced shape in the failure chain.</p>`;
+    const children = node.children || [];
+    const childShapes = children.filter(child => child.type === "shape").map(child => displayIri(child.label, "local"));
+    const childLeaves = children.filter(child => child.type === "leaf").map(child => displayIri(child.label, "local"));
+    return {
+      title: shapeLabel,
+      body: `
+        ${intro}
+        <p><code>${esc(node.label)}</code> contributes ${node.entryCount || childLeaves.length || childShapes.length} visible failure${(node.entryCount || 0) === 1 ? "" : "s"}.</p>
+        ${childShapes.length ? `<p>It is referencing: <code>${esc(childShapes.join(", "))}</code></p>` : ""}
+        ${childLeaves.length ? `<p>Leaf violations here: <code>${esc(childLeaves.join(", "))}</code></p>` : ""}
+      `,
+    };
+  }
+
+  if (node.isCatalogOnly) {
+    return {
+      title: displayIri(node.label, "local"),
+      body: `
+        <p><code>${esc(node.label)}</code> is available on this shape but did not produce a violation for the current focus node.</p>
+      `,
+    };
+  }
+
+  const entry = node.entry;
+  const valueLine = node.value ? `<p>Observed value: <code>${esc(node.value)}</code></p>` : "";
+  const repairLine = node.repairHint ? `<p>Suggested fix: ${esc(node.repairHint)}</p>` : "";
+  const chainLine = node.fullChain.length
+    ? `<p>Reached through: <code>${esc(node.fullChain.map(shape => displayIri(shape, "local")).join(" -> "))}</code></p>`
+    : `<p>This is a direct leaf violation.</p>`;
+  const altLines = (entry.node.altChains || []).length
+    ? `<ul class="graph-detail-list">${entry.node.altChains.map(chain => `<li><code>${esc(chain.map(shape => displayIri(shape, "local")).join(" -> "))}</code></li>`).join("")}</ul>`
+    : "";
+
+  return {
+    title: displayIri(node.label, "local"),
+    body: `
+      <p>${esc(node.message || node.issue)}</p>
+      ${valueLine}
+      ${repairLine}
+      ${chainLine}
+      ${altLines ? `<p>Also reachable via:</p>${altLines}` : ""}
+    `,
+  };
+}
+
+function makeGraphNodeButton(node, detailEl, focusLabel, childContainer) {
+  const btn = document.createElement("button");
+  btn.type = "button";
+  if (node.type === "focus") {
+    btn.className = "graph-node graph-focus";
+  } else {
+    const levelClass = ((Math.max(node.depth, 1) - 1) % 6) + 1;
+    btn.className = `graph-node level-${levelClass}`;
+  }
+  const label = esc(displayIri(node.label, "local"));
+  const badge = node.type === "shape" && node.depth >= 4
+    ? `<span class="graph-node-badge">L${esc(String(node.depth))}</span>`
+    : "";
+  btn.innerHTML = `<span class="graph-node-label">${label}</span>${badge}`;
+  btn.setAttribute("aria-expanded", childContainer ? "false" : "false");
+
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".graph-node.selected, .graph-leaf.selected").forEach(el => el.classList.remove("selected"));
+    btn.classList.add("selected");
+    const detail = graphDetailHtml(node, focusLabel);
+    detailEl.innerHTML = `
+      <div class="graph-detail-title">${esc(detail.title)}</div>
+      <div class="graph-detail-body">${detail.body}</div>
+    `;
+    if (childContainer) {
+      const isHidden = childContainer.hidden;
+      childContainer.hidden = !isHidden;
+      btn.setAttribute("aria-expanded", isHidden ? "true" : "false");
+      scheduleGraphFit();
+    }
+  });
+
+  return btn;
+}
+
+function makeGraphLeafButton(node, detailEl, focusLabel) {
+  const wrap = document.createElement("div");
+  wrap.className = "graph-leaf-wrap";
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = `graph-leaf${node.status === "pass" ? " pass" : ""}`;
+  btn.textContent = displayIri(node.label, "local");
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".graph-node.selected, .graph-leaf.selected").forEach(el => el.classList.remove("selected"));
+    btn.classList.add("selected");
+    const detail = graphDetailHtml(node, focusLabel);
+    detailEl.innerHTML = `
+      <div class="graph-detail-title">${esc(detail.title)}</div>
+      <div class="graph-detail-body">${detail.body}</div>
+    `;
+  });
+  wrap.appendChild(btn);
+  if (node.value) {
+    const value = document.createElement("div");
+    value.className = "graph-leaf-value";
+    value.textContent = String(node.value);
+    wrap.appendChild(value);
+  }
+  return wrap;
+}
+
+let graphFitRaf = null;
+
+function fitGraphStage() {
+  const stage = document.querySelector(".graph-stage");
+  const root = document.querySelector(".graph-root");
+  if (!stage || !root) return;
+  root.style.setProperty("--graph-scale", "1");
+  stage.style.height = "auto";
+  const availableWidth = Math.max(stage.clientWidth - 24, 0);
+  const naturalWidth = root.scrollWidth;
+  const naturalHeight = root.scrollHeight;
+  if (!availableWidth || !naturalWidth || !naturalHeight) return;
+  const scale = Math.min(1, availableWidth / naturalWidth);
+  root.style.setProperty("--graph-scale", String(scale));
+  stage.style.height = `${Math.ceil(naturalHeight * scale)}px`;
+  stage.scrollLeft = 0;
+}
+
+function scheduleGraphFit() {
+  if (graphFitRaf) cancelAnimationFrame(graphFitRaf);
+  graphFitRaf = requestAnimationFrame(() => {
+    graphFitRaf = null;
+    fitGraphStage();
+  });
+}
+
+window.addEventListener("resize", scheduleGraphFit);
+
+if ("ResizeObserver" in window) {
+  const graphResizeObserver = new ResizeObserver(scheduleGraphFit);
+  document.addEventListener("DOMContentLoaded", () => {
+    const main = document.querySelector(".main");
+    if (main) graphResizeObserver.observe(main);
+  });
+}
+
+function renderGraphBranch(node, detailEl, focusLabel) {
+  if (node.type === "leaf") {
+    return makeGraphLeafButton(node, detailEl, focusLabel);
+  }
+
+  const branch = document.createElement("div");
+  branch.className = "graph-branch";
+  const children = node.children || [];
+
+  const childrenWrap = document.createElement("div");
+  childrenWrap.className = "graph-children";
+  childrenWrap.hidden = true;
+
+  if (children.length) {
+    const line = document.createElement("div");
+    line.className = "graph-link";
+    childrenWrap.appendChild(line);
+    const relation = document.createElement("div");
+    relation.className = "graph-relation";
+    relation.textContent = node.type === "focus" ? "does not conform to" : "is referencing";
+    childrenWrap.appendChild(relation);
+    const panel = document.createElement("div");
+    panel.className = "graph-row-panel";
+    const row = document.createElement("div");
+    row.className = "graph-row";
+    children.forEach(child => row.appendChild(renderGraphBranch(child, detailEl, focusLabel)));
+    const levelLabel = document.createElement("div");
+    levelLabel.className = "graph-level-label";
+    levelLabel.textContent = `L${node.depth + 1}`;
+    panel.appendChild(row);
+    panel.appendChild(levelLabel);
+    childrenWrap.appendChild(panel);
+  }
+
+  const btn = makeGraphNodeButton(node, detailEl, focusLabel, children.length ? childrenWrap : null);
+  branch.appendChild(btn);
+  if (children.length) branch.appendChild(childrenWrap);
+  return branch;
+}
+
+function focusBlockId(fn) {
+  return `focus-${fn.replace(/[^a-z0-9]/gi,"_")}`;
+}
+
+function selectFocus(fn) {
+  sidebarMode = "focus";
+  selectedFocus = fn;
+  renderMainPanel();
+  updateSidebarVisibility();
+}
+
+function selectIssue(issue) {
+  sidebarMode = "issue";
+  selectedIssue = issue;
+  renderMainPanel();
+  updateShowingCount();
+  updateSidebarVisibility();
+}
+
+function setSidebarMode(mode) {
+  sidebarMode = mode;
+  document.getElementById("focus-panel").hidden = mode !== "focus";
+  document.getElementById("issue-panel").hidden = mode !== "issue";
+  document.getElementById("all-panel").hidden = mode !== "all";
+  document.getElementById("tab-focus").classList.toggle("active", mode === "focus");
+  document.getElementById("tab-issue").classList.toggle("active", mode === "issue");
+  document.getElementById("tab-all").classList.toggle("active", mode === "all");
+  document.getElementById("tab-focus").setAttribute("aria-selected", mode === "focus" ? "true" : "false");
+  document.getElementById("tab-issue").setAttribute("aria-selected", mode === "issue" ? "true" : "false");
+  document.getElementById("tab-all").setAttribute("aria-selected", mode === "all" ? "true" : "false");
+  document.getElementById("tab-focus").tabIndex = mode === "focus" ? 0 : -1;
+  document.getElementById("tab-issue").tabIndex = mode === "issue" ? 0 : -1;
+  document.getElementById("tab-all").tabIndex = mode === "all" ? 0 : -1;
+  const search = document.getElementById("focus-search");
+  if (search) {
+    search.placeholder = mode === "focus" ? "Search focus node" : mode === "issue" ? "Search issue" : "Search hidden in all view";
+    search.disabled = mode === "all";
+  }
+  if (mode === "focus" && (!selectedFocus || countMatchingEntries(FOCUS_ENTRY_INDEX.get(selectedFocus) || []) === 0))
+    selectedFocus = firstVisibleFocus();
+  if (mode === "issue" && (!selectedIssue || countMatchingEntries(ISSUE_INDEX.get(selectedIssue) || []) === 0))
+    selectedIssue = firstVisibleIssue();
+  if (mode !== "focus" && presentationMode === "graph") {
+    presentationMode = "list";
+    document.getElementById("view-list")?.classList.add("active");
+    document.getElementById("view-graph")?.classList.remove("active");
+  }
+  renderMainPanel();
+  updateShowingCount();
+  updateSidebarVisibility();
+}
+
+function renderMainPanel() {
+  if (presentationMode === "graph") {
+    renderGraphView();
+    return;
+  }
+  if (sidebarMode === "issue") renderSelectedIssue();
+  else if (sidebarMode === "all") renderAllViolations();
+  else renderSelectedFocus();
+}
+
+function renderGraphView() {
+  const report = document.getElementById("report");
+  if (!report) return;
+  report.innerHTML = "";
+
+  if (sidebarMode !== "focus") {
+    const empty = document.createElement("div");
+    empty.className = "graph-view";
+    empty.innerHTML = `
+      <div class="graph-empty">
+        Graph view currently works from <strong>By focus</strong> mode so the explanation can stay anchored to one violated node.
+        <div><button class="expand-all-btn" type="button" onclick="setSidebarMode('focus')">switch to By focus</button></div>
+      </div>`;
+    report.appendChild(empty);
+    return;
+  }
+
+  const entries = (FOCUS_ENTRY_INDEX.get(selectedFocus) || []).filter(entry => dataLeafMatches(entry.node, entry.ctx));
+  if (!selectedFocus || entries.length === 0) {
+    const empty = document.createElement("div");
+    empty.className = "graph-view";
+    empty.innerHTML = `<div class="graph-empty">No focus-node graph matches the current filters.</div>`;
+    report.appendChild(empty);
+    return;
+  }
+
+  const graph = buildFocusGraph(entries, selectedFocus);
+  enrichGraphWithCatalog(graph);
+  const shell = document.createElement("div");
+  shell.className = "graph-view";
+  shell.innerHTML = `
+    <div class="graph-legend">
+      <span class="graph-legend-item" style="color:var(--focus-red)"><span class="graph-legend-swatch"></span>violated focus node</span>
+      <span class="graph-legend-item" style="color:var(--level-1)"><span class="graph-legend-swatch"></span>Level 1</span>
+      <span class="graph-legend-item" style="color:var(--level-2)"><span class="graph-legend-swatch"></span>Level 2</span>
+      <span class="graph-legend-item" style="color:var(--level-3)"><span class="graph-legend-swatch"></span>Level 3</span>
+      <span class="graph-legend-item" style="color:var(--level-4)"><span class="graph-legend-swatch"></span>Level 4</span>
+      <span class="graph-legend-item" style="color:var(--level-5)"><span class="graph-legend-swatch"></span>Level 5</span>
+      <span class="graph-legend-item" style="color:var(--level-6)"><span class="graph-legend-swatch"></span>Level 6 and deeper levels repeat</span>
+      <span class="graph-legend-break"></span>
+      <span class="graph-legend-item" style="color:var(--red)"><span class="graph-legend-swatch leaf"></span>violated leaf</span>
+      <span class="graph-legend-item" style="color:var(--green)"><span class="graph-legend-swatch leaf" style="border-color:var(--green)"></span>available constraint</span>
+    </div>
+    <div class="graph-filter-toggle" aria-label="Graph leaf visibility">
+      <button class="view-btn ${graphLeafMode === "violated" ? "active" : ""}" id="graph-filter-violated" type="button" onclick="setGraphLeafMode('violated')">Violations only</button>
+      <button class="view-btn ${graphLeafMode === "all" ? "active" : ""}" id="graph-filter-all" type="button" onclick="setGraphLeafMode('all')">All constraints</button>
+      <button class="export-btn" type="button" onclick="exportGraphSvg(event, this)">export graph SVG</button>
+    </div>`;
+
+  const detail = document.createElement("div");
+  detail.className = "graph-detail";
+  const initialDetail = graphDetailHtml(graph, selectedFocus);
+  detail.innerHTML = `
+    <div class="graph-detail-title">${esc(initialDetail.title)}</div>
+    <div class="graph-detail-body">${initialDetail.body}</div>`;
+
+  const stage = document.createElement("div");
+  stage.className = "graph-stage";
+  const root = document.createElement("div");
+  root.className = "graph-root";
+  const graphDom = renderGraphBranch(graph, detail, selectedFocus);
+  const rootButton = graphDom.querySelector(".graph-node");
+  if (rootButton) rootButton.classList.add("selected");
+  root.appendChild(graphDom);
+  stage.appendChild(root);
+
+  shell.appendChild(stage);
+  shell.appendChild(detail);
+  report.appendChild(shell);
+  scheduleGraphFit();
+
+  document.querySelectorAll(".focus-item").forEach(item => {
+    item.classList.toggle("active", item.dataset.focusKey === selectedFocus);
+  });
+}
+
+function renderSelectedFocus() {
+  const report = document.getElementById("report");
+  if (!report) return;
+  report.innerHTML = "";
+  leafId = 0;
+  refId = 0;
+
+  if (!selectedFocus || !REPORT_GROUPS[selectedFocus]) {
+    const empty = document.createElement("div");
+    empty.className = "focus-empty";
+    empty.style.display = "block";
+    empty.textContent = "No focus node matches the current filters";
+    report.appendChild(empty);
+    return;
+  }
+
+  const nodes = REPORT_GROUPS[selectedFocus];
+  const totalCount = (FOCUS_ENTRY_INDEX.get(selectedFocus) || []).length;
+  const visibleCount = countMatchingEntries(FOCUS_ENTRY_INDEX.get(selectedFocus) || []);
+
+  const block = document.createElement("div");
+  block.className = "focus-block";
+  block.id = focusBlockId(selectedFocus);
+
+  const hdr = document.createElement("div");
+  hdr.className = "focus-header";
+  hdr.innerHTML = `
+    <span class="copy-wrap">
+      <span class="focus-node-label">${esc(selectedFocus)}</span>
+      ${copyButton(selectedFocus, "focus node IRI")}
+    </span>
+    <span class="focus-badge">focus node</span>
+    <span class="failure-count">${visibleCount} of ${totalCount} failure${totalCount!==1?"s":""}</span>`;
+
+  const tree = document.createElement("div");
+  tree.className = "tree";
+  nodes.forEach(n => tree.appendChild(n.type==="leaf" ? mkLeaf(n) : mkRef(n,0)));
+
+  block.appendChild(hdr);
+  block.appendChild(tree);
+  report.appendChild(block);
+
+  document.querySelectorAll(".focus-item").forEach(item => {
+    item.classList.toggle("active", item.dataset.focusKey === selectedFocus);
+  });
+
+  applyDomFilter();
+}
+
+function renderSelectedIssue() {
+  const report = document.getElementById("report");
+  if (!report) return;
+  report.innerHTML = "";
+  leafId = 0;
+  refId = 0;
+
+  const entries = (ISSUE_INDEX.get(selectedIssue) || []).filter(e => dataLeafMatches(e.node, e.ctx));
+
+  if (!selectedIssue || entries.length === 0) {
+    const empty = document.createElement("div");
+    empty.className = "focus-empty";
+    empty.style.display = "block";
+    empty.textContent = "No issue cluster matches the current filters";
+    report.appendChild(empty);
+    return;
+  }
+
+  const block = document.createElement("div");
+  block.className = "focus-block";
+
+  const hdr = document.createElement("div");
+  hdr.className = "focus-header";
+  hdr.innerHTML = `
+    <span class="focus-node-label">${esc(selectedIssue)}</span>
+    <span class="focus-badge">issue cluster</span>
+    <span class="failure-count">${entries.length} affected node${entries.length!==1?"s":""}</span>`;
+
+  const tree = document.createElement("div");
+  tree.className = "tree";
+  entries.forEach(entry => tree.appendChild(mkLeaf(entry.node, entry.ctx)));
+
+  block.appendChild(hdr);
+  block.appendChild(tree);
+  report.appendChild(block);
+
+  document.querySelectorAll(".issue-item").forEach(item => {
+    item.classList.toggle("active", item.dataset.issueKey === selectedIssue);
+  });
+}
+
+function renderAllViolations() {
+  const report = document.getElementById("report");
+  if (!report) return;
+  report.innerHTML = "";
+  leafId = 0;
+  refId = 0;
+
+  const entries = ALL_LEAF_ENTRIES.filter(entry => dataLeafMatches(entry.node, entry.ctx));
+
+  if (entries.length === 0) {
+    const empty = document.createElement("div");
+    empty.className = "focus-empty";
+    empty.style.display = "block";
+    empty.textContent = "No violations match the current filters";
+    report.appendChild(empty);
+    return;
+  }
+
+  const block = document.createElement("div");
+  block.className = "focus-block";
+
+  const hdr = document.createElement("div");
+  hdr.className = "focus-header";
+  hdr.innerHTML = `
+    <span class="focus-node-label">All visible violations</span>
+    <span class="focus-badge">global view</span>
+    <span class="failure-count">${entries.length} failure${entries.length!==1?"s":""}</span>`;
+
+  const tree = document.createElement("div");
+  tree.className = "tree";
+  entries.forEach(entry => tree.appendChild(mkLeaf(entry.node, entry.ctx)));
+
+  block.appendChild(hdr);
+  block.appendChild(tree);
+  report.appendChild(block);
+}
+
+function render() {
+  // group by focus node
+  const groups = {};
+  for (const node of REPORT_DATA) {
+    const fn = node.focusNode || node.focus_node || "unknown";
+    (groups[fn] = groups[fn] || []).push(node);
+  }
+  REPORT_GROUPS = groups;
+  ALL_LEAF_ENTRIES = collectLeafEntries(REPORT_DATA);
+  ISSUE_ENTRIES = ALL_LEAF_ENTRIES;
+  FOCUS_ENTRY_INDEX = new Map();
+  Object.keys(groups).forEach(fn => {
+    FOCUS_ENTRY_INDEX.set(fn, collectLeafEntries(groups[fn]));
+  });
+  ISSUE_INDEX = new Map();
+  ALL_LEAF_ENTRIES.forEach(entry => {
+    if (!ISSUE_INDEX.has(entry.issue)) ISSUE_INDEX.set(entry.issue, []);
+    ISSUE_INDEX.get(entry.issue).push(entry);
+  });
+  selectedFocus = Object.keys(groups)[0] || null;
+  selectedIssue = firstVisibleIssue();
+
+  buildSidebar(groups);
+  buildIssueSidebar();
+  buildFilters(REPORT_DATA);
+  updateStats(groups);
+  updateSummaryPanel(groups);
+  initSidebarResize();
+  document.getElementById("tab-focus")?.addEventListener("keydown", event => onSidebarTabKeydown(event, "focus"));
+  document.getElementById("tab-issue")?.addEventListener("keydown", event => onSidebarTabKeydown(event, "issue"));
+  document.getElementById("tab-all")?.addEventListener("keydown", event => onSidebarTabKeydown(event, "all"));
+  document.getElementById("gen-time").textContent = "2026-08-25 22:15:31";
+
+  applyFilter();
+}
+
+render();
+applyThemeLabel();
+</script>
+</body>
+</html>

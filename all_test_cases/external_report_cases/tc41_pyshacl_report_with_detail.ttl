@@ -1,0 +1,28 @@
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix ex:  <http://example.org/> .
+
+[] a sh:ValidationReport ;
+    sh:conforms false ;
+    sh:result [
+        a sh:ValidationResult ;
+        sh:focusNode ex:alice ;
+        sh:sourceShape ex:PersonShape ;
+        sh:sourceConstraintComponent sh:NodeConstraintComponent ;
+        sh:detail [
+            a sh:ValidationResult ;
+            sh:focusNode ex:alice ;
+            sh:resultPath ex:name ;
+            sh:sourceShape _:nameShape ;
+            sh:sourceConstraintComponent sh:MinCountConstraintComponent ;
+            sh:resultMessage "Name is required" ;
+        ] ;
+    ] .
+
+ex:PersonShape
+    sh:node ex:PersonShape ;
+    sh:property _:nameShape .
+
+_:nameShape
+    sh:path ex:name ;
+    sh:minCount 1 ;
+    sh:message "Name is required" .

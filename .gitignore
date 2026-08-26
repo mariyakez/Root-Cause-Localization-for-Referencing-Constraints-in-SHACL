@@ -1,0 +1,12 @@
+.DS_Store
+__pycache__/
+*.pyc
+.venv/
+
+# Local/generated validation exports
+*failures.csv
+*timings.csv
+report.ttl
+*_report.ttl
+!all_test_cases/**/*_report.ttl
+!output_mode_examples/**
