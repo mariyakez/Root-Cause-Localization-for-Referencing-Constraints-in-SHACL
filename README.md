@@ -64,15 +64,23 @@ python3 -m shacl_explainer.cli \
   all_test_cases/sh_node_cases/tc1_single_leaf.ttl
 ```
 
-If the data is valid, the CLI prints:
+When the data conforms, the CLI reports that and exits without building a tree:
+
+```bash
+python3 -m shacl_explainer.cli \
+  all_test_cases/sh_node_cases/testdata.ttl \
+  all_test_cases/sh_node_cases/testshapes.ttl
+```
 
 ```text
 ✓ Data is valid.
 ```
 
-If the data is invalid, the CLI prints an explanation tree.
+When it does not conform, the CLI prints an explanation tree.
 
 ## Example
+
+Property-level `sh:node`, with repair hints enabled:
 
 ```bash
 python3 -m shacl_explainer.cli \
@@ -81,23 +89,56 @@ python3 -m shacl_explainer.cli \
   --hints
 ```
 
-Example output:
-
 ```text
-via ex:CompanyShape  path=ex:worksFor  focus=ex:alice
-   ❌ [minCount]  path=ex:legalName
-      → ex:legalName is required
-      repair: Add at least one ex:legalName value to ex:acme.
+Focus node: ex:alice/
+└── sh:node ex:CompanyShape  path=ex:worksFor/
+    └── ❌ minCount    ex:legalName = (missing)
+        ├── via ex:CompanyShape
+        ├── message: ex:legalName is required
+        └── → fix: Add at least one ex:legalName value to ex:acme.
 ```
 
-This means `ex:alice` failed through the property `ex:worksFor`, because the value node `ex:acme` did not satisfy `ex:CompanyShape`.
+This means `ex:alice` failed through the property `ex:worksFor`, because the value node `ex:acme` did not satisfy `ex:CompanyShape`. The standard SHACL report only states that `ex:CompanyShape` was violated; the `minCount` line, the offending value node, and the repair are what this tool recovers.
+
+Each tree is rooted at a focus node. Every `sh:node` hop is shown as its own level, the `❌` line names the failing SHACL Core component and the leaf path, and the `via` line spells out the full chain of referenced shapes that reached it. Two nested levels, without `--hints`:
+
+```bash
+python3 -m shacl_explainer.cli \
+  all_test_cases/sh_node_cases/tc3_two_level.ttl \
+  all_test_cases/sh_node_cases/tc3_two_level.ttl
+```
+
+```text
+Focus node: ex:carol/
+└── sh:node ex:ContractorShape/
+    └── sh:node ex:EmployeeShape/
+        └── ❌ datatype    ex:age = "thirty-one"
+            ├── via ex:ContractorShape -> ex:EmployeeShape -> ex:PersonShape
+            └── message: ex:age must be an xsd:integer
+```
 
 ## Output Modes
+
+Three rendering formats are selected with `--format`, and `--summary` overrides the
+format with aggregate counts.
+
+| Mode | Flag | Description |
+|---|---|---|
+| Text tree | `--format text` (default) | Unicode explanation tree, optionally colorized |
+| JSON | `--format json` | Machine-readable nested tree |
+| HTML | `--format html` | Self-contained interactive report |
+| Summary | `--summary` | Aggregate counts and top-N tables |
 
 Text tree output:
 
 ```bash
 python3 -m shacl_explainer.cli DATA.ttl SHAPES.ttl
+```
+
+Repair hints (text mode only):
+
+```bash
+python3 -m shacl_explainer.cli DATA.ttl SHAPES.ttl --hints
 ```
 
 JSON output:
@@ -106,22 +147,71 @@ JSON output:
 python3 -m shacl_explainer.cli DATA.ttl SHAPES.ttl --format json
 ```
 
+```json
+[
+  {
+    "type": "reference",
+    "focusNode": "ex:alice",
+    "shape": "ex:CompanyShape",
+    "referencedShape": "ex:CompanyShape",
+    "path": "ex:worksFor",
+    "refChain": [],
+    "children": [
+      {
+        "type": "leaf",
+        "focusNode": "ex:acme",
+        "path": "ex:legalName",
+        "component": "sh:MinCountConstraintComponent",
+        "message": "ex:legalName is required",
+        "repairHint": "Add at least one ex:legalName value to ex:acme.",
+        "refChain": ["ex:CompanyShape"],
+        "altChains": []
+      }
+    ]
+  }
+]
+```
+
 Summary output:
 
 ```bash
 python3 -m shacl_explainer.cli DATA.ttl SHAPES.ttl --summary
 ```
 
-Repair hints:
+```text
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SHACL Explanation Summary
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Focus nodes affected  : 1
+Total leaf failures   : 1  (1 via sh:node,  0 direct)
+Unique paths failing  : 1
+Max reference depth   : 1 level
 
-```bash
-python3 -m shacl_explainer.cli DATA.ttl SHAPES.ttl --hints
+Input
+  Data triples        : 15
+  Shape triples       : 17
+  Pyshacl results     : 2  (1 top-level)
+
+Top failing paths
+      1  ex:legalName                    minCount
+...
 ```
 
-CSV export:
+Limit each summary table to the top N rows:
+
+```bash
+python3 -m shacl_explainer.cli DATA.ttl SHAPES.ttl --summary --top 10
+```
+
+CSV export (one row per leaf failure):
 
 ```bash
 python3 -m shacl_explainer.cli DATA.ttl SHAPES.ttl --csv failures.csv
+```
+
+```text
+focus_node,depth,reference_chain,alternate_reference_chains,leaf_path,component,value,message,kind,repair_hint
+ex:acme,1,ex:CompanyShape,,ex:legalName,sh:MinCountConstraintComponent,,ex:legalName is required,referenced,Add at least one ex:legalName value to ex:acme.
 ```
 
 Save the raw validation report:
@@ -130,7 +220,7 @@ Save the raw validation report:
 python3 -m shacl_explainer.cli DATA.ttl SHAPES.ttl --save-report report.ttl
 ```
 
-Timing information:
+Timing information (printed to stderr):
 
 ```bash
 python3 -m shacl_explainer.cli DATA.ttl SHAPES.ttl --summary --timing
@@ -141,6 +231,75 @@ Timing CSV:
 ```bash
 python3 -m shacl_explainer.cli DATA.ttl SHAPES.ttl --timing-csv timings.csv
 ```
+
+### Writing Output to a File
+
+By default the rendered explanation goes to stdout. `--output` redirects it to a file
+instead (the confirmation line goes to stderr, so it never pollutes redirected output):
+
+```bash
+python3 -m shacl_explainer.cli DATA.ttl SHAPES.ttl --format json --output tree.json
+```
+
+For `--format html`, a bare filename with no directory component is placed inside
+`html_outputs/` automatically; paths containing a directory are used as given.
+
+### Colorized Text Output
+
+Text-tree output is colorized when stdout is a terminal. `--color` overrides the
+detection, which is useful when piping into a pager or capturing output for a report:
+
+```bash
+python3 -m shacl_explainer.cli DATA.ttl SHAPES.ttl --color always | less -R
+python3 -m shacl_explainer.cli DATA.ttl SHAPES.ttl --color never > tree.txt
+```
+
+Color is only applied to the plain text tree — JSON, HTML, summary, and `--output`
+runs are always uncolored.
+
+## HTML Report
+
+`--format html` renders a single self-contained HTML file with no external
+dependencies: the explanation tree is embedded as JSON in the page and all styling
+and interaction is inlined, so the report can be opened directly from disk or handed
+over as a standalone artifact.
+
+```bash
+python3 -m shacl_explainer.cli \
+  all_test_cases/sh_node_cases/tc53_deep_gradient_graph.ttl \
+  all_test_cases/sh_node_cases/tc53_deep_gradient_graph.ttl \
+  --format html --output tc53_deep_gradient_graph.html
+```
+
+The report provides:
+
+- an **analytical view** listing failures with summary statistics and a breakdown table,
+- a **graph view** drawing the reference chains, with colors cycling by nesting depth,
+- a sidebar with **By focus**, **By issue**, and **All** tabs plus focus-node search,
+- interactive filters on component, leaf path, reference path, shape, and direct-vs-referenced kind,
+- a light/dark theme toggle,
+- a provenance header recording the data file, shapes file, generation timestamp, and the git commit the report was produced from.
+
+Pre-generated reports for every test case and every LUBM combination are committed
+under [`html_outputs/`](html_outputs/) (59 files).
+
+## Input Formats
+
+Data, shapes, and external reports are parsed as Turtle by default. Use the matching
+flag to load another RDF serialization, e.g. `xml`, `json-ld`, or `nt`:
+
+```bash
+python3 -m shacl_explainer.cli data.rdf shapes.ttl --data-format xml
+python3 -m shacl_explainer.cli data.ttl shapes.jsonld --shapes-format json-ld
+```
+
+| Flag | Applies to | Default |
+|---|---|---|
+| `--data-format` | Data graph | `turtle` |
+| `--shapes-format` | Shapes graph | `turtle` |
+| `--report-format` | External `--report` graph | `turtle` |
+
+These flags are ignored for `.pkl`/`.pickle` inputs, which are unpickled directly.
 
 ## Filters
 
@@ -173,6 +332,47 @@ Limit printed explanation roots:
 ```bash
 python3 -m shacl_explainer.cli DATA.ttl SHAPES.ttl --limit 20
 ```
+
+Filters compose, and `--csv` is written before `--limit` is applied, so a CSV export
+always contains the full filtered result set even when the printed tree is truncated:
+
+```bash
+python3 -m shacl_explainer.cli DATA.ttl SHAPES.ttl \
+  --component minCount --reference-path ex:worksFor --limit 5 --csv failures.csv
+```
+
+## CLI Reference
+
+```text
+python3 -m shacl_explainer.cli DATA SHAPES [options]
+```
+
+| Option | Description |
+|---|---|
+| `DATA`, `SHAPES` | Positional: data graph and shapes graph (`.ttl`, another RDF format via `--data-format`/`--shapes-format`, or a pickled `rdflib.Graph`) |
+| `--format {text,json,html}` | Output format (default `text`) |
+| `--output PATH` | Write rendered output to a file instead of stdout |
+| `--summary` | Print aggregate counts instead of the tree |
+| `--top N` | Limit each summary table to the top N entries |
+| `--hints` | Add repair hints to text output |
+| `--color {auto,always,never}` | Colorize the text tree (default `auto`: on only for terminals) |
+| `--limit N` | Limit the number of top-level explanation roots printed |
+| `--focus URI` | Show only roots for this focus node |
+| `--path URI` | Show only leaf failures on this leaf path |
+| `--component NAME` | Show only leaf failures for this component, e.g. `minCount` |
+| `--reference-path URI` | Show only failures reached through this referencing property |
+| `--csv PATH` | Write leaf failures to CSV |
+| `--save-report PATH` | Save the raw validation report graph as Turtle |
+| `--report PATH` | Explain an existing report instead of running pySHACL |
+| `--data-format FMT` | RDF format of the data graph (default `turtle`) |
+| `--shapes-format FMT` | RDF format of the shapes graph (default `turtle`) |
+| `--report-format FMT` | RDF format of the `--report` graph (default `turtle`) |
+| `--timing` | Print parse, validation, build, and render timings to stderr |
+| `--timing-csv PATH` | Write reproducibility and timing metrics to CSV |
+
+A third positional argument is still accepted as a deprecated way of setting the output
+format (`... DATA.ttl SHAPES.ttl json`). It is retained for backward compatibility with
+earlier scripts; `--format` takes precedence and should be preferred.
 
 ## Apache Jena Report Compatibility
 
@@ -211,6 +411,11 @@ The Jena compatibility path handles reports where:
 - `sh:resultPath` identifies the failing property,
 - `sh:value` is the node that must be revalidated against the referenced shape.
 
+When `--report` is supplied, pySHACL is not used to produce the top-level report. It is
+still used internally by `fallback.py`, which re-validates the referenced value node
+against a minimal targeted copy of the referenced shape in order to reconstruct the
+nested results the external report omitted.
+
 ## Pipeline
 
 | Module | Input | Output |
@@ -221,7 +426,8 @@ The Jena compatibility path handles reports where:
 | `expander.py` | Root results plus report/data/shapes graphs | Explanation tree |
 | `fallback.py` | Focus/value node and referenced shape | Reconstructed nested validation results |
 | `deduplicator.py` | Explanation tree | Deduplicated tree with alternate chains preserved |
-| `renderer.py` | Deduplicated tree | Text, JSON, CSV, summary, and repair hints |
+| `renderer.py` | Deduplicated tree | Text tree, JSON, HTML, CSV, summary, and repair hints |
+| `report_template.html` | — | Static template that `renderer.py` fills in to produce the HTML report |
 
 ## Test Cases
 
@@ -312,9 +518,15 @@ python3 -m unittest discover -s tests -v
 Expected result:
 
 ```text
-Ran 32 tests
+Ran 33 tests
 OK
 ```
+
+| Test module | Tests | Covers |
+|---|---:|---|
+| `tests/test_cli_pipeline.py` | 30 | End-to-end CLI runs across the test-case corpus, output modes, and filters |
+| `tests/test_fallback.py` | 2 | Re-validation when an external report has no `sh:detail` |
+| `tests/test_deduplicator.py` | 1 | Diamond-reference deduplication with alternate chains preserved |
 
 ## Large Dataset Evaluation
 
@@ -328,9 +540,22 @@ against three progressively larger SHACL shape schemas (six combinations total):
 
 | Schema | Shape triples |
 |---|---|
-| `schema1.ttl` | 54 |
-| `schema2.ttl` | 110 |
-| `schema3.ttl` | 341 |
+| [`lubm_schemas/schema1.ttl`](lubm_schemas/schema1.ttl) | 54 |
+| [`lubm_schemas/schema2.ttl`](lubm_schemas/schema2.ttl) | 110 |
+| [`lubm_schemas/schema3.ttl`](lubm_schemas/schema3.ttl) | 341 |
+
+Shape-triple counts are taken from `collect_stats` in `cli.py`, which reads
+`len(shapes_graph)` after `pyshacl.validate()` has run. pySHACL adds two fixed
+RDFS/OWL axiom triples to the shapes graph in place during validation, so parsing
+one of the files above standalone gives two fewer triples (52 / 108 / 339) than the
+counts above.
+
+The two LUBM data graphs are not committed to this repository because of their size
+(171 MB and 732 MB); the shape schemas above are small enough to commit and are
+included so the evaluation can be re-run against any LUBM-generated data graph of the
+same university-benchmark ontology. The resulting reports in
+[`html_outputs/`](html_outputs/) and the full breakdown in
+[`lubm_evaluation_results.md`](lubm_evaluation_results.md) are also committed.
 
 Command (one HTML report and one summary+timing run per combination):
 
@@ -372,19 +597,42 @@ with schema2/schema3 adding a second dominant story around missing `ub:type` rea
 through course shapes. Full per-combination breakdowns (top failing paths, reference
 paths, and reference chains) are in [`lubm_evaluation_results.md`](lubm_evaluation_results.md).
 
-## Thesis Report
+## Generated Artifacts
 
-The generated feature report is available as:
+Committed outputs, so the results can be inspected without re-running the tool:
 
-```text
-SHACL_Explainer_Feature_Report.pdf
-```
+| Path | Contents |
+|---|---|
+| [`html_outputs/`](html_outputs/) | Interactive HTML reports: one per test case (TC1–TC53) plus six LUBM dataset × schema combinations |
+| [`output_mode_examples/`](output_mode_examples/) | Reference samples of the non-HTML output modes |
+| [`lubm_evaluation_results.md`](lubm_evaluation_results.md) | Full per-combination LUBM breakdown behind the summary tables above |
 
-Regenerate it with:
+The output-mode samples were produced with:
 
 ```bash
-python3 build_feature_report.py
+# JSON tree
+python3 -m shacl_explainer.cli \
+  all_test_cases/sh_node_cases/tc7_property_node.ttl \
+  all_test_cases/sh_node_cases/tc7_property_node.ttl \
+  --format json --output output_mode_examples/tc7_property_node.json
+
+# Summary
+python3 -m shacl_explainer.cli \
+  all_test_cases/sh_node_cases/tc53_deep_gradient_graph.ttl \
+  all_test_cases/sh_node_cases/tc53_deep_gradient_graph.ttl \
+  --summary > output_mode_examples/tc53_deep_gradient_graph_summary.txt
+
+# Failure CSV and timing CSV
+python3 -m shacl_explainer.cli \
+  all_test_cases/scale_cases/tc50_100_focus_nodes.ttl \
+  all_test_cases/scale_cases/tc50_100_focus_nodes.ttl \
+  --csv output_mode_examples/tc50_100_focus_nodes_failures.csv \
+  --timing-csv output_mode_examples/tc50_100_focus_nodes_timings.csv
 ```
+
+Re-running these reproduces the same content, with two expected differences: CSV row
+order varies between runs (the tree is walked over unordered RDF node sets), and the
+timing columns naturally differ per machine and run.
 
 ## Repository
 

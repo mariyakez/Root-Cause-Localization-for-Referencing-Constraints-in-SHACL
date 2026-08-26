@@ -1,0 +1,77 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ub: <http://swat.cse.lehigh.edu/onto/univ-bench.owl#>.
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ub:FullProfessorShape
+    a sh:NodeShape ;
+    sh:targetClass ub:FullProfessor ;
+    sh:property [
+        sh:path ub:doctoralDegreeFrom ;
+        sh:minCount 1 ; 
+        sh:node ub:UniversityShape ;
+    ];
+    sh:property [
+        sh:path ub:emailAddress ;
+        sh:minCount 1 ; 
+    ];
+    sh:property [
+        sh:path ub:headOf ;
+        sh:maxCount 1 ; 
+        sh:node ub:DepartmentShape ;
+    ];
+    sh:property [
+        sh:path ub:mastersDegreeFrom ;
+        sh:minCount 1 ; 
+        sh:node ub:UniversityShape ;
+    ];
+    sh:property [
+        sh:path ub:name ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+    ];
+    sh:property [
+        sh:path ub:researchInterest ;
+        sh:minCount 1 ; 
+    ];
+    sh:property [
+        sh:path ub:telephone ;
+        sh:minCount 1 ; 
+    ];
+    sh:property [
+        sh:path ub:undergraduateDegreeFrom ;
+        sh:minCount 1 ; 
+        sh:node ub:UniversityShape ;
+    ];
+    
+    sh:property [
+        sh:path ub:worksFor ;
+        sh:minCount 1 ; 
+        sh:node ub:DepartmentShape ;
+    ]. 
+    
+    
+ub:DepartmentShape
+    a sh:NodeShape ;
+    sh:targetClass ub:Department ;
+    sh:property [
+        sh:path ub:name ;
+        sh:maxCount 1 ;
+        sh:minCount 1 ; 
+    ] ;
+    sh:property [
+        sh:path ub:subOrganizationOf ;
+        sh:maxCount 1 ;
+        sh:minCount 1 ;
+        sh:node ub:UniversityShape ;
+    ] .
+    
+ub:UniversityShape
+    a sh:NodeShape ;
+    sh:targetClass ub:University ;
+    sh:property [
+        sh:path ub:name ;
+        sh:maxCount 1 ;
+        sh:minCount 1 ; 
+    ] .    
