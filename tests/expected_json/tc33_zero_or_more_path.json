@@ -1,0 +1,13 @@
+[
+  {
+    "altChains": [],
+    "component": "sh:ClassConstraintComponent",
+    "focusNode": "ex:department",
+    "message": "Every node in the parent organization chain must be an Organization",
+    "path": "_:blank-path-expression",
+    "refChain": [],
+    "repairHint": "Make ex:faculty, a value of ex:department on the failing path, an instance of ex:Organization, or replace it with one.",
+    "type": "leaf",
+    "value": "ex:faculty"
+  }
+]

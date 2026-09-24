@@ -1,0 +1,21 @@
+# As employee_only.ttl, but ex:alice is targeted by both node shapes and
+# ex:acme fails both referenced shapes. The report holds two results that differ
+# only in their anonymous sh:sourceShape, so nothing in them says which is which.
+# Exercises pairing results with candidates one to one.
+
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix ex: <http://example.org/> .
+
+ex:CompanyShape a sh:NodeShape ;
+    sh:property [ sh:path ex:legalName ; sh:minCount 1 ] .
+ex:CharityShape a sh:NodeShape ;
+    sh:property [ sh:path ex:charityNumber ; sh:minCount 1 ] .
+ex:EmployeeShape a sh:NodeShape ;
+    sh:targetClass ex:Employee ;
+    sh:property [ sh:path ex:worksFor ; sh:node ex:CompanyShape ] .
+ex:VolunteerShape a sh:NodeShape ;
+    sh:targetClass ex:Volunteer ;
+    sh:property [ sh:path ex:worksFor ; sh:node ex:CharityShape ] .
+
+ex:alice a ex:Employee, ex:Volunteer ; ex:worksFor ex:acme .
+ex:acme a ex:Company .

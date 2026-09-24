@@ -46,7 +46,9 @@ def run(data_path: str, shapes_path: str, fmt="text",
         start = time.perf_counter()
         report_graph = load_graph(report_path, rdf_format=report_format)
         timings["parse report"] = time.perf_counter() - start
-        conforms_value = report_graph.value(predicate=SH.conforms)
+        # Graph.value() returns None whenever subject and object are both
+        # unbound, so read the triple directly.
+        conforms_value = next(report_graph.objects(predicate=SH.conforms), None)
         conforms = bool(conforms_value.toPython()) if conforms_value is not None else False
     else:
         start = time.perf_counter()

@@ -4,7 +4,7 @@ SHACL Explanation Summary
 Focus nodes affected  : 1
 Total leaf failures   : 16  (16 via sh:node,  0 direct)
 Unique paths failing  : 16
-Max reference depth   : 9 levels
+Max reference depth   : 8 levels
 
 Input
   Data triples        : 165

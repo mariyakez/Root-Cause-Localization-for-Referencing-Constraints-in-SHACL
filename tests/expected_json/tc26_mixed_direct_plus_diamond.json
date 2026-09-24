@@ -1,0 +1,99 @@
+[
+  {
+    "altChains": [],
+    "component": "sh:MinCountConstraintComponent",
+    "focusNode": "ex:carol",
+    "message": "Worker code is directly required",
+    "path": "ex:workerCode",
+    "refChain": [],
+    "repairHint": "Add at least one ex:workerCode value to ex:carol.",
+    "type": "leaf"
+  },
+  {
+    "children": [
+      {
+        "altChains": [],
+        "component": "sh:MinCountConstraintComponent",
+        "focusNode": "ex:carol",
+        "message": "Contract ID is required",
+        "path": "ex:contractId",
+        "refChain": [
+          "ex:WorkerShape",
+          "ex:ContractorShape"
+        ],
+        "repairHint": "Add at least one ex:contractId value to ex:carol.",
+        "type": "leaf"
+      },
+      {
+        "altChains": [],
+        "component": "sh:MinCountConstraintComponent",
+        "focusNode": "ex:carol",
+        "message": "Department is directly required",
+        "path": "ex:department",
+        "refChain": [
+          "ex:WorkerShape",
+          "ex:StaffShape"
+        ],
+        "repairHint": "Add at least one ex:department value to ex:carol.",
+        "type": "leaf"
+      },
+      {
+        "children": [
+          {
+            "altChains": [
+              [
+                "ex:WorkerShape",
+                "ex:StaffShape",
+                "ex:PersonShape"
+              ]
+            ],
+            "component": "sh:DatatypeConstraintComponent",
+            "focusNode": "ex:carol",
+            "message": "Age must be an integer",
+            "path": "ex:age",
+            "refChain": [
+              "ex:WorkerShape",
+              "ex:ContractorShape",
+              "ex:PersonShape"
+            ],
+            "repairHint": "Replace \"not-a-number\" on ex:age with a value of type xsd:integer.",
+            "type": "leaf",
+            "value": "not-a-number"
+          },
+          {
+            "altChains": [
+              [
+                "ex:WorkerShape",
+                "ex:StaffShape",
+                "ex:PersonShape"
+              ]
+            ],
+            "component": "sh:MinCountConstraintComponent",
+            "focusNode": "ex:carol",
+            "message": "Name is required",
+            "path": "ex:name",
+            "refChain": [
+              "ex:WorkerShape",
+              "ex:ContractorShape",
+              "ex:PersonShape"
+            ],
+            "repairHint": "Add at least one ex:name value to ex:carol.",
+            "type": "leaf"
+          }
+        ],
+        "focusNode": "ex:carol",
+        "refChain": [
+          "ex:WorkerShape"
+        ],
+        "referencedShape": "ex:PersonShape",
+        "shape": "ex:ContractorShape",
+        "type": "reference"
+      }
+    ],
+    "focusNode": "ex:carol",
+    "refChain": [],
+    "referencedShape": "ex:ContractorShape",
+    "shape": "ex:WorkerShape",
+    "type": "reference"
+  }
+]

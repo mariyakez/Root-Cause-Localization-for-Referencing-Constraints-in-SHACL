@@ -1,0 +1,12 @@
+[
+  {
+    "altChains": [],
+    "component": "sh:MinCountConstraintComponent",
+    "focusNode": "ex:bob",
+    "message": "Profile URL is useful metadata",
+    "path": "ex:profileUrl",
+    "refChain": [],
+    "repairHint": "Add at least one ex:profileUrl value to ex:bob.",
+    "type": "leaf"
+  }
+]

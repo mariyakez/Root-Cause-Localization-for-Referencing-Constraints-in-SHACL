@@ -1,0 +1,45 @@
+[
+  {
+    "altChains": [],
+    "component": "sh:DatatypeConstraintComponent",
+    "focusNode": "ex:alice",
+    "message": "Age must be an integer",
+    "path": "ex:age",
+    "refChain": [],
+    "repairHint": "Replace \"thirty\" on ex:age with a value of type xsd:integer.",
+    "type": "leaf",
+    "value": "thirty"
+  },
+  {
+    "altChains": [],
+    "component": "sh:MinCountConstraintComponent",
+    "focusNode": "ex:alice",
+    "message": "Employee ID is directly required",
+    "path": "ex:employeeId",
+    "refChain": [],
+    "repairHint": "Add at least one ex:employeeId value to ex:alice.",
+    "type": "leaf"
+  },
+  {
+    "children": [
+      {
+        "altChains": [],
+        "component": "sh:MinCountConstraintComponent",
+        "focusNode": "ex:alice",
+        "message": "Employee name is required through PersonShape",
+        "path": "ex:name",
+        "refChain": [
+          "ex:EmployeeShape",
+          "ex:PersonShape"
+        ],
+        "repairHint": "Add at least one ex:name value to ex:alice.",
+        "type": "leaf"
+      }
+    ],
+    "focusNode": "ex:alice",
+    "refChain": [],
+    "referencedShape": "ex:PersonShape",
+    "shape": "ex:EmployeeShape",
+    "type": "reference"
+  }
+]

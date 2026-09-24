@@ -1,0 +1,14 @@
+# sh:class on a node shape rather than on a property shape. With no sh:path the
+# constraint is about the focus node itself, so this is the one sh:class case
+# whose hint names the focus node. Compare tc12_direct_class.ttl, where the
+# constraint sits on a property shape and the hint must name the value instead.
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix ex:  <http://example.org/> .
+
+ex:StaffShape
+    a sh:NodeShape ;
+    sh:targetNode ex:erin ;
+    sh:class ex:Employee .
+
+ex:erin
+    a ex:Person .

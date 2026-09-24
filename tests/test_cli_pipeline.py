@@ -1,4 +1,7 @@
+import json
+import os
 import pickle
+import random
 import subprocess
 import sys
 import tempfile
@@ -11,6 +14,7 @@ from rdflib import Graph
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 CASE_DIR = "all_test_cases/sh_node_cases"
 DIRECT_CASE_DIR = "all_test_cases/direct_constraint_cases"
+HINT_CASE_DIR = "all_test_cases/repair_hint_cases"
 ADDITIONAL_CASE_DIRS = [
     "all_test_cases/mixed_constraint_cases",
     "all_test_cases/multi_focus_cases",
@@ -113,13 +117,13 @@ class ShaclExplainerCliTests(unittest.TestCase):
             (
                 "all_test_cases/external_report_cases/tc43_data_shapes.ttl",
                 "all_test_cases/external_report_cases/tc43_data_shapes.ttl",
-                "all_test_cases/external_report_cases/tc43_jena_property_shape_report.ttl",
+                "all_test_cases/external_report_cases/tc43_enclosing_shape_property_report.ttl",
                 "ex:legalName",
             ),
             (
                 "all_test_cases/external_report_cases/tc43_data_shapes.ttl",
                 "all_test_cases/external_report_cases/tc43_data_shapes.ttl",
-                "all_test_cases/external_report_cases/tc44_topbraid_like_report.ttl",
+                "all_test_cases/external_report_cases/tc44_referenced_shape_property_report.ttl",
                 "ex:legalName",
             ),
             (
@@ -346,12 +350,14 @@ class ShaclExplainerCliTests(unittest.TestCase):
         )
         self.assertNotIn("value to ex:alice", result.stdout)
 
-    def test_jena_report_node_source_shape_with_result_path(self):
+    def test_synthetic_report_enclosing_source_shape_with_result_path(self):
+        """A report naming the enclosing node shape plus sh:resultPath, a
+        structure no validator checked so far emits, is still resolved."""
         result = self.run_cli(
             f"{CASE_DIR}/tc7_property_node.ttl",
             f"{CASE_DIR}/tc7_property_node.ttl",
             "--report",
-            f"{CASE_DIR}/jena_report_tc7_node_source_no_detail.ttl",
+            f"{CASE_DIR}/synthetic_report_tc7_enclosing_shape_no_detail.ttl",
             "--hints",
         )
 
@@ -365,6 +371,223 @@ class ShaclExplainerCliTests(unittest.TestCase):
             ],
         )
         self.assertNotIn("sh:node ex:EmployeeShape", result.stdout)
+
+    def test_real_validator_property_level_reports_recover_referenced_shape(self):
+        """Apache Jena 6.2.0 and TopBraid SHACL 1.5.0 both name the property
+        shape, anonymously, in sh:sourceShape for a property-level sh:node
+        result, so the reported path is the only link back to the constraint."""
+        for report in (
+            "jena_real_tc7_property_no_detail.ttl",
+            "topbraid_real_tc7_property_no_detail.ttl",
+        ):
+            with self.subTest(report=report):
+                result = self.run_cli(
+                    f"{CASE_DIR}/tc7_property_node.ttl",
+                    f"{CASE_DIR}/tc7_property_node.ttl",
+                    "--report",
+                    f"{CASE_DIR}/{report}",
+                    "--hints",
+                )
+
+                self.assert_contains_all(
+                    result.stdout,
+                    [
+                        "sh:node ex:CompanyShape  path=ex:worksFor",
+                        "Focus node: ex:alice",
+                        "minCount    ex:legalName",
+                        "\u2192 fix: Add at least one ex:legalName value to ex:acme.",
+                    ],
+                )
+                # The failure belongs to the value node, not to the outer focus node.
+                self.assertNotIn("value to ex:alice", result.stdout)
+
+    def test_conforming_external_report_is_reported_valid(self):
+        """A conforming report passed with --report must say so, not print
+        an empty explanation."""
+        case = "all_test_cases/cycle_cases/tc49_cycle_without_leaf_failure.ttl"
+        result = self.run_cli(
+            case,
+            case,
+            "--report",
+            "all_test_cases/cycle_cases/topbraid_real_tc49_conforms.ttl",
+        )
+
+        self.assertEqual(result.stdout.strip(), "\u2713 Data is valid.")
+
+    def test_fallback_keeps_a_validator_result_it_cannot_break_down(self):
+        """If re-validation finds nothing to explain an sh:node result, or the
+        report gives no sh:value and the path leads to no value, the
+        validator's own result is kept and marked, never silently dropped."""
+        edges = "all_test_cases/external_report_cases/fallback_edges"
+        cases = [
+            (
+                f"{edges}/company_now_valid.ttl",
+                f"{CASE_DIR}/jena_real_tc7_property_no_detail.ttl",
+                "ex:acme",
+                "re-validation against the referenced shape found no violation",
+            ),
+            (
+                f"{edges}/employee_without_employer.ttl",
+                f"{edges}/report_without_value.ttl",
+                None,
+                "the reported path leads to no value",
+            ),
+        ]
+        for data, report, value, note in cases:
+            with self.subTest(data=data):
+                result = self.run_cli(data, data, "--report", report, "--format", "json")
+                roots = json.loads(result.stdout)
+                self.assertEqual(len(roots), 1)
+                [leaf] = roots[0]["children"]
+                self.assertEqual(leaf["component"], "sh:NodeConstraintComponent")
+                self.assertEqual(leaf["path"], "ex:worksFor")
+                self.assertEqual(leaf.get("value"), value)
+                self.assertIn(note, leaf["note"])
+
+                summary = self.run_cli(data, data, "--report", report, "--summary")
+                self.assertIn("Not broken down       : 1", summary.stdout)
+
+    def test_real_reports_on_a_targeted_referenced_shape_stay_local(self):
+        """When the referenced shape has a target of its own, rebuilding a
+        result from a real report must re-validate only the value it names:
+        ex:globex also fails ex:CompanyShape but is not reached from ex:alice,
+        so its failure stays a direct result of its own."""
+        edges = "all_test_cases/external_report_cases/fallback_edges"
+        data = f"{edges}/targeted_referenced_shape.ttl"
+        for validator in ("jena", "topbraid"):
+            with self.subTest(validator=validator):
+                result = self.run_cli(
+                    data, data, "--report", f"{edges}/targeted_referenced_shape.{validator}.ttl",
+                    "--format", "json",
+                )
+                roots = {root["focusNode"]: root for root in json.loads(result.stdout)}
+
+                self.assertEqual(set(roots), {"ex:alice", "ex:globex"})
+                self.assertEqual(
+                    [leaf["focusNode"] for leaf in roots["ex:alice"]["children"]],
+                    ["ex:acme"],
+                )
+                self.assertEqual(roots["ex:globex"]["type"], "leaf")
+                self.assertEqual(roots["ex:globex"]["refChain"], [])
+
+    def test_real_reports_reach_a_shape_nested_below_the_referenced_one(self):
+        """The referenced shape declares a property-level sh:node of its own;
+        re-validation must carry that shape along, or the failure below it
+        is lost."""
+        edges = "all_test_cases/external_report_cases/fallback_edges"
+        data = f"{edges}/nested_property_node.ttl"
+        for validator in ("jena", "topbraid"):
+            with self.subTest(validator=validator):
+                result = self.run_cli(
+                    data, data, "--report", f"{edges}/nested_property_node.{validator}.ttl", "--hints",
+                )
+                self.assert_contains_all(
+                    result.stdout,
+                    [
+                        "sh:node ex:CompanyShape  path=ex:worksFor",
+                        "sh:node ex:AddressShape  path=ex:address",
+                        "minCount    ex:city",
+                        "via ex:CompanyShape -> ex:AddressShape",
+                        "\u2192 fix: Add at least one ex:city value to ex:hq.",
+                    ],
+                )
+                self.assertNotIn("note:", result.stdout)
+
+    def test_property_level_result_without_value_uses_values_along_the_path(self):
+        """A property-level result without sh:value is re-validated on the
+        values its path reaches, never on the focus node."""
+        result = self.run_cli(
+            f"{CASE_DIR}/tc7_property_node.ttl",
+            f"{CASE_DIR}/tc7_property_node.ttl",
+            "--report",
+            "all_test_cases/external_report_cases/fallback_edges/report_without_value.ttl",
+            "--hints",
+        )
+
+        self.assert_contains_all(
+            result.stdout,
+            [
+                "sh:node ex:CompanyShape  path=ex:worksFor",
+                "minCount    ex:legalName",
+                "\u2192 fix: Add at least one ex:legalName value to ex:acme.",
+            ],
+        )
+        self.assertNotIn("value to ex:alice", result.stdout)
+
+    def test_output_does_not_depend_on_hash_seed_or_triple_order(self):
+        """Python seeds string hashing per process, which reorders the
+        validator's results; the explanation must come out byte for byte the
+        same regardless, including which root holds a shared leaf and which
+        chain is primary."""
+        def explain(path, seed, *extra):
+            env = {**os.environ, "PYTHONHASHSEED": str(seed)}
+            return subprocess.run(
+                [sys.executable, "-m", "shacl_explainer.cli", path, path, "--hints", *extra],
+                cwd=PROJECT_ROOT, check=True, text=True, capture_output=True, env=env,
+            ).stdout
+
+        for fixture in (
+            f"{CASE_DIR}/tc5_diamond.ttl",
+            "all_test_cases/scale_cases/tc52_large_diamond_dedup.ttl",
+            "all_test_cases/mixed_constraint_cases/tc26_mixed_direct_plus_diamond.ttl",
+        ):
+            with self.subTest(fixture=fixture):
+                outputs = {explain(fixture, seed) for seed in (1, 2, 3)}
+                self.assertEqual(len(outputs), 1)
+
+        # The same triples in another order must give the same explanation.
+        source = Graph().parse(PROJECT_ROOT / CASE_DIR / "tc5_diamond.ttl", format="turtle")
+        triples = list(source)
+        with tempfile.TemporaryDirectory() as temp_dir:
+            outputs = set()
+            for seed in (1, 2, 3):
+                random.Random(seed).shuffle(triples)
+                shuffled = Graph()
+                for triple in triples:
+                    shuffled.add(triple)
+                path = Path(temp_dir) / f"tc5_shuffled_{seed}.nt"
+                shuffled.serialize(destination=path, format="nt", encoding="utf-8")
+                outputs.add(explain(str(path), seed, "--data-format", "nt", "--shapes-format", "nt"))
+            self.assertEqual(len(outputs), 1)
+
+    def test_shared_path_reports_resolve_to_the_applicable_property_shape(self):
+        """When several property shapes declare sh:node on one path, a real
+        report that names an anonymous property shape must be resolved to the
+        one that produced each result, not to every shape on the path."""
+        case_dir = "all_test_cases/external_report_cases/shared_path"
+        company = ("ex:CompanyShape", "ex:legalName")
+        charity = ("ex:CharityShape", "ex:charityNumber")
+        expected = {
+            "employee_only": {company},
+            "both_types": {company, charity},
+            "both_types_messages": {company, charity},
+            "both_types_one_failing": {company},
+        }
+
+        for case, steps in expected.items():
+            for validator in ("jena", "topbraid"):
+                with self.subTest(case=case, validator=validator):
+                    data = f"{case_dir}/{case}.ttl"
+                    result = self.run_cli(
+                        data,
+                        data,
+                        "--report",
+                        f"{case_dir}/{case}.{validator}.ttl",
+                        "--format",
+                        "json",
+                    )
+                    roots = json.loads(result.stdout)
+                    leaves = [(root, leaf) for root in roots for leaf in root["children"]]
+
+                    self.assertEqual(
+                        {(root["referencedShape"], leaf["path"]) for root, leaf in leaves},
+                        steps,
+                    )
+                    # Each failure is reached through its own shape alone, never
+                    # through a chain joining two shapes that do not reference
+                    # each other.
+                    for root, leaf in leaves:
+                        self.assertEqual(leaf["refChain"], [root["referencedShape"]])
 
     def test_summary_mode(self):
         result = self.run_cli(
@@ -451,6 +674,61 @@ class ShaclExplainerCliTests(unittest.TestCase):
 
         self.assertIn("→ fix: Add at least one ex:age value to ex:bob.", result.stdout)
         self.assertIn("→ fix: Change \"not-an-email\" on ex:email", result.stdout)
+
+    def test_repair_hints_name_the_constraint_parameter(self):
+        """A hint states what the shape requires, and describes the node the
+        constraint was checked on. For sh:class on a property shape that is the
+        value reached along the path, not the focus node holding it."""
+        expected = {
+            f"{DIRECT_CASE_DIR}/tc11_direct_datatype.ttl":
+                "→ fix: Replace \"three\" on ex:credits with a value of type xsd:integer.",
+            f"{DIRECT_CASE_DIR}/tc13_direct_pattern.ttl":
+                "→ fix: Change \"cs101\" on ex:courseCode so it matches ^CS-[0-9]{3}$.",
+            f"{DIRECT_CASE_DIR}/tc14_direct_in.ttl":
+                "→ fix: Replace \"expert\" on ex:level with one of: "
+                "\"beginner\", \"intermediate\", \"advanced\".",
+            f"{DIRECT_CASE_DIR}/tc10_direct_max_count.ttl":
+                "→ fix: Remove ex:nickname values from ex:bob until at most 1 remains.",
+            # sh:class on a property shape: the instance must be the value.
+            f"{DIRECT_CASE_DIR}/tc12_direct_class.ttl":
+                "→ fix: Make ex:charlie, the ex:student value of ex:enrollment1, "
+                "an instance of ex:Student, or replace it with one.",
+            # sh:class on a node shape: the instance must be the focus node.
+            f"{HINT_CASE_DIR}/node_level_class.ttl":
+                "→ fix: Make ex:erin an instance of ex:Employee.",
+            # A minimum above one cannot be repaired by adding a single value.
+            f"{HINT_CASE_DIR}/min_count_above_one.ttl":
+                "→ fix: Add 2 more ex:reviewer values to ex:project1 "
+                "(has 1, needs at least 3).",
+        }
+
+        for path, hint in expected.items():
+            with self.subTest(fixture=Path(path).name):
+                result = self.run_cli(path, path, "--hints")
+                self.assertIn(hint, result.stdout)
+
+    def test_repair_hint_parameter_from_an_anonymous_property_shape(self):
+        """Jena and TopBraid report an anonymous property shape as a blank node
+        that matches nothing in the shapes graph, leaving the reported path as
+        the only link back to the constraint. The parameter may be named only
+        where every property shape on that path agrees on it."""
+        fixture = f"{HINT_CASE_DIR}/anonymous_property_shape.ttl"
+        result = self.run_cli(
+            fixture, fixture,
+            "--report", f"{HINT_CASE_DIR}/anonymous_property_shape.report.ttl",
+            "--hints",
+        )
+
+        self.assertIn(
+            "→ fix: Replace ex:notALiteral on ex:agreed with a value of type xsd:integer.",
+            result.stdout,
+        )
+        self.assertIn(
+            "→ fix: Replace ex:notALiteral on ex:disputed with a value of "
+            "the required datatype.",
+            result.stdout,
+        )
+        self.assertNotIn("on ex:disputed with a value of type", result.stdout)
 
     def test_text_tree_color_modes(self):
         plain = self.run_cli(

@@ -87,6 +87,19 @@ def full_leaf_chain(leaf: LeafFailure, chain=None) -> list:
         full_chain.append(source_shape)
     return full_chain
 
+def reference_depth(leaf: LeafFailure) -> int:
+    """
+    Reference depth of a leaf: the number of sh:node steps traversed to reach it.
+
+    One step is recorded in ref_chain per traversal, for node-level and
+    property-level references alike, so a direct failure is 0 and one
+    reference step is 1 in both cases. This is the same quantity the HTML
+    report derives from reference-node nesting; it is deliberately not the
+    length of the displayed chain, which also names the shape owning the
+    leaf's constraint when that shape is not already shown.
+    """
+    return len(leaf.ref_chain)
+
 def format_alt_chains(leaf: LeafFailure) -> str:
     chains = []
     for chain in getattr(leaf, "alt_chains", []):
@@ -99,24 +112,102 @@ def component_label(component) -> str:
     compact = short_uri(component).split(":")[-1]
     return COMPONENT_SHORT.get(compact, compact)
 
+def as_int(value):
+    try:
+        return int(str(value))
+    except (TypeError, ValueError):
+        return None
+
+def format_allowed(parameter, limit=5) -> str | None:
+    """The members of sh:in, as a hint should name them. A long list is cut so
+    that one hint stays readable in a terminal, a table cell and a CSV field."""
+    if not isinstance(parameter, list) or not parameter:
+        return None
+    shown = ", ".join(short_uri(member) for member in parameter[:limit])
+    remaining = len(parameter) - limit
+    return f"{shown} (and {remaining} more)" if remaining > 0 else shown
+
+def path_name(leaf: LeafFailure) -> str | None:
+    """The failing path as a hint may name it.
+
+    A complex path, such as an inverse or a sequence, is a blank-node structure
+    whose label rdflib mints afresh on every parse. Printing it would put
+    something like <n3519653f27e1487f> in front of the reader, which names
+    nothing and changes between runs, so such a path has no name here and the
+    hints fall back to describing it.
+    """
+    if leaf.result_path is None or isinstance(leaf.result_path, BNode):
+        return None
+    return short_uri(leaf.result_path) or None
+
 def repair_hint(leaf: LeafFailure) -> str | None:
+    """A local repair suggestion for one leaf.
+
+    The hint names what the shape requires wherever the parameter was
+    recovered, and falls back to its unparameterised wording otherwise. It
+    describes the node the constraint was actually checked on: for a property
+    shape that is each value reached along the path, not the focus node holding
+    them, which is the distinction sh:class turns on.
+    """
     comp = component_label(leaf.component)
-    path = short_uri(leaf.result_path) or "the required path"
     focus = short_uri(leaf.focus_node) or "the focus node"
     value = short_uri(leaf.value_node)
+    parameter = leaf.parameter
+
+    named = path_name(leaf)
+    on_path = f"on {named}" if named else "on the failing path"
+    one_value = f"one {named} value" if named else "one value on the failing path"
+    some_values = f"{named} values" if named else "values on the failing path"
 
     if comp == "minCount":
-        return f"Add at least one {path} value to {focus}."
+        minimum = as_int(parameter)
+        if minimum is None or minimum <= 1:
+            return f"Add at least {one_value} to {focus}."
+        present = leaf.value_count
+        if present is None or present >= minimum:
+            return f"Add {some_values} to {focus} until it has at least {minimum}."
+        missing = minimum - present
+        countable = one_value[len("one "):] if missing == 1 else some_values
+        return (f"Add {missing} more {countable} to {focus} "
+                f"(has {present}, needs at least {minimum}).")
+
     if comp == "maxCount":
-        return f"Remove extra {path} values from {focus}."
+        maximum = as_int(parameter)
+        if maximum is None:
+            return f"Remove extra {some_values} from {focus}."
+        return (f"Remove {some_values} from {focus} until at most {maximum} "
+                f"{'remains' if maximum == 1 else 'remain'}.")
+
     if comp == "datatype" and value:
-        return f"Replace {value} on {path} with a value of the required datatype."
+        datatype = short_uri(parameter) if parameter is not None else None
+        if datatype:
+            return f"Replace {value} {on_path} with a value of type {datatype}."
+        return f"Replace {value} {on_path} with a value of the required datatype."
+
     if comp == "pattern" and value:
-        return f"Change {value} on {path} so it matches the required pattern."
+        if parameter is not None:
+            return f"Change {value} {on_path} so it matches {parameter}."
+        return f"Change {value} {on_path} so it matches the required pattern."
+
+    # sh:class on a property shape constrains each value reached along the
+    # path, so the node to repair is that value and not the focus node holding
+    # it. Only a node shape's sh:class constrains the focus node itself, which
+    # is the case with no path.
     if comp == "class":
-        return f"Make {focus} conform to the required class."
+        required = short_uri(parameter) if parameter is not None else "the required class"
+        if leaf.result_path is None:
+            return f"Make {focus} an instance of {required}."
+        if value:
+            where = f"the {named} value of {focus}" if named else f"a value of {focus} {on_path}"
+            return f"Make {value}, {where}, an instance of {required}, or replace it with one."
+        return f"Give {focus} a value {on_path} that is an instance of {required}."
+
     if comp == "in" and value:
-        return f"Replace {value} on {path} with one of the allowed values."
+        allowed = format_allowed(parameter)
+        if allowed:
+            return f"Replace {value} {on_path} with one of: {allowed}."
+        return f"Replace {value} {on_path} with one of the allowed values."
+
     return None
 
 COMPONENT_WIDTH = 10   # fixed column width for component names
@@ -197,6 +288,8 @@ def _render_nodes(nodes: list, prefix: str, hints: bool, color: bool) -> str:
                 details.append(color_text(f"via {format_chain(primary_chain)}", "magenta", enabled=color))
             if node.message:
                 details.append(color_text(f"message: {node.message}", "dim", enabled=color))
+            if node.note:
+                details.append(color_text(f"note: {node.note}", "yellow", enabled=color))
             if hints:
                 hint = repair_hint(node)
                 if hint:
@@ -310,7 +403,7 @@ def to_summary(nodes: list, top=None, stats=None) -> str:
     focus_nodes = {str(getattr(n, "focus_node", "")) for n in nodes}
 
     # max reference depth
-    max_depth = max((len(full_leaf_chain(l)) for l in leaves), default=0)
+    max_depth = max((reference_depth(l) for l in leaves), default=0)
 
     # counters
     leaf_paths = Counter(
@@ -339,6 +432,7 @@ def to_summary(nodes: list, top=None, stats=None) -> str:
 
     direct   = sum(1 for l in leaves if not l.ref_chain)
     via_node = sum(1 for l in leaves if     full_leaf_chain(l))
+    unexplained = sum(1 for l in leaves if l.note)
 
     sep = "━" * 44
     lines = [
@@ -351,6 +445,9 @@ def to_summary(nodes: list, top=None, stats=None) -> str:
         f"Unique paths failing  : {len(leaf_paths)}",
         f"Max reference depth   : {max_depth} level{'s' if max_depth != 1 else ''}",
     ]
+    if unexplained:
+        lines.append(f"Not broken down       : {unexplained}"
+                     "  (validator's sh:node result kept; see note)")
 
     if stats:
         lines += [
@@ -362,7 +459,7 @@ def to_summary(nodes: list, top=None, stats=None) -> str:
               f"  ({stats.get('top_results', 0)} top-level)",
         ]
 
-    def add_table(title, rows, col1="", col2=""):
+    def add_table(title, rows):
         lines.append("")
         lines.append(title)
         if not rows:
@@ -429,14 +526,14 @@ def write_csv(nodes: list, destination):
             chain = full_leaf_chain(leaf)
             writer.writerow({
                 "focus_node": short_uri(leaf.focus_node),
-                "depth": len(chain),
+                "depth": reference_depth(leaf),
                 "reference_chain": format_chain(chain),
                 "alternate_reference_chains": format_alt_chains(leaf),
                 "leaf_path": short_uri(leaf.result_path),
                 "component": short_uri(leaf.component),
                 "value": short_uri(leaf.value_node),
                 "message": leaf.message or "",
-                "kind": "referenced" if chain else "direct",
+                "kind": "unexplained" if leaf.note else ("referenced" if chain else "direct"),
                 "repair_hint": repair_hint(leaf) or "",
             })
     finally:
@@ -461,6 +558,7 @@ def tree_to_data(nodes: list) -> list:
                 "component":  serialise_value(node.component),
                 "value":      serialise_value(node.value_node) if node.value_node else None,
                 "message":    node.message,
+                "note":       node.note,
                 "repairHint": repair_hint(node),
                 "refChain":   [short_uri(s) for s in full_leaf_chain(node)],
                 "altChains":  [
@@ -493,7 +591,10 @@ def shape_catalog_data(shapes_graph) -> dict:
     SH = Namespace(SHACL_NS)
     catalog: dict[str, list[dict[str, str]]] = {}
 
-    for shape in set(shapes_graph.subjects(RDF.type, SH.NodeShape)):
+    # Sorted, not merely deduplicated: the catalog is written into the HTML
+    # report, and iterating the set directly left its key order to vary
+    # between runs on one unchanged input.
+    for shape in sorted(set(shapes_graph.subjects(RDF.type, SH.NodeShape)), key=str):
         shape_key = short_uri(shape)
         children: list[dict[str, str]] = []
         seen: set[tuple[str, str, str]] = set()
@@ -534,9 +635,11 @@ def to_json(nodes: list) -> str:
 
 def to_html(nodes: list, title: str = "SHACL Explanation Report", metadata=None, shape_catalog=None) -> str:
     """
-    Produce a self-contained HTML file embedding the explanation tree.
+    Produce a single HTML file embedding the explanation tree.
     The JSON data is injected into the REPORT_DATA constant in the
-    page's <script> block. No external dependencies required.
+    page's <script> block. No build step and no runtime library; the
+    template's only network requests are the web-font links in its
+    <head>, and the report works offline without them.
     """
     import datetime
     import html as _html

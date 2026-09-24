@@ -1,0 +1,21 @@
+# As both_types.ttl, but ex:acme has a charity number and so conforms to
+# ex:CharityShape. The report holds one result against two applicable candidates.
+# Exercises the evidence filter: the candidate whose referenced shape the value
+# satisfies cannot have produced the result.
+
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix ex: <http://example.org/> .
+
+ex:CompanyShape a sh:NodeShape ;
+    sh:property [ sh:path ex:legalName ; sh:minCount 1 ] .
+ex:CharityShape a sh:NodeShape ;
+    sh:property [ sh:path ex:charityNumber ; sh:minCount 1 ] .
+ex:EmployeeShape a sh:NodeShape ;
+    sh:targetClass ex:Employee ;
+    sh:property [ sh:path ex:worksFor ; sh:node ex:CompanyShape ] .
+ex:VolunteerShape a sh:NodeShape ;
+    sh:targetClass ex:Volunteer ;
+    sh:property [ sh:path ex:worksFor ; sh:node ex:CharityShape ] .
+
+ex:alice a ex:Employee, ex:Volunteer ; ex:worksFor ex:acme .
+ex:acme a ex:Company ; ex:charityNumber "1234567" .

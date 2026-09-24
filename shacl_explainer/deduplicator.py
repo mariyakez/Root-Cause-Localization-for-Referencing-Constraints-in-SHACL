@@ -1,7 +1,23 @@
 # removes diamond duplicates
 # deduplicator.py
 from dataclasses import replace
+from rdflib import BNode
 from .tree import LeafFailure, ReferenceNode
+
+
+def _label(term) -> str:
+    # A blank node's label is new on every parse, so it must not decide order.
+    return "" if term is None or isinstance(term, BNode) else str(term)
+
+
+def child_order(node):
+    """Content key for the children of one step. Merging sibling steps appends
+    one step's children after another's, so a step's children are sorted again
+    afterwards; the sort is stable, so ties keep their earlier order."""
+    if isinstance(node, LeafFailure):
+        return (1, _label(node.focus_node), _label(node.result_path),
+                _label(node.component), _label(node.value_node))
+    return (0, _label(node.focus_node), _label(node.source_shape), _label(node.result_path))
 
 def deduplicate(roots: list) -> list:
     """
@@ -30,7 +46,8 @@ def deduplicate(roots: list) -> list:
 
             key = ref_key(node)
             if key in by_key:
-                by_key[key].children = [*by_key[key].children, *node.children]
+                by_key[key].children = sorted([*by_key[key].children, *node.children],
+                                              key=child_order)
             else:
                 by_key[key] = node
                 merged.append(node)

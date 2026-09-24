@@ -1,0 +1,12 @@
+[
+  {
+    "altChains": [],
+    "component": "sh:MinCountConstraintComponent",
+    "focusNode": "ex:carol",
+    "message": "Name is required | Name ist erforderlich",
+    "path": "ex:name",
+    "refChain": [],
+    "repairHint": "Add at least one ex:name value to ex:carol.",
+    "type": "leaf"
+  }
+]

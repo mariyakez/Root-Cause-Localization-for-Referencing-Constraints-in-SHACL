@@ -1,0 +1,48 @@
+[
+  {
+    "children": [
+      {
+        "altChains": [],
+        "component": "sh:MinCountConstraintComponent",
+        "focusNode": "ex:item",
+        "message": "B-side required property is missing",
+        "path": "ex:bRequired",
+        "refChain": [
+          "ex:ShapeA",
+          "ex:ShapeB"
+        ],
+        "repairHint": "Add at least one ex:bRequired value to ex:item.",
+        "type": "leaf"
+      },
+      {
+        "children": [
+          {
+            "altChains": [],
+            "component": "sh:MinCountConstraintComponent",
+            "focusNode": "ex:item",
+            "message": "A-side required property is missing",
+            "path": "ex:aRequired",
+            "refChain": [
+              "ex:ShapeA",
+              "ex:ShapeB"
+            ],
+            "repairHint": "Add at least one ex:aRequired value to ex:item.",
+            "type": "leaf"
+          }
+        ],
+        "focusNode": "ex:item",
+        "refChain": [
+          "ex:ShapeA"
+        ],
+        "referencedShape": "ex:ShapeA",
+        "shape": "ex:ShapeB",
+        "type": "reference"
+      }
+    ],
+    "focusNode": "ex:item",
+    "refChain": [],
+    "referencedShape": "ex:ShapeB",
+    "shape": "ex:ShapeA",
+    "type": "reference"
+  }
+]

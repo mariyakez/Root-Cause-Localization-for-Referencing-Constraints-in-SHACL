@@ -1,0 +1,23 @@
+[
+  {
+    "altChains": [],
+    "component": "sh:DatatypeConstraintComponent",
+    "focusNode": "ex:dana",
+    "message": "Blank property shape requires integer age",
+    "path": "ex:age",
+    "refChain": [],
+    "repairHint": "Replace \"forty\" on ex:age with a value of type xsd:integer.",
+    "type": "leaf",
+    "value": "forty"
+  },
+  {
+    "altChains": [],
+    "component": "sh:MinCountConstraintComponent",
+    "focusNode": "ex:dana",
+    "message": "Named property shape requires a name",
+    "path": "ex:name",
+    "refChain": [],
+    "repairHint": "Add at least one ex:name value to ex:dana.",
+    "type": "leaf"
+  }
+]

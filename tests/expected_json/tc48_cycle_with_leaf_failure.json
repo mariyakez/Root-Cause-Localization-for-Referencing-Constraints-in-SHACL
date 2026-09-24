@@ -1,0 +1,25 @@
+[
+  {
+    "children": [
+      {
+        "altChains": [],
+        "component": "sh:DatatypeConstraintComponent",
+        "focusNode": "ex:item",
+        "message": "Age is invalid inside the recursive cycle",
+        "path": "ex:age",
+        "refChain": [
+          "ex:ShapeA",
+          "ex:ShapeB"
+        ],
+        "repairHint": "Replace \"old\" on ex:age with a value of type xsd:integer.",
+        "type": "leaf",
+        "value": "old"
+      }
+    ],
+    "focusNode": "ex:item",
+    "refChain": [],
+    "referencedShape": "ex:ShapeB",
+    "shape": "ex:ShapeA",
+    "type": "reference"
+  }
+]

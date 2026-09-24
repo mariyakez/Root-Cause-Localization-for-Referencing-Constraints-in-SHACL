@@ -1,0 +1,12 @@
+[
+  {
+    "altChains": [],
+    "component": "sh:MinCountConstraintComponent",
+    "focusNode": "ex:bob",
+    "message": "Email is required | Provide one primary contact email",
+    "path": "ex:email",
+    "refChain": [],
+    "repairHint": "Add at least one ex:email value to ex:bob.",
+    "type": "leaf"
+  }
+]

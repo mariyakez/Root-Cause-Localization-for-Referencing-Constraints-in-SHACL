@@ -1,0 +1,22 @@
+# Real output of Apache Jena SHACL 6.2.0, captured with:
+#   shacl validate --shapes tc7_property_node.ttl --data tc7_property_node.ttl
+# Unlike the hand-written Jena-style fixtures, this report carries the
+# property shape in sh:sourceShape, as an anonymous node, and no sh:detail.
+PREFIX ex:   <http://example.org/>
+PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sh:   <http://www.w3.org/ns/shacl#>
+PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
+
+[ rdf:type     sh:ValidationReport;
+  sh:conforms  false;
+  sh:result    [ rdf:type                      sh:ValidationResult;
+                 sh:focusNode                  ex:alice;
+                 sh:resultMessage              "ex:worksFor must point to a valid company";
+                 sh:resultPath                 ex:worksFor;
+                 sh:resultSeverity             sh:Violation;
+                 sh:sourceConstraintComponent  sh:NodeConstraintComponent;
+                 sh:sourceShape                [] ;
+                 sh:value                      ex:acme
+               ]
+] .

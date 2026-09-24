@@ -1,0 +1,12 @@
+[
+  {
+    "altChains": [],
+    "component": "sh:MinCountConstraintComponent",
+    "focusNode": "ex:alice",
+    "message": "Email is recommended",
+    "path": "ex:email",
+    "refChain": [],
+    "repairHint": "Add at least one ex:email value to ex:alice.",
+    "type": "leaf"
+  }
+]

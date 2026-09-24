@@ -1,0 +1,612 @@
+[
+  {
+    "children": [
+      {
+        "children": [
+          {
+            "altChains": [
+              [
+                "ex:RootShape",
+                "ex:RightShape",
+                "ex:PersonShape"
+              ]
+            ],
+            "component": "sh:DatatypeConstraintComponent",
+            "focusNode": "ex:w01",
+            "message": "Age must be an integer",
+            "path": "ex:age",
+            "refChain": [
+              "ex:RootShape",
+              "ex:LeftShape",
+              "ex:PersonShape"
+            ],
+            "repairHint": "Replace \"old\" on ex:age with a value of type xsd:integer.",
+            "type": "leaf",
+            "value": "old"
+          },
+          {
+            "altChains": [
+              [
+                "ex:RootShape",
+                "ex:RightShape",
+                "ex:PersonShape"
+              ]
+            ],
+            "component": "sh:MinCountConstraintComponent",
+            "focusNode": "ex:w01",
+            "message": "Name is required",
+            "path": "ex:name",
+            "refChain": [
+              "ex:RootShape",
+              "ex:LeftShape",
+              "ex:PersonShape"
+            ],
+            "repairHint": "Add at least one ex:name value to ex:w01.",
+            "type": "leaf"
+          }
+        ],
+        "focusNode": "ex:w01",
+        "refChain": [
+          "ex:RootShape"
+        ],
+        "referencedShape": "ex:PersonShape",
+        "shape": "ex:LeftShape",
+        "type": "reference"
+      }
+    ],
+    "focusNode": "ex:w01",
+    "refChain": [],
+    "referencedShape": "ex:LeftShape",
+    "shape": "ex:RootShape",
+    "type": "reference"
+  },
+  {
+    "children": [
+      {
+        "children": [
+          {
+            "altChains": [
+              [
+                "ex:RootShape",
+                "ex:RightShape",
+                "ex:PersonShape"
+              ]
+            ],
+            "component": "sh:DatatypeConstraintComponent",
+            "focusNode": "ex:w02",
+            "message": "Age must be an integer",
+            "path": "ex:age",
+            "refChain": [
+              "ex:RootShape",
+              "ex:LeftShape",
+              "ex:PersonShape"
+            ],
+            "repairHint": "Replace \"old\" on ex:age with a value of type xsd:integer.",
+            "type": "leaf",
+            "value": "old"
+          },
+          {
+            "altChains": [
+              [
+                "ex:RootShape",
+                "ex:RightShape",
+                "ex:PersonShape"
+              ]
+            ],
+            "component": "sh:MinCountConstraintComponent",
+            "focusNode": "ex:w02",
+            "message": "Name is required",
+            "path": "ex:name",
+            "refChain": [
+              "ex:RootShape",
+              "ex:LeftShape",
+              "ex:PersonShape"
+            ],
+            "repairHint": "Add at least one ex:name value to ex:w02.",
+            "type": "leaf"
+          }
+        ],
+        "focusNode": "ex:w02",
+        "refChain": [
+          "ex:RootShape"
+        ],
+        "referencedShape": "ex:PersonShape",
+        "shape": "ex:LeftShape",
+        "type": "reference"
+      }
+    ],
+    "focusNode": "ex:w02",
+    "refChain": [],
+    "referencedShape": "ex:LeftShape",
+    "shape": "ex:RootShape",
+    "type": "reference"
+  },
+  {
+    "children": [
+      {
+        "children": [
+          {
+            "altChains": [
+              [
+                "ex:RootShape",
+                "ex:RightShape",
+                "ex:PersonShape"
+              ]
+            ],
+            "component": "sh:DatatypeConstraintComponent",
+            "focusNode": "ex:w03",
+            "message": "Age must be an integer",
+            "path": "ex:age",
+            "refChain": [
+              "ex:RootShape",
+              "ex:LeftShape",
+              "ex:PersonShape"
+            ],
+            "repairHint": "Replace \"old\" on ex:age with a value of type xsd:integer.",
+            "type": "leaf",
+            "value": "old"
+          },
+          {
+            "altChains": [
+              [
+                "ex:RootShape",
+                "ex:RightShape",
+                "ex:PersonShape"
+              ]
+            ],
+            "component": "sh:MinCountConstraintComponent",
+            "focusNode": "ex:w03",
+            "message": "Name is required",
+            "path": "ex:name",
+            "refChain": [
+              "ex:RootShape",
+              "ex:LeftShape",
+              "ex:PersonShape"
+            ],
+            "repairHint": "Add at least one ex:name value to ex:w03.",
+            "type": "leaf"
+          }
+        ],
+        "focusNode": "ex:w03",
+        "refChain": [
+          "ex:RootShape"
+        ],
+        "referencedShape": "ex:PersonShape",
+        "shape": "ex:LeftShape",
+        "type": "reference"
+      }
+    ],
+    "focusNode": "ex:w03",
+    "refChain": [],
+    "referencedShape": "ex:LeftShape",
+    "shape": "ex:RootShape",
+    "type": "reference"
+  },
+  {
+    "children": [
+      {
+        "children": [
+          {
+            "altChains": [
+              [
+                "ex:RootShape",
+                "ex:RightShape",
+                "ex:PersonShape"
+              ]
+            ],
+            "component": "sh:DatatypeConstraintComponent",
+            "focusNode": "ex:w04",
+            "message": "Age must be an integer",
+            "path": "ex:age",
+            "refChain": [
+              "ex:RootShape",
+              "ex:LeftShape",
+              "ex:PersonShape"
+            ],
+            "repairHint": "Replace \"old\" on ex:age with a value of type xsd:integer.",
+            "type": "leaf",
+            "value": "old"
+          },
+          {
+            "altChains": [
+              [
+                "ex:RootShape",
+                "ex:RightShape",
+                "ex:PersonShape"
+              ]
+            ],
+            "component": "sh:MinCountConstraintComponent",
+            "focusNode": "ex:w04",
+            "message": "Name is required",
+            "path": "ex:name",
+            "refChain": [
+              "ex:RootShape",
+              "ex:LeftShape",
+              "ex:PersonShape"
+            ],
+            "repairHint": "Add at least one ex:name value to ex:w04.",
+            "type": "leaf"
+          }
+        ],
+        "focusNode": "ex:w04",
+        "refChain": [
+          "ex:RootShape"
+        ],
+        "referencedShape": "ex:PersonShape",
+        "shape": "ex:LeftShape",
+        "type": "reference"
+      }
+    ],
+    "focusNode": "ex:w04",
+    "refChain": [],
+    "referencedShape": "ex:LeftShape",
+    "shape": "ex:RootShape",
+    "type": "reference"
+  },
+  {
+    "children": [
+      {
+        "children": [
+          {
+            "altChains": [
+              [
+                "ex:RootShape",
+                "ex:RightShape",
+                "ex:PersonShape"
+              ]
+            ],
+            "component": "sh:DatatypeConstraintComponent",
+            "focusNode": "ex:w05",
+            "message": "Age must be an integer",
+            "path": "ex:age",
+            "refChain": [
+              "ex:RootShape",
+              "ex:LeftShape",
+              "ex:PersonShape"
+            ],
+            "repairHint": "Replace \"old\" on ex:age with a value of type xsd:integer.",
+            "type": "leaf",
+            "value": "old"
+          },
+          {
+            "altChains": [
+              [
+                "ex:RootShape",
+                "ex:RightShape",
+                "ex:PersonShape"
+              ]
+            ],
+            "component": "sh:MinCountConstraintComponent",
+            "focusNode": "ex:w05",
+            "message": "Name is required",
+            "path": "ex:name",
+            "refChain": [
+              "ex:RootShape",
+              "ex:LeftShape",
+              "ex:PersonShape"
+            ],
+            "repairHint": "Add at least one ex:name value to ex:w05.",
+            "type": "leaf"
+          }
+        ],
+        "focusNode": "ex:w05",
+        "refChain": [
+          "ex:RootShape"
+        ],
+        "referencedShape": "ex:PersonShape",
+        "shape": "ex:LeftShape",
+        "type": "reference"
+      }
+    ],
+    "focusNode": "ex:w05",
+    "refChain": [],
+    "referencedShape": "ex:LeftShape",
+    "shape": "ex:RootShape",
+    "type": "reference"
+  },
+  {
+    "children": [
+      {
+        "children": [
+          {
+            "altChains": [
+              [
+                "ex:RootShape",
+                "ex:RightShape",
+                "ex:PersonShape"
+              ]
+            ],
+            "component": "sh:DatatypeConstraintComponent",
+            "focusNode": "ex:w06",
+            "message": "Age must be an integer",
+            "path": "ex:age",
+            "refChain": [
+              "ex:RootShape",
+              "ex:LeftShape",
+              "ex:PersonShape"
+            ],
+            "repairHint": "Replace \"old\" on ex:age with a value of type xsd:integer.",
+            "type": "leaf",
+            "value": "old"
+          },
+          {
+            "altChains": [
+              [
+                "ex:RootShape",
+                "ex:RightShape",
+                "ex:PersonShape"
+              ]
+            ],
+            "component": "sh:MinCountConstraintComponent",
+            "focusNode": "ex:w06",
+            "message": "Name is required",
+            "path": "ex:name",
+            "refChain": [
+              "ex:RootShape",
+              "ex:LeftShape",
+              "ex:PersonShape"
+            ],
+            "repairHint": "Add at least one ex:name value to ex:w06.",
+            "type": "leaf"
+          }
+        ],
+        "focusNode": "ex:w06",
+        "refChain": [
+          "ex:RootShape"
+        ],
+        "referencedShape": "ex:PersonShape",
+        "shape": "ex:LeftShape",
+        "type": "reference"
+      }
+    ],
+    "focusNode": "ex:w06",
+    "refChain": [],
+    "referencedShape": "ex:LeftShape",
+    "shape": "ex:RootShape",
+    "type": "reference"
+  },
+  {
+    "children": [
+      {
+        "children": [
+          {
+            "altChains": [
+              [
+                "ex:RootShape",
+                "ex:RightShape",
+                "ex:PersonShape"
+              ]
+            ],
+            "component": "sh:DatatypeConstraintComponent",
+            "focusNode": "ex:w07",
+            "message": "Age must be an integer",
+            "path": "ex:age",
+            "refChain": [
+              "ex:RootShape",
+              "ex:LeftShape",
+              "ex:PersonShape"
+            ],
+            "repairHint": "Replace \"old\" on ex:age with a value of type xsd:integer.",
+            "type": "leaf",
+            "value": "old"
+          },
+          {
+            "altChains": [
+              [
+                "ex:RootShape",
+                "ex:RightShape",
+                "ex:PersonShape"
+              ]
+            ],
+            "component": "sh:MinCountConstraintComponent",
+            "focusNode": "ex:w07",
+            "message": "Name is required",
+            "path": "ex:name",
+            "refChain": [
+              "ex:RootShape",
+              "ex:LeftShape",
+              "ex:PersonShape"
+            ],
+            "repairHint": "Add at least one ex:name value to ex:w07.",
+            "type": "leaf"
+          }
+        ],
+        "focusNode": "ex:w07",
+        "refChain": [
+          "ex:RootShape"
+        ],
+        "referencedShape": "ex:PersonShape",
+        "shape": "ex:LeftShape",
+        "type": "reference"
+      }
+    ],
+    "focusNode": "ex:w07",
+    "refChain": [],
+    "referencedShape": "ex:LeftShape",
+    "shape": "ex:RootShape",
+    "type": "reference"
+  },
+  {
+    "children": [
+      {
+        "children": [
+          {
+            "altChains": [
+              [
+                "ex:RootShape",
+                "ex:RightShape",
+                "ex:PersonShape"
+              ]
+            ],
+            "component": "sh:DatatypeConstraintComponent",
+            "focusNode": "ex:w08",
+            "message": "Age must be an integer",
+            "path": "ex:age",
+            "refChain": [
+              "ex:RootShape",
+              "ex:LeftShape",
+              "ex:PersonShape"
+            ],
+            "repairHint": "Replace \"old\" on ex:age with a value of type xsd:integer.",
+            "type": "leaf",
+            "value": "old"
+          },
+          {
+            "altChains": [
+              [
+                "ex:RootShape",
+                "ex:RightShape",
+                "ex:PersonShape"
+              ]
+            ],
+            "component": "sh:MinCountConstraintComponent",
+            "focusNode": "ex:w08",
+            "message": "Name is required",
+            "path": "ex:name",
+            "refChain": [
+              "ex:RootShape",
+              "ex:LeftShape",
+              "ex:PersonShape"
+            ],
+            "repairHint": "Add at least one ex:name value to ex:w08.",
+            "type": "leaf"
+          }
+        ],
+        "focusNode": "ex:w08",
+        "refChain": [
+          "ex:RootShape"
+        ],
+        "referencedShape": "ex:PersonShape",
+        "shape": "ex:LeftShape",
+        "type": "reference"
+      }
+    ],
+    "focusNode": "ex:w08",
+    "refChain": [],
+    "referencedShape": "ex:LeftShape",
+    "shape": "ex:RootShape",
+    "type": "reference"
+  },
+  {
+    "children": [
+      {
+        "children": [
+          {
+            "altChains": [
+              [
+                "ex:RootShape",
+                "ex:RightShape",
+                "ex:PersonShape"
+              ]
+            ],
+            "component": "sh:DatatypeConstraintComponent",
+            "focusNode": "ex:w09",
+            "message": "Age must be an integer",
+            "path": "ex:age",
+            "refChain": [
+              "ex:RootShape",
+              "ex:LeftShape",
+              "ex:PersonShape"
+            ],
+            "repairHint": "Replace \"old\" on ex:age with a value of type xsd:integer.",
+            "type": "leaf",
+            "value": "old"
+          },
+          {
+            "altChains": [
+              [
+                "ex:RootShape",
+                "ex:RightShape",
+                "ex:PersonShape"
+              ]
+            ],
+            "component": "sh:MinCountConstraintComponent",
+            "focusNode": "ex:w09",
+            "message": "Name is required",
+            "path": "ex:name",
+            "refChain": [
+              "ex:RootShape",
+              "ex:LeftShape",
+              "ex:PersonShape"
+            ],
+            "repairHint": "Add at least one ex:name value to ex:w09.",
+            "type": "leaf"
+          }
+        ],
+        "focusNode": "ex:w09",
+        "refChain": [
+          "ex:RootShape"
+        ],
+        "referencedShape": "ex:PersonShape",
+        "shape": "ex:LeftShape",
+        "type": "reference"
+      }
+    ],
+    "focusNode": "ex:w09",
+    "refChain": [],
+    "referencedShape": "ex:LeftShape",
+    "shape": "ex:RootShape",
+    "type": "reference"
+  },
+  {
+    "children": [
+      {
+        "children": [
+          {
+            "altChains": [
+              [
+                "ex:RootShape",
+                "ex:RightShape",
+                "ex:PersonShape"
+              ]
+            ],
+            "component": "sh:DatatypeConstraintComponent",
+            "focusNode": "ex:w10",
+            "message": "Age must be an integer",
+            "path": "ex:age",
+            "refChain": [
+              "ex:RootShape",
+              "ex:LeftShape",
+              "ex:PersonShape"
+            ],
+            "repairHint": "Replace \"old\" on ex:age with a value of type xsd:integer.",
+            "type": "leaf",
+            "value": "old"
+          },
+          {
+            "altChains": [
+              [
+                "ex:RootShape",
+                "ex:RightShape",
+                "ex:PersonShape"
+              ]
+            ],
+            "component": "sh:MinCountConstraintComponent",
+            "focusNode": "ex:w10",
+            "message": "Name is required",
+            "path": "ex:name",
+            "refChain": [
+              "ex:RootShape",
+              "ex:LeftShape",
+              "ex:PersonShape"
+            ],
+            "repairHint": "Add at least one ex:name value to ex:w10.",
+            "type": "leaf"
+          }
+        ],
+        "focusNode": "ex:w10",
+        "refChain": [
+          "ex:RootShape"
+        ],
+        "referencedShape": "ex:PersonShape",
+        "shape": "ex:LeftShape",
+        "type": "reference"
+      }
+    ],
+    "focusNode": "ex:w10",
+    "refChain": [],
+    "referencedShape": "ex:LeftShape",
+    "shape": "ex:RootShape",
+    "type": "reference"
+  }
+]

@@ -1,0 +1,12 @@
+[
+  {
+    "altChains": [],
+    "component": "sh:MinCountConstraintComponent",
+    "focusNode": "ex:bob",
+    "message": "A person's address must have a postal code",
+    "path": "_:blank-path-expression",
+    "refChain": [],
+    "repairHint": "Add at least one value on the failing path to ex:bob.",
+    "type": "leaf"
+  }
+]

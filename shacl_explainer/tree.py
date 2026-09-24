@@ -16,6 +16,20 @@ class LeafFailure:
     message:     Optional[str]
     ref_chain:   list[RDFNode]          # [ContractorShape, EmployeeShape, PersonShape]
     alt_chains:  list[list[RDFNode]] = field(default_factory=list)
+    # Set when this leaf is the validator's own sh:node result, kept because
+    # re-validation could not break it down into a concrete failure.
+    note:        Optional[str] = None
+    # What the shape requires: sh:minCount 3, sh:datatype xsd:integer,
+    # sh:class ex:Company, the members of sh:in, and so on. A repair hint names
+    # it instead of saying "the required datatype". None where the shape that
+    # produced the result cannot be identified, which is what an external
+    # report gives for an anonymous property shape; the hint then falls back to
+    # its unparameterised wording.
+    parameter:   Optional[Union[RDFNode, list[RDFNode]]] = None
+    # How many values the focus node already has on the failing path. Only
+    # counted where a hint cannot be written without it, that is a minimum
+    # above one, since reading it costs a path evaluation per leaf.
+    value_count: Optional[int] = None
 
     def dedup_key(self):
         return (str(self.focus_node), str(self.result_path),

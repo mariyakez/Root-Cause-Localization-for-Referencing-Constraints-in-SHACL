@@ -1,0 +1,28 @@
+# TC7's shapes, but ex:alice has no ex:worksFor at all. Paired with
+# report_without_value.ttl, whose result gives the path but no sh:value: the
+# path leads to no value, so there is nothing to re-validate.
+
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix ex:  <http://example.org/> .
+
+ex:CompanyShape
+    a sh:NodeShape ;
+    sh:property [
+        sh:path ex:legalName ;
+        sh:minCount 1 ;
+        sh:message "ex:legalName is required" ;
+    ] .
+
+ex:EmployeeShape
+    a sh:NodeShape ;
+    sh:targetClass ex:Employee ;
+    sh:property [
+        sh:path ex:worksFor ;
+        sh:minCount 1 ;
+        sh:node ex:CompanyShape ;
+        sh:message "ex:worksFor must point to a valid company" ;
+    ] .
+
+ex:alice
+    a ex:Employee .

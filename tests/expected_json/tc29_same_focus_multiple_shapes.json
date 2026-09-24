@@ -1,0 +1,33 @@
+[
+  {
+    "altChains": [],
+    "component": "sh:DatatypeConstraintComponent",
+    "focusNode": "ex:dana",
+    "message": "Age must be an integer",
+    "path": "ex:age",
+    "refChain": [],
+    "repairHint": "Replace \"forty\" on ex:age with a value of type xsd:integer.",
+    "type": "leaf",
+    "value": "forty"
+  },
+  {
+    "altChains": [],
+    "component": "sh:MinCountConstraintComponent",
+    "focusNode": "ex:dana",
+    "message": "Employee ID is required by EmployeeShape",
+    "path": "ex:employeeId",
+    "refChain": [],
+    "repairHint": "Add at least one ex:employeeId value to ex:dana.",
+    "type": "leaf"
+  },
+  {
+    "altChains": [],
+    "component": "sh:MinCountConstraintComponent",
+    "focusNode": "ex:dana",
+    "message": "Name is required by PersonShape",
+    "path": "ex:name",
+    "refChain": [],
+    "repairHint": "Add at least one ex:name value to ex:dana.",
+    "type": "leaf"
+  }
+]

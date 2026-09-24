@@ -1,0 +1,35 @@
+# TC7's shapes, but ex:acme now has the ex:legalName that TC7 omits, so it
+# conforms to ex:CompanyShape. Paired with the real Jena report for TC7
+# (sh_node_cases/jena_real_tc7_property_no_detail.ttl), which still says it does
+# not: re-validation finds nothing to explain the validator's result, as can
+# happen where two validators disagree. The result must be kept, not dropped.
+
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix ex:  <http://example.org/> .
+
+ex:CompanyShape
+    a sh:NodeShape ;
+    sh:property [
+        sh:path ex:legalName ;
+        sh:minCount 1 ;
+        sh:message "ex:legalName is required" ;
+    ] .
+
+ex:EmployeeShape
+    a sh:NodeShape ;
+    sh:targetClass ex:Employee ;
+    sh:property [
+        sh:path ex:worksFor ;
+        sh:minCount 1 ;
+        sh:node ex:CompanyShape ;
+        sh:message "ex:worksFor must point to a valid company" ;
+    ] .
+
+ex:alice
+    a ex:Employee ;
+    ex:worksFor ex:acme .
+
+ex:acme
+    a ex:Company ;
+    ex:legalName "Acme Ltd" .

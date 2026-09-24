@@ -1,0 +1,41 @@
+# Two node shapes constrain the same two paths, and both apply to the same
+# record. On ex:agreed they ask for the same datatype; on ex:disputed they ask
+# for different ones. Read with anonymous_property_shape.report.ttl, where the
+# failing property shape is anonymous and so cannot be identified, this is what
+# decides whether a repair hint may name the required datatype: on ex:agreed
+# every shape on the path says xsd:integer, while on ex:disputed the path alone
+# cannot say which shape produced the result.
+#
+# The offending value is an IRI, which fails xsd:integer and xsd:string alike.
+@prefix sh:   <http://www.w3.org/ns/shacl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix ex:   <http://example.org/> .
+
+ex:FirstShape
+    a sh:NodeShape ;
+    sh:targetClass ex:Record ;
+    sh:property [
+        sh:path ex:agreed ;
+        sh:datatype xsd:integer ;
+    ] ;
+    sh:property [
+        sh:path ex:disputed ;
+        sh:datatype xsd:integer ;
+    ] .
+
+ex:SecondShape
+    a sh:NodeShape ;
+    sh:targetClass ex:Record ;
+    sh:property [
+        sh:path ex:agreed ;
+        sh:datatype xsd:integer ;
+    ] ;
+    sh:property [
+        sh:path ex:disputed ;
+        sh:datatype xsd:string ;
+    ] .
+
+ex:record1
+    a ex:Record ;
+    ex:agreed ex:notALiteral ;
+    ex:disputed ex:notALiteral .

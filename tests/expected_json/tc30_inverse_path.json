@@ -1,0 +1,12 @@
+[
+  {
+    "altChains": [],
+    "component": "sh:MinCountConstraintComponent",
+    "focusNode": "ex:alice",
+    "message": "A person must be a member of at least one group",
+    "path": "_:blank-path-expression",
+    "refChain": [],
+    "repairHint": "Add at least one value on the failing path to ex:alice.",
+    "type": "leaf"
+  }
+]

@@ -1,0 +1,18 @@
+# A minimum above one. "Add at least one value" is wrong here: the shape asks
+# for three reviewers and the project has one, so the hint has to say how many
+# are missing, which is the only case where the count of existing values is
+# read from the data graph.
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix ex:  <http://example.org/> .
+
+ex:ProjectShape
+    a sh:NodeShape ;
+    sh:targetClass ex:Project ;
+    sh:property [
+        sh:path ex:reviewer ;
+        sh:minCount 3 ;
+    ] .
+
+ex:project1
+    a ex:Project ;
+    ex:reviewer ex:dana .

@@ -1,0 +1,37 @@
+# The referenced shape has a target of its own: ex:CompanyShape applies to every
+# ex:Company, so two companies without a legal name fail it directly, and one of
+# them, ex:acme, is also reached from ex:alice through ex:worksFor. Rebuilding
+# alice's sh:node result must re-validate ex:acme alone. A copy of
+# ex:CompanyShape that kept its sh:targetClass would re-validate every company
+# and file ex:globex's failure under alice, though nothing links the two.
+
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix ex:  <http://example.org/> .
+
+ex:CompanyShape
+    a sh:NodeShape ;
+    sh:targetClass ex:Company ;
+    sh:property [
+        sh:path ex:legalName ;
+        sh:minCount 1 ;
+        sh:message "ex:legalName is required" ;
+    ] .
+
+ex:EmployeeShape
+    a sh:NodeShape ;
+    sh:targetClass ex:Employee ;
+    sh:property [
+        sh:path ex:worksFor ;
+        sh:node ex:CompanyShape ;
+        sh:message "ex:worksFor must point to a valid company" ;
+    ] .
+
+ex:alice
+    a ex:Employee ;
+    ex:worksFor ex:acme .
+
+ex:acme
+    a ex:Company .
+
+ex:globex
+    a ex:Company .

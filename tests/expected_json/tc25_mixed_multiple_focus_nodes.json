@@ -1,0 +1,77 @@
+[
+  {
+    "altChains": [],
+    "component": "sh:DatatypeConstraintComponent",
+    "focusNode": "ex:alice",
+    "message": "Customer age must be an integer",
+    "path": "ex:age",
+    "refChain": [],
+    "repairHint": "Replace \"old\" on ex:age with a value of type xsd:integer.",
+    "type": "leaf",
+    "value": "old"
+  },
+  {
+    "altChains": [],
+    "component": "sh:MinCountConstraintComponent",
+    "focusNode": "ex:alice",
+    "message": "Customer ID is required",
+    "path": "ex:customerId",
+    "refChain": [],
+    "repairHint": "Add at least one ex:customerId value to ex:alice.",
+    "type": "leaf"
+  },
+  {
+    "altChains": [],
+    "component": "sh:MinCountConstraintComponent",
+    "focusNode": "ex:bob",
+    "message": "Customer ID is required",
+    "path": "ex:customerId",
+    "refChain": [],
+    "repairHint": "Add at least one ex:customerId value to ex:bob.",
+    "type": "leaf"
+  },
+  {
+    "children": [
+      {
+        "altChains": [],
+        "component": "sh:MinCountConstraintComponent",
+        "focusNode": "ex:aliceAddress",
+        "message": "City is required",
+        "path": "ex:city",
+        "refChain": [
+          "ex:AddressShape"
+        ],
+        "repairHint": "Add at least one ex:city value to ex:aliceAddress.",
+        "type": "leaf"
+      }
+    ],
+    "focusNode": "ex:alice",
+    "path": "ex:address",
+    "refChain": [],
+    "referencedShape": "ex:AddressShape",
+    "shape": "ex:AddressShape",
+    "type": "reference"
+  },
+  {
+    "children": [
+      {
+        "altChains": [],
+        "component": "sh:MinCountConstraintComponent",
+        "focusNode": "ex:bobAddress",
+        "message": "City is required",
+        "path": "ex:city",
+        "refChain": [
+          "ex:AddressShape"
+        ],
+        "repairHint": "Add at least one ex:city value to ex:bobAddress.",
+        "type": "leaf"
+      }
+    ],
+    "focusNode": "ex:bob",
+    "path": "ex:address",
+    "refChain": [],
+    "referencedShape": "ex:AddressShape",
+    "shape": "ex:AddressShape",
+    "type": "reference"
+  }
+]

@@ -1,0 +1,29 @@
+# Real output of Apache Jena SHACL 6.2.0, captured with:
+#   shacl validate --shapes both_types.ttl --data both_types.ttl
+PREFIX ex:   <http://example.org/>
+PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sh:   <http://www.w3.org/ns/shacl#>
+PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
+
+[ rdf:type     sh:ValidationReport;
+  sh:conforms  false;
+  sh:result    [ rdf:type                      sh:ValidationResult;
+                 sh:focusNode                  ex:alice;
+                 sh:resultMessage              "Node[<http://example.org/CharityShape>] at focusNode <http://example.org/acme>";
+                 sh:resultPath                 ex:worksFor;
+                 sh:resultSeverity             sh:Violation;
+                 sh:sourceConstraintComponent  sh:NodeConstraintComponent;
+                 sh:sourceShape                [] ;
+                 sh:value                      ex:acme
+               ];
+  sh:result    [ rdf:type                      sh:ValidationResult;
+                 sh:focusNode                  ex:alice;
+                 sh:resultMessage              "Node[<http://example.org/CompanyShape>] at focusNode <http://example.org/acme>";
+                 sh:resultPath                 ex:worksFor;
+                 sh:resultSeverity             sh:Violation;
+                 sh:sourceConstraintComponent  sh:NodeConstraintComponent;
+                 sh:sourceShape                [] ;
+                 sh:value                      ex:acme
+               ]
+] .

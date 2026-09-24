@@ -1,0 +1,21 @@
+# Two node shapes constrain ex:worksFor through anonymous property shapes that
+# reference different shapes. ex:alice is targeted only by ex:EmployeeShape, so a
+# report naming the anonymous property shape must be resolved to ex:CompanyShape;
+# ex:CharityShape never applied to her. Exercises the target filter.
+
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix ex: <http://example.org/> .
+
+ex:CompanyShape a sh:NodeShape ;
+    sh:property [ sh:path ex:legalName ; sh:minCount 1 ] .
+ex:CharityShape a sh:NodeShape ;
+    sh:property [ sh:path ex:charityNumber ; sh:minCount 1 ] .
+ex:EmployeeShape a sh:NodeShape ;
+    sh:targetClass ex:Employee ;
+    sh:property [ sh:path ex:worksFor ; sh:node ex:CompanyShape ] .
+ex:VolunteerShape a sh:NodeShape ;
+    sh:targetClass ex:Volunteer ;
+    sh:property [ sh:path ex:worksFor ; sh:node ex:CharityShape ] .
+
+ex:alice a ex:Employee ; ex:worksFor ex:acme .
+ex:acme a ex:Company .

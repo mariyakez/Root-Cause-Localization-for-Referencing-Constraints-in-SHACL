@@ -1,0 +1,29 @@
+# An external report in the shape Apache Jena and TopBraid produce for a
+# violation of an anonymous property shape: sh:sourceShape is a blank node that
+# matches nothing in the shapes graph, so the reported path is the only link
+# back to the constraint. Written by hand rather than captured, because it has
+# to pair with the two-shape schema of anonymous_property_shape.ttl.
+PREFIX ex:   <http://example.org/>
+PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX sh:   <http://www.w3.org/ns/shacl#>
+PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
+
+[ rdf:type     sh:ValidationReport ;
+  sh:conforms  false ;
+  sh:result    [ rdf:type                      sh:ValidationResult ;
+                 sh:focusNode                  ex:record1 ;
+                 sh:resultPath                 ex:agreed ;
+                 sh:resultSeverity             sh:Violation ;
+                 sh:sourceConstraintComponent  sh:DatatypeConstraintComponent ;
+                 sh:value                      ex:notALiteral ;
+                 sh:sourceShape                [] ;
+               ] ;
+  sh:result    [ rdf:type                      sh:ValidationResult ;
+                 sh:focusNode                  ex:record1 ;
+                 sh:resultPath                 ex:disputed ;
+                 sh:resultSeverity             sh:Violation ;
+                 sh:sourceConstraintComponent  sh:DatatypeConstraintComponent ;
+                 sh:value                      ex:notALiteral ;
+                 sh:sourceShape                [] ;
+               ] ;
+] .

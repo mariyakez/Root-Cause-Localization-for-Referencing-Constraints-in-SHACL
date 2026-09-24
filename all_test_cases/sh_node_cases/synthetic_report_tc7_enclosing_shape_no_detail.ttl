@@ -1,10 +1,12 @@
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix ex: <http://example.org/> .
 
-# Jena-style compatibility fixture:
+# Synthetic report, the same structure as external_report_cases/TC43:
 # the report identifies the enclosing node shape as sh:sourceShape and gives
 # sh:resultPath/sh:value, but does not embed sh:detail or the anonymous
-# property shape. The explainer must recover:
+# property shape. Neither Apache Jena 6.2.0 nor TopBraid SHACL 1.5.0 emits this;
+# both name the property shape instead (see *_real_tc7_property_no_detail.ttl).
+# Kept as a robustness case. The explainer must recover:
 #   ex:EmployeeShape sh:property [ sh:path ex:worksFor ; sh:node ex:CompanyShape ]
 # from the original shapes graph.
 [] a sh:ValidationReport ;

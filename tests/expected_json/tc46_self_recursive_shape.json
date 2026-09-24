@@ -1,0 +1,23 @@
+[
+  {
+    "children": [
+      {
+        "altChains": [],
+        "component": "sh:MinCountConstraintComponent",
+        "focusNode": "ex:root",
+        "message": "Required property must still be reported despite recursion",
+        "path": "ex:required",
+        "refChain": [
+          "ex:SelfShape"
+        ],
+        "repairHint": "Add at least one ex:required value to ex:root.",
+        "type": "leaf"
+      }
+    ],
+    "focusNode": "ex:root",
+    "refChain": [],
+    "referencedShape": "ex:SelfShape",
+    "shape": "ex:SelfShape",
+    "type": "reference"
+  }
+]

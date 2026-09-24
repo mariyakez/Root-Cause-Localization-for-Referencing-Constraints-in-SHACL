@@ -1,3 +1,7 @@
+# Synthetic report. A property-level sh:node result that names the referenced
+# shape in sh:sourceShape. Neither Apache Jena 6.2.0 nor TopBraid SHACL 1.5.0
+# emits this: both name the property shape instead (see
+# sh_node_cases/*_real_tc7_property_no_detail.ttl). Kept as a robustness case.
 @prefix sh:  <http://www.w3.org/ns/shacl#> .
 @prefix ex:  <http://example.org/> .
 
@@ -10,5 +14,5 @@
         sh:resultPath ex:worksFor ;
         sh:sourceShape ex:CompanyShape ;
         sh:sourceConstraintComponent sh:NodeConstraintComponent ;
-        sh:resultMessage "TopBraid-like report naming the referenced shape" ;
+        sh:resultMessage "Synthetic property sh:node result naming the referenced shape" ;
     ] .

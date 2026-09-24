@@ -1,0 +1,23 @@
+# As both_types.ttl, but each property shape declares its own sh:message,
+# which validators copy into sh:resultMessage, so each result is matched to its
+# property shape by that message. Pairing would reach the same answer here; the
+# tie-breaker decides only where the counts differ, which test_fallback.py checks.
+
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix ex: <http://example.org/> .
+
+ex:CompanyShape a sh:NodeShape ;
+    sh:property [ sh:path ex:legalName ; sh:minCount 1 ] .
+ex:CharityShape a sh:NodeShape ;
+    sh:property [ sh:path ex:charityNumber ; sh:minCount 1 ] .
+ex:EmployeeShape a sh:NodeShape ;
+    sh:targetClass ex:Employee ;
+    sh:property [ sh:path ex:worksFor ; sh:node ex:CompanyShape ;
+                  sh:message "An employer must be a valid company" ] .
+ex:VolunteerShape a sh:NodeShape ;
+    sh:targetClass ex:Volunteer ;
+    sh:property [ sh:path ex:worksFor ; sh:node ex:CharityShape ;
+                  sh:message "A volunteering organisation must be a registered charity" ] .
+
+ex:alice a ex:Employee, ex:Volunteer ; ex:worksFor ex:acme .
+ex:acme a ex:Company .

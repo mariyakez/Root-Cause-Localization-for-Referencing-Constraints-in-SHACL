@@ -1,0 +1,21 @@
+# The real Jena 6.2.0 report for TC7 (sh_node_cases/jena_real_tc7_property_no_detail.ttl)
+# with its sh:value triple removed by hand, since neither validator omits it for
+# this result. The value must be found along sh:resultPath from the focus node;
+# re-validating the focus node itself would misattribute the failure.
+PREFIX ex:   <http://example.org/>
+PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sh:   <http://www.w3.org/ns/shacl#>
+PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
+
+[ rdf:type     sh:ValidationReport;
+  sh:conforms  false;
+  sh:result    [ rdf:type                      sh:ValidationResult;
+                 sh:focusNode                  ex:alice;
+                 sh:resultMessage              "ex:worksFor must point to a valid company";
+                 sh:resultPath                 ex:worksFor;
+                 sh:resultSeverity             sh:Violation;
+                 sh:sourceConstraintComponent  sh:NodeConstraintComponent;
+                 sh:sourceShape                [] ;
+               ]
+] .

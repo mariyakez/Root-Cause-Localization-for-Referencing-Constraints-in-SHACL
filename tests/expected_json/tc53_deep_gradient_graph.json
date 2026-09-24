@@ -1,0 +1,381 @@
+[
+  {
+    "children": [
+      {
+        "altChains": [],
+        "component": "sh:DatatypeConstraintComponent",
+        "focusNode": "ex:deep-case",
+        "message": "ex:l1Score must be an xsd:integer",
+        "path": "ex:l1Score",
+        "refChain": [
+          "ex:GradientRootShape",
+          "ex:Level1Shape"
+        ],
+        "repairHint": "Replace \"not-an-integer\" on ex:l1Score with a value of type xsd:integer.",
+        "type": "leaf",
+        "value": "not-an-integer"
+      },
+      {
+        "altChains": [],
+        "component": "sh:MinCountConstraintComponent",
+        "focusNode": "ex:deep-case",
+        "message": "ex:l1Code is required at level 1",
+        "path": "ex:l1Code",
+        "refChain": [
+          "ex:GradientRootShape",
+          "ex:Level1Shape"
+        ],
+        "repairHint": "Add at least one ex:l1Code value to ex:deep-case.",
+        "type": "leaf"
+      },
+      {
+        "children": [
+          {
+            "altChains": [],
+            "component": "sh:MinCountConstraintComponent",
+            "focusNode": "ex:deep-case",
+            "message": "ex:l2Owner is required at level 2",
+            "path": "ex:l2Owner",
+            "refChain": [
+              "ex:GradientRootShape",
+              "ex:Level1Shape",
+              "ex:Level2Shape"
+            ],
+            "repairHint": "Add at least one ex:l2Owner value to ex:deep-case.",
+            "type": "leaf"
+          },
+          {
+            "altChains": [],
+            "component": "sh:PatternConstraintComponent",
+            "focusNode": "ex:deep-case",
+            "message": "ex:l2Email must match a basic email pattern",
+            "path": "ex:l2Email",
+            "refChain": [
+              "ex:GradientRootShape",
+              "ex:Level1Shape",
+              "ex:Level2Shape"
+            ],
+            "repairHint": "Change \"owner-at-example\" on ex:l2Email so it matches ^\\S+@\\S+$.",
+            "type": "leaf",
+            "value": "owner-at-example"
+          },
+          {
+            "children": [
+              {
+                "altChains": [],
+                "component": "sh:InConstraintComponent",
+                "focusNode": "ex:deep-case",
+                "message": "ex:l3Region must be emea, apac, or amer",
+                "path": "ex:l3Region",
+                "refChain": [
+                  "ex:GradientRootShape",
+                  "ex:Level1Shape",
+                  "ex:Level2Shape",
+                  "ex:Level3Shape"
+                ],
+                "repairHint": "Replace \"antarctica\" on ex:l3Region with one of: \"emea\", \"apac\", \"amer\".",
+                "type": "leaf",
+                "value": "antarctica"
+              },
+              {
+                "altChains": [],
+                "component": "sh:MinCountConstraintComponent",
+                "focusNode": "ex:deep-case",
+                "message": "ex:l3Approval is required at level 3",
+                "path": "ex:l3Approval",
+                "refChain": [
+                  "ex:GradientRootShape",
+                  "ex:Level1Shape",
+                  "ex:Level2Shape",
+                  "ex:Level3Shape"
+                ],
+                "repairHint": "Add at least one ex:l3Approval value to ex:deep-case.",
+                "type": "leaf"
+              },
+              {
+                "children": [
+                  {
+                    "altChains": [],
+                    "component": "sh:DatatypeConstraintComponent",
+                    "focusNode": "ex:deep-case",
+                    "message": "ex:l4Budget must be an xsd:decimal",
+                    "path": "ex:l4Budget",
+                    "refChain": [
+                      "ex:GradientRootShape",
+                      "ex:Level1Shape",
+                      "ex:Level2Shape",
+                      "ex:Level3Shape",
+                      "ex:Level4Shape"
+                    ],
+                    "repairHint": "Replace \"many\" on ex:l4Budget with a value of type xsd:decimal.",
+                    "type": "leaf",
+                    "value": "many"
+                  },
+                  {
+                    "altChains": [],
+                    "component": "sh:MinCountConstraintComponent",
+                    "focusNode": "ex:deep-case",
+                    "message": "ex:l4Checkpoint is required at level 4",
+                    "path": "ex:l4Checkpoint",
+                    "refChain": [
+                      "ex:GradientRootShape",
+                      "ex:Level1Shape",
+                      "ex:Level2Shape",
+                      "ex:Level3Shape",
+                      "ex:Level4Shape"
+                    ],
+                    "repairHint": "Add at least one ex:l4Checkpoint value to ex:deep-case.",
+                    "type": "leaf"
+                  },
+                  {
+                    "children": [
+                      {
+                        "altChains": [],
+                        "component": "sh:InConstraintComponent",
+                        "focusNode": "ex:deep-case",
+                        "message": "ex:l5Risk must be low, medium, or high",
+                        "path": "ex:l5Risk",
+                        "refChain": [
+                          "ex:GradientRootShape",
+                          "ex:Level1Shape",
+                          "ex:Level2Shape",
+                          "ex:Level3Shape",
+                          "ex:Level4Shape",
+                          "ex:Level5Shape"
+                        ],
+                        "repairHint": "Replace \"extreme\" on ex:l5Risk with one of: \"low\", \"medium\", \"high\".",
+                        "type": "leaf",
+                        "value": "extreme"
+                      },
+                      {
+                        "altChains": [],
+                        "component": "sh:MinCountConstraintComponent",
+                        "focusNode": "ex:deep-case",
+                        "message": "ex:l5Reviewer is required at level 5",
+                        "path": "ex:l5Reviewer",
+                        "refChain": [
+                          "ex:GradientRootShape",
+                          "ex:Level1Shape",
+                          "ex:Level2Shape",
+                          "ex:Level3Shape",
+                          "ex:Level4Shape",
+                          "ex:Level5Shape"
+                        ],
+                        "repairHint": "Add at least one ex:l5Reviewer value to ex:deep-case.",
+                        "type": "leaf"
+                      },
+                      {
+                        "children": [
+                          {
+                            "altChains": [],
+                            "component": "sh:DatatypeConstraintComponent",
+                            "focusNode": "ex:deep-case",
+                            "message": "ex:l6Date must be an xsd:date",
+                            "path": "ex:l6Date",
+                            "refChain": [
+                              "ex:GradientRootShape",
+                              "ex:Level1Shape",
+                              "ex:Level2Shape",
+                              "ex:Level3Shape",
+                              "ex:Level4Shape",
+                              "ex:Level5Shape",
+                              "ex:Level6Shape"
+                            ],
+                            "repairHint": "Replace \"tomorrow\" on ex:l6Date with a value of type xsd:date.",
+                            "type": "leaf",
+                            "value": "tomorrow"
+                          },
+                          {
+                            "altChains": [],
+                            "component": "sh:MinCountConstraintComponent",
+                            "focusNode": "ex:deep-case",
+                            "message": "ex:l6Reference is required at level 6",
+                            "path": "ex:l6Reference",
+                            "refChain": [
+                              "ex:GradientRootShape",
+                              "ex:Level1Shape",
+                              "ex:Level2Shape",
+                              "ex:Level3Shape",
+                              "ex:Level4Shape",
+                              "ex:Level5Shape",
+                              "ex:Level6Shape"
+                            ],
+                            "repairHint": "Add at least one ex:l6Reference value to ex:deep-case.",
+                            "type": "leaf"
+                          },
+                          {
+                            "children": [
+                              {
+                                "altChains": [],
+                                "component": "sh:DatatypeConstraintComponent",
+                                "focusNode": "ex:deep-case",
+                                "message": "ex:l7Flag must be an xsd:boolean",
+                                "path": "ex:l7Flag",
+                                "refChain": [
+                                  "ex:GradientRootShape",
+                                  "ex:Level1Shape",
+                                  "ex:Level2Shape",
+                                  "ex:Level3Shape",
+                                  "ex:Level4Shape",
+                                  "ex:Level5Shape",
+                                  "ex:Level6Shape",
+                                  "ex:Level7Shape"
+                                ],
+                                "repairHint": "Replace \"maybe\" on ex:l7Flag with a value of type xsd:boolean.",
+                                "type": "leaf",
+                                "value": "maybe"
+                              },
+                              {
+                                "altChains": [],
+                                "component": "sh:MinCountConstraintComponent",
+                                "focusNode": "ex:deep-case",
+                                "message": "ex:l7Control is required at level 7",
+                                "path": "ex:l7Control",
+                                "refChain": [
+                                  "ex:GradientRootShape",
+                                  "ex:Level1Shape",
+                                  "ex:Level2Shape",
+                                  "ex:Level3Shape",
+                                  "ex:Level4Shape",
+                                  "ex:Level5Shape",
+                                  "ex:Level6Shape",
+                                  "ex:Level7Shape"
+                                ],
+                                "repairHint": "Add at least one ex:l7Control value to ex:deep-case.",
+                                "type": "leaf"
+                              },
+                              {
+                                "children": [
+                                  {
+                                    "altChains": [],
+                                    "component": "sh:InConstraintComponent",
+                                    "focusNode": "ex:deep-case",
+                                    "message": "ex:l8Status must be ready, blocked, or done",
+                                    "path": "ex:l8Status",
+                                    "refChain": [
+                                      "ex:GradientRootShape",
+                                      "ex:Level1Shape",
+                                      "ex:Level2Shape",
+                                      "ex:Level3Shape",
+                                      "ex:Level4Shape",
+                                      "ex:Level5Shape",
+                                      "ex:Level6Shape",
+                                      "ex:Level7Shape",
+                                      "ex:Level8Shape"
+                                    ],
+                                    "repairHint": "Replace \"waiting\" on ex:l8Status with one of: \"ready\", \"blocked\", \"done\".",
+                                    "type": "leaf",
+                                    "value": "waiting"
+                                  },
+                                  {
+                                    "altChains": [],
+                                    "component": "sh:MinCountConstraintComponent",
+                                    "focusNode": "ex:deep-case",
+                                    "message": "ex:l8Archive is required at level 8",
+                                    "path": "ex:l8Archive",
+                                    "refChain": [
+                                      "ex:GradientRootShape",
+                                      "ex:Level1Shape",
+                                      "ex:Level2Shape",
+                                      "ex:Level3Shape",
+                                      "ex:Level4Shape",
+                                      "ex:Level5Shape",
+                                      "ex:Level6Shape",
+                                      "ex:Level7Shape",
+                                      "ex:Level8Shape"
+                                    ],
+                                    "repairHint": "Add at least one ex:l8Archive value to ex:deep-case.",
+                                    "type": "leaf"
+                                  }
+                                ],
+                                "focusNode": "ex:deep-case",
+                                "refChain": [
+                                  "ex:GradientRootShape",
+                                  "ex:Level1Shape",
+                                  "ex:Level2Shape",
+                                  "ex:Level3Shape",
+                                  "ex:Level4Shape",
+                                  "ex:Level5Shape",
+                                  "ex:Level6Shape"
+                                ],
+                                "referencedShape": "ex:Level8Shape",
+                                "shape": "ex:Level7Shape",
+                                "type": "reference"
+                              }
+                            ],
+                            "focusNode": "ex:deep-case",
+                            "refChain": [
+                              "ex:GradientRootShape",
+                              "ex:Level1Shape",
+                              "ex:Level2Shape",
+                              "ex:Level3Shape",
+                              "ex:Level4Shape",
+                              "ex:Level5Shape"
+                            ],
+                            "referencedShape": "ex:Level7Shape",
+                            "shape": "ex:Level6Shape",
+                            "type": "reference"
+                          }
+                        ],
+                        "focusNode": "ex:deep-case",
+                        "refChain": [
+                          "ex:GradientRootShape",
+                          "ex:Level1Shape",
+                          "ex:Level2Shape",
+                          "ex:Level3Shape",
+                          "ex:Level4Shape"
+                        ],
+                        "referencedShape": "ex:Level6Shape",
+                        "shape": "ex:Level5Shape",
+                        "type": "reference"
+                      }
+                    ],
+                    "focusNode": "ex:deep-case",
+                    "refChain": [
+                      "ex:GradientRootShape",
+                      "ex:Level1Shape",
+                      "ex:Level2Shape",
+                      "ex:Level3Shape"
+                    ],
+                    "referencedShape": "ex:Level5Shape",
+                    "shape": "ex:Level4Shape",
+                    "type": "reference"
+                  }
+                ],
+                "focusNode": "ex:deep-case",
+                "refChain": [
+                  "ex:GradientRootShape",
+                  "ex:Level1Shape",
+                  "ex:Level2Shape"
+                ],
+                "referencedShape": "ex:Level4Shape",
+                "shape": "ex:Level3Shape",
+                "type": "reference"
+              }
+            ],
+            "focusNode": "ex:deep-case",
+            "refChain": [
+              "ex:GradientRootShape",
+              "ex:Level1Shape"
+            ],
+            "referencedShape": "ex:Level3Shape",
+            "shape": "ex:Level2Shape",
+            "type": "reference"
+          }
+        ],
+        "focusNode": "ex:deep-case",
+        "refChain": [
+          "ex:GradientRootShape"
+        ],
+        "referencedShape": "ex:Level2Shape",
+        "shape": "ex:Level1Shape",
+        "type": "reference"
+      }
+    ],
+    "focusNode": "ex:deep-case",
+    "refChain": [],
+    "referencedShape": "ex:Level1Shape",
+    "shape": "ex:GradientRootShape",
+    "type": "reference"
+  }
+]

@@ -1,0 +1,33 @@
+[
+  {
+    "altChains": [],
+    "component": "sh:DatatypeConstraintComponent",
+    "focusNode": "ex:carol",
+    "message": "Age should be numeric when present",
+    "path": "ex:age",
+    "refChain": [],
+    "repairHint": "Replace \"unknown\" on ex:age with a value of type xsd:integer.",
+    "type": "leaf",
+    "value": "unknown"
+  },
+  {
+    "altChains": [],
+    "component": "sh:MinCountConstraintComponent",
+    "focusNode": "ex:carol",
+    "message": "Email is recommended",
+    "path": "ex:email",
+    "refChain": [],
+    "repairHint": "Add at least one ex:email value to ex:carol.",
+    "type": "leaf"
+  },
+  {
+    "altChains": [],
+    "component": "sh:MinCountConstraintComponent",
+    "focusNode": "ex:carol",
+    "message": "Name is mandatory",
+    "path": "ex:name",
+    "refChain": [],
+    "repairHint": "Add at least one ex:name value to ex:carol.",
+    "type": "leaf"
+  }
+]

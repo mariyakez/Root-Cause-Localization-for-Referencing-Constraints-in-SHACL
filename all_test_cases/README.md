@@ -11,9 +11,10 @@ This folder groups every SHACL explainer test fixture by scenario.
 | `property_path_cases/` | Inverse, sequence, alternative, and zero-or-more paths |
 | `severity_cases/` | `sh:Violation`, `sh:Warning`, and `sh:Info` |
 | `message_metadata_cases/` | Missing, multiple, language-tagged messages, and shape metadata |
-| `external_report_cases/` | pySHACL, Jena-style, TopBraid-like, and incomplete external reports |
+| `external_report_cases/` | pySHACL, Jena-style, synthetic property-level, and incomplete external reports |
 | `cycle_cases/` | Recursive and cyclic shape references |
 | `scale_cases/` | Synthetic scale and performance-oriented cases |
+| `repair_hint_cases/` | Named, non-numbered cases for repair-hint wording the TC1-TC53 corpus does not reach |
 
 Example:
 

@@ -1,0 +1,44 @@
+# The referenced shape itself contains a property-level sh:node: an employer
+# must be a valid company, and a company's address must be a valid address.
+# Rebuilding ex:alice's result re-validates ex:acme against ex:CompanyShape, so
+# the copied shapes graph must carry ex:AddressShape as well, reached only
+# through a property shape of ex:CompanyShape. Without it, pyshacl cannot see
+# the missing ex:city on ex:hq and the failure would be lost.
+
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix ex:  <http://example.org/> .
+
+ex:AddressShape
+    a sh:NodeShape ;
+    sh:property [
+        sh:path ex:city ;
+        sh:minCount 1 ;
+        sh:message "ex:city is required" ;
+    ] .
+
+ex:CompanyShape
+    a sh:NodeShape ;
+    sh:property [
+        sh:path ex:address ;
+        sh:node ex:AddressShape ;
+        sh:message "ex:address must be a valid address" ;
+    ] .
+
+ex:EmployeeShape
+    a sh:NodeShape ;
+    sh:targetClass ex:Employee ;
+    sh:property [
+        sh:path ex:worksFor ;
+        sh:node ex:CompanyShape ;
+        sh:message "ex:worksFor must point to a valid company" ;
+    ] .
+
+ex:alice
+    a ex:Employee ;
+    ex:worksFor ex:acme .
+
+ex:acme
+    ex:address ex:hq .
+
+ex:hq
+    ex:street "1 Main St" .

@@ -1,0 +1,12 @@
+[
+  {
+    "altChains": [],
+    "component": "sh:MaxCountConstraintComponent",
+    "focusNode": "ex:bigNode",
+    "message": "At most one tag is allowed",
+    "path": "ex:tag",
+    "refChain": [],
+    "repairHint": "Remove ex:tag values from ex:bigNode until at most 1 remains.",
+    "type": "leaf"
+  }
+]

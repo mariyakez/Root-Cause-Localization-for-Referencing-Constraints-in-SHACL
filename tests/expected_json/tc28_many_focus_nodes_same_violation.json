@@ -1,0 +1,102 @@
+[
+  {
+    "altChains": [],
+    "component": "sh:MinCountConstraintComponent",
+    "focusNode": "ex:person01",
+    "message": "Email is required",
+    "path": "ex:email",
+    "refChain": [],
+    "repairHint": "Add at least one ex:email value to ex:person01.",
+    "type": "leaf"
+  },
+  {
+    "altChains": [],
+    "component": "sh:MinCountConstraintComponent",
+    "focusNode": "ex:person02",
+    "message": "Email is required",
+    "path": "ex:email",
+    "refChain": [],
+    "repairHint": "Add at least one ex:email value to ex:person02.",
+    "type": "leaf"
+  },
+  {
+    "altChains": [],
+    "component": "sh:MinCountConstraintComponent",
+    "focusNode": "ex:person03",
+    "message": "Email is required",
+    "path": "ex:email",
+    "refChain": [],
+    "repairHint": "Add at least one ex:email value to ex:person03.",
+    "type": "leaf"
+  },
+  {
+    "altChains": [],
+    "component": "sh:MinCountConstraintComponent",
+    "focusNode": "ex:person04",
+    "message": "Email is required",
+    "path": "ex:email",
+    "refChain": [],
+    "repairHint": "Add at least one ex:email value to ex:person04.",
+    "type": "leaf"
+  },
+  {
+    "altChains": [],
+    "component": "sh:MinCountConstraintComponent",
+    "focusNode": "ex:person05",
+    "message": "Email is required",
+    "path": "ex:email",
+    "refChain": [],
+    "repairHint": "Add at least one ex:email value to ex:person05.",
+    "type": "leaf"
+  },
+  {
+    "altChains": [],
+    "component": "sh:MinCountConstraintComponent",
+    "focusNode": "ex:person06",
+    "message": "Email is required",
+    "path": "ex:email",
+    "refChain": [],
+    "repairHint": "Add at least one ex:email value to ex:person06.",
+    "type": "leaf"
+  },
+  {
+    "altChains": [],
+    "component": "sh:MinCountConstraintComponent",
+    "focusNode": "ex:person07",
+    "message": "Email is required",
+    "path": "ex:email",
+    "refChain": [],
+    "repairHint": "Add at least one ex:email value to ex:person07.",
+    "type": "leaf"
+  },
+  {
+    "altChains": [],
+    "component": "sh:MinCountConstraintComponent",
+    "focusNode": "ex:person08",
+    "message": "Email is required",
+    "path": "ex:email",
+    "refChain": [],
+    "repairHint": "Add at least one ex:email value to ex:person08.",
+    "type": "leaf"
+  },
+  {
+    "altChains": [],
+    "component": "sh:MinCountConstraintComponent",
+    "focusNode": "ex:person09",
+    "message": "Email is required",
+    "path": "ex:email",
+    "refChain": [],
+    "repairHint": "Add at least one ex:email value to ex:person09.",
+    "type": "leaf"
+  },
+  {
+    "altChains": [],
+    "component": "sh:MinCountConstraintComponent",
+    "focusNode": "ex:person10",
+    "message": "Email is required",
+    "path": "ex:email",
+    "refChain": [],
+    "repairHint": "Add at least one ex:email value to ex:person10.",
+    "type": "leaf"
+  }
+]

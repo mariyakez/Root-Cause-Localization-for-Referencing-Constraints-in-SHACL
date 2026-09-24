@@ -1,0 +1,12 @@
+[
+  {
+    "altChains": [],
+    "component": "sh:MinCountConstraintComponent",
+    "focusNode": "ex:alice",
+    "message": "Less than 1 values on ex:alice->ex:name",
+    "path": "ex:name",
+    "refChain": [],
+    "repairHint": "Add at least one ex:name value to ex:alice.",
+    "type": "leaf"
+  }
+]

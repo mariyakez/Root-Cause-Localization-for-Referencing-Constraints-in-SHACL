@@ -16,13 +16,3 @@ def get_top_level_results(report_graph: Graph):
     """
     report_node = get_report_node(report_graph)
     return list(report_graph.objects(report_node, SH.result))
-
-def is_node_constraint(result_node, report_graph: Graph) -> bool:
-    component = report_graph.value(result_node,
-                                   SH.sourceConstraintComponent)
-    return str(component) == str(SH.NodeConstraintComponent)
-
-
-#The key lesson from TC4 output: direct property violations appear as top-level sh:result entries with a blank-node sh:sourceShape. 
-# Nested sh:node violations appear as top-level sh:result entries with a named sh:sourceShape and sh:detail children. 
-# The parser separates these two populations at the top level.

@@ -1,0 +1,12 @@
+[
+  {
+    "altChains": [],
+    "component": "sh:MinCountConstraintComponent",
+    "focusNode": "ex:carol",
+    "message": "A person must have either email or phone",
+    "path": "_:blank-path-expression",
+    "refChain": [],
+    "repairHint": "Add at least one value on the failing path to ex:carol.",
+    "type": "leaf"
+  }
+]
