@@ -833,7 +833,8 @@ timing columns naturally differ per machine and run.
 ├── lubm_schemas/             the three LUBM shape schemas, plus corrected variants
 ├── tools/                    evaluation and maintenance scripts (see Generated Artifacts)
 ├── lubm_evaluation_results.md  full per-combination LUBM breakdown
-└── requirements.txt          pyshacl 0.31.0, rdflib 7.6.0
+├── requirements.txt          pyshacl 0.31.0, rdflib 7.6.0
+└── thesis.pdf                the submitted thesis (103 pages)
 ```
 
 | Path | What it is | Start here if you want to |
@@ -843,7 +844,8 @@ timing columns naturally differ per machine and run.
 | [`all_test_cases/`](all_test_cases/) | Every fixture, grouped by scenario | Reproduce a specific behaviour from the thesis |
 | [`html_outputs/`](html_outputs/) | 59 committed reports | See real output without installing anything |
 | [`lubm_schemas/`](lubm_schemas/) | The evaluation schemas | Re-run the large-dataset evaluation |
-| [`tools/`](tools/) | Six scripts behind the evaluation chapter | Regenerate a result reported in the thesis |
+| [`tools/`](tools/) | Five scripts behind the evaluation chapter | Regenerate a result reported in the thesis |
+| [`thesis.pdf`](thesis.pdf) | The full thesis, 103 pages | Read the method, the evaluation and the results in full |
 
 The two LUBM data graphs (171 MB and 732 MB) are **not** committed; see
 [Large Dataset Evaluation](#large-dataset-evaluation).
